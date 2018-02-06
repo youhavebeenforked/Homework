@@ -39,10 +39,4 @@ public class SimpleCalculator {
             throw new DivideByZeroException();
         return first/second;
     }
-    
-    class DivideByZeroException extends RuntimeException {
-        DivideByZeroException() {
-            super("Divided by zero!");
-        }
-    }
 }
