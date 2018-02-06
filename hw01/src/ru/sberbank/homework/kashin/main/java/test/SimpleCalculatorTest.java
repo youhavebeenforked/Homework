@@ -38,12 +38,12 @@ public class SimpleCalculatorTest {
 
     public void divisionTest(int one, int two, int expected) {
         int actual = simpleCalculator.division(one, two);
-        Assert.assertEqual("Multiplication int test passed", expected, actual);
+        Assert.assertEqual("Division int test passed", expected, actual);
     }
 
     public void divisionTest(double one, double two, double expected) {
         double actual = simpleCalculator.division(one, two);
-        Assert.assertEqual("Multiplication double test passed", expected, actual);
+        Assert.assertEqual("Division double test passed", expected, actual);
     }
 
 }
