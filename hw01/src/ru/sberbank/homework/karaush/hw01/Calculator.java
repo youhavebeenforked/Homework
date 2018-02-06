@@ -1,33 +1,36 @@
 public class Calculator {
 
-    public <T extends Number> Number add(T first, T second){
-        if(first instanceof Double)
-            return first.doubleValue() + second.doubleValue();
-        else
-            return first.intValue() + second.intValue();
+    int add(int a, int b) {
+        return a + b;
     }
 
-    public <T extends Number> Number subtract(T first, T second){
-        if(first instanceof Double)
-            return first.doubleValue() - second.doubleValue();
-        else
-            return first.intValue() - second.intValue();
+    int subtract(int a, int b) {
+        return a - b;
     }
 
-    public <T extends Number> Number multiply(T first, T second){
-        if(first instanceof Double)
-            return first.doubleValue() * second.doubleValue();
-        else
-            return first.intValue() * second.intValue();
+    int divide(int a, int b) {
+        return a / b;
     }
 
-    public <T extends Number> Number divide(T first, T second){
-        if(first instanceof Double)
-            return first.doubleValue() / second.doubleValue();
-        else
-            return first.intValue() / second.intValue();
+    int multiply(int a, int b) {
+        return a * b;
     }
 
+    double add(double a, double b) {
+        return a + b;
+    }
+
+    double subtract(double a, double b) {
+        return a - b;
+    }
+
+    double divide(double a, double b) {
+        return a / b;
+    }
+
+    double multiply(double a, double b) {
+        return a * b;
+    }
 
 }
 
