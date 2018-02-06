@@ -83,7 +83,7 @@ public class SimpleCalculatorTest {
         try {
             calculator.div(first, second);
         } catch (DivisionByZeroException ex) {
-            Assert.assertEquals("Handled " + DivisionByZeroException.class.getSimpleName() + ": " + first + " / " + second,
+            Assert.assertEquals("Handled " + DivisionByZeroException.class.getSimpleName() + " in intDivisionByZeroTest",
                     expected,
                     ex.getMessage());
         }
@@ -96,7 +96,7 @@ public class SimpleCalculatorTest {
         try {
             calculator.div(first, second);
         } catch (DivisionByZeroException ex) {
-            Assert.assertEquals("Handled " + DivisionByZeroException.class.getSimpleName() + ": " + first + " / " + second,
+            Assert.assertEquals("Handled " + DivisionByZeroException.class.getSimpleName() + " in doubleDivisionByZeroTest",
                     expected,
                     ex.getMessage());
         }
