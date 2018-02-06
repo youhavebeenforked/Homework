@@ -37,7 +37,7 @@ public class SimpleCalculatorTest {
     }
 
     public void divisionTest(int one, int two, int expected) {
-        int actual = simpleCalculator.division(one, two);
+        double actual = simpleCalculator.division(one, two);
         Assert.assertEqual("Division int test passed", expected, actual);
     }
 
