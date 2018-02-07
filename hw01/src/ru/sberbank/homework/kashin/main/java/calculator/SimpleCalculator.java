@@ -13,7 +13,7 @@ public class SimpleCalculator {
         return one - two;
     }
 
-    public double subtraction(double one,double two) {
+    public double subtraction(double one, double two) {
         return one - two;
     }
 

@@ -12,7 +12,7 @@ public class MainCalculator {
         test.multiplicationTest(3, 3, 9);
         test.multiplicationTest(3.3, 2.2, 7.26);
         test.divisionTest(15, 3, 5);
-        test.divisionTest(5.0625,2.25 , 2.25);
+        test.divisionTest(5.0625, 2.25, 2.25);
 
         /* The tests fail
 
