@@ -64,7 +64,7 @@ public class SimpleCalculatorTests {
 }
 
 class Assert {
-    private static final double eps = 1e-6;
+    private static final double EPSILON = 1e-6;
 
     public static void assertIntEquals(String msg, int a, int b) {
         if (a != b) {
@@ -76,7 +76,7 @@ class Assert {
     }
 
     public static void assertDoubleEquals(String msg, double a, double b) {
-        if (Math.abs(a - b) > eps) {
+        if (Math.abs(a - b) > EPSILON) {
             System.out.println(msg);
             throw new RuntimeException("doubles " + a + " and " + b + " are not equal");
         } else {
