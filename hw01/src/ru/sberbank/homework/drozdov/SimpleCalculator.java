@@ -26,9 +26,6 @@ public class SimpleCalculator {
     }
 
     public static int divide(int first, int second) {
-        if (second == 0) {
-            throw new ArithmeticException("/ by zero");
-        }
         return first / second;
     }
 
