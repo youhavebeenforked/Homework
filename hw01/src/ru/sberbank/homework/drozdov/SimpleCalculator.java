@@ -9,11 +9,11 @@ public class SimpleCalculator {
         return first + second;
     }
 
-    public static int subtraction(int first, int second) {
+    public static int subtract(int first, int second) {
         return first - second;
     }
 
-    public static double subtraction(double first, double second) {
+    public static double subtract(double first, double second) {
         return first - second;
     }
 
@@ -25,14 +25,14 @@ public class SimpleCalculator {
         return first * second;
     }
 
-    public static int division(int first, int second) {
+    public static int divide(int first, int second) {
         if (second == 0) {
-            throw new RuntimeException("Division by zero");
+            throw new ArithmeticException("/ by zero");
         }
         return first / second;
     }
 
-    public static double division(double first, double second) {
+    public static double divide(double first, double second) {
         return first / second;
     }
 }
