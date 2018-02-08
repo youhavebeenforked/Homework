@@ -17,8 +17,9 @@ public class SimpleCalculator {
     }
 
     public int divide(int first, int second) {
-        if (second == 0)
+        if (second == 0) {
             throw new DivisionByZeroException();
+        }
         return first / second;
     }
 
@@ -35,8 +36,9 @@ public class SimpleCalculator {
     }
 
     public double divide(double first, double second) {
-        if (second == 0)
+        if (second == 0) {
             throw new DivisionByZeroException();
+        }
         return first / second;
     }
 }
