@@ -22,7 +22,7 @@ public class CalculatorImpl implements Calculator {
     public String calculate(String userInput) {
         String result = null;
         try {
-            Expression expression = Helper.parser(userInput.trim());
+            Expression expression = Helper.parser(userInput.trim().replaceAll(",", "."));
             result = Helper.calculateHelper(expression);
         } catch (Exception e) {
             print("Что-то введено неверно. Попробуйте еще раз");
