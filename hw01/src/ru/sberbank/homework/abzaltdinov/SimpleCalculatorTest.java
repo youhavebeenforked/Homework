@@ -82,13 +82,13 @@ public class SimpleCalculatorTest {
         String expected = "Divided by zero!";
         try {
             calculator.divide(first, second);
+            //if uncatched
+            throw new AssertException("Uncatched " + DivisionByZeroException.class.getSimpleName() + " in intDivisionByZeroTest");
         } catch (DivisionByZeroException ex) {
             Assert.assertEquals("Handled " + DivisionByZeroException.class.getSimpleName() + " in intDivisionByZeroTest",
                     expected,
                     ex.getMessage());
         }
-        //if uncatched
-        throw new AssertException("Uncatched " + DivisionByZeroException.class.getSimpleName() + " in intDivisionByZeroTest");
     }
 
     public void doubleDivisionByZeroTest() {
@@ -97,12 +97,12 @@ public class SimpleCalculatorTest {
         String expected = "Divided by zero!";
         try {
             calculator.divide(first, second);
+            //if uncatched
+            throw new AssertException("Uncatched " + DivisionByZeroException.class.getSimpleName() + " in doubleDivisionByZeroTest");
         } catch (DivisionByZeroException ex) {
             Assert.assertEquals("Handled " + DivisionByZeroException.class.getSimpleName() + " in doubleDivisionByZeroTest",
                     expected,
                     ex.getMessage());
         }
-        //if uncatched
-        throw new AssertException("Uncatched " + DivisionByZeroException.class.getSimpleName() + " in doubleDivisionByZeroTest");
     }
 }
