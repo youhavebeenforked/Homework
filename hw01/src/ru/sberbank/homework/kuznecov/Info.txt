@@ -1,0 +1,1 @@
+Run SimpleCalculatorTest class to test a calculator.
