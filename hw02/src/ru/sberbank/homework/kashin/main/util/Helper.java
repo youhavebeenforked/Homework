@@ -7,13 +7,16 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import static java.util.Objects.nonNull;
 import static ru.sberbank.homework.your_lastname.Operation.*;
 
 public class Helper {
+    private static Double preResult;
 
     public static String readConsole() {
         String userInput = null;
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        try {
             userInput = reader.readLine();
         } catch (IOException e) {
             e.printStackTrace();
@@ -26,11 +29,22 @@ public class Helper {
     }
 
     public static Expression parser(String expString) {
-        String[] simbols = expString.split(" ");
         Expression expression = new Expression();
-        expression.setFirst(Double.valueOf(simbols[0]));
-        expression.setSecond(Double.valueOf(simbols[2]));
-        switch (simbols[1]) {
+
+        if (expString.startsWith("+") || expString.startsWith("-") || expString.startsWith("*") || expString.startsWith("/")) {
+            if (nonNull(preResult)) {
+                expString = preResult.toString() + " " + expString;
+            } else {
+                print("Вы ввели неверную команду");
+                throw new RuntimeException("Неверная команда");
+            }
+        }
+        String[] character = expString.split(" ");
+        double firstNum = checkNotation(character[0]);
+        double secondNum = checkNotation(character[2]);
+        expression.setFirst(firstNum);
+        expression.setSecond(secondNum);
+        switch (character[1]) {
             case "+": {
                 expression.setOperator(ADDITION);
                 break;
@@ -46,6 +60,9 @@ public class Helper {
             case "/": {
                 expression.setOperator(DIVISION);
                 break;
+            }
+            default: {
+                throw new RuntimeException("Неверное выражение");
             }
 
         }
@@ -76,8 +93,22 @@ public class Helper {
             }
 
         }
+        preResult = result;
         return Double.toString(result);
 
+    }
+
+    public static Double checkNotation(String number) {
+        String result = number;
+
+        if (number.contains("b")) {
+            result = String.valueOf(Integer.parseInt(number.substring(2, number.length()), 2));
+        } else if (number.startsWith("0")) {
+            result = String.valueOf(Integer.parseInt(number.substring(1, number.length()), 8));
+        } else if (number.contains("x") || number.contains("X")) {
+            result = String.valueOf(Integer.parseInt(number.substring(2, number.length()), 16));
+        }
+        return Double.valueOf(result);
     }
 
 }

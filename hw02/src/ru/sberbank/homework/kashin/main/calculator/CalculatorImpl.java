@@ -4,6 +4,8 @@ import ru.sberbank.homework.kashin.main.model.Expression;
 import ru.sberbank.homework.kashin.main.util.Helper;
 import ru.sberbank.homework.your_lastname.Calculator;
 
+import static ru.sberbank.homework.kashin.main.util.Helper.print;
+
 public class CalculatorImpl implements Calculator {
 
     /**
@@ -18,8 +20,13 @@ public class CalculatorImpl implements Calculator {
      */
     @Override
     public String calculate(String userInput) {
-        Expression expression = Helper.parser(userInput);
-        String result = Helper.calculateHelper(expression);
+        String result = null;
+        try {
+            Expression expression = Helper.parser(userInput.trim());
+            result = Helper.calculateHelper(expression);
+        } catch (Exception e) {
+            print("Что-то введено неверно. Попробуйте еще раз");
+        }
         return result;
     }
 }
