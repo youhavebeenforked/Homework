@@ -24,6 +24,8 @@ public class CalculatorImpl implements Calculator {
         try {
             Expression expression = Helper.parser(userInput.trim().replaceAll(",", "."));
             result = Helper.calculateHelper(expression);
+        } catch (RuntimeException e) {
+            print(e.getMessage());
         } catch (Exception e) {
             print("Что-то введено неверно. Попробуйте еще раз");
         }

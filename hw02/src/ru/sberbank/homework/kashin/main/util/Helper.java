@@ -35,8 +35,7 @@ public class Helper {
             if (nonNull(preResult)) {
                 expString = preResult.toString() + " " + expString;
             } else {
-                print("Вы ввели неверную команду");
-                throw new RuntimeException("Неверная команда");
+                throw new RuntimeException("Чтобы продолжить вычисление, нужно ввести команду в формате: [оператор][пробел][число]. Или quit для выхода");
             }
         }
         String[] character = expString.split(" ");
@@ -62,7 +61,7 @@ public class Helper {
                 break;
             }
             default: {
-                throw new RuntimeException("Неверное выражение");
+                throw new RuntimeException("Неверно введен оператор");
             }
 
         }
@@ -88,6 +87,9 @@ public class Helper {
                 break;
             }
             case DIVISION: {
+                if (second == 0) {
+                    throw new RuntimeException("Делить на 0 нельзя!");
+                }
                 result = first / second;
                 break;
             }
@@ -104,6 +106,9 @@ public class Helper {
         if (number.contains("b")) {
             result = String.valueOf(Integer.parseInt(number.substring(2, number.length()), 2));
         } else if (number.startsWith("0")) {
+            if (Integer.valueOf(number) == 0) {
+                throw new RuntimeException("Делить на 0 нельзя!");
+            }
             result = String.valueOf(Integer.parseInt(number.substring(1, number.length()), 8));
         } else if (number.contains("x") || number.contains("X")) {
             result = String.valueOf(Integer.parseInt(number.substring(2, number.length()), 16));
