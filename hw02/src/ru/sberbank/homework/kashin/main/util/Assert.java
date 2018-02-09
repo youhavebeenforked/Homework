@@ -32,7 +32,6 @@ public class Assert {
     public static void assertEquals(Expression expected, Expression actual) {
         assertEquals(expected.getFirst(), actual.getFirst());
         assertEquals(expected.getSecond(), actual.getSecond());
-        assertEquals(expected.getOperator(), actual.getOperator());
     }
 
     public static void assertEquals(Operation expected, Operation actual) {

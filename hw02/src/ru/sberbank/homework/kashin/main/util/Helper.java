@@ -1,17 +1,23 @@
 package ru.sberbank.homework.kashin.main.util;
 
 import ru.sberbank.homework.kashin.main.model.Expression;
-import ru.sberbank.homework.your_lastname.Operation;
+import ru.sberbank.homework.kashin.main.model.expressions.Addition;
+import ru.sberbank.homework.kashin.main.model.expressions.Division;
+import ru.sberbank.homework.kashin.main.model.expressions.Multiplication;
+import ru.sberbank.homework.kashin.main.model.expressions.Subtraction;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
 import static java.util.Objects.nonNull;
-import static ru.sberbank.homework.your_lastname.Operation.*;
 
 public class Helper {
     private static Double preResult;
+
+    public static void setPreResult(Double preResult) {
+        Helper.preResult = preResult;
+    }
 
     public static String readConsole() {
         String userInput = null;
@@ -29,7 +35,7 @@ public class Helper {
     }
 
     public static Expression parser(String expString) {
-        Expression expression = new Expression();
+        Expression expression = null;
 
         if (expString.startsWith("+") || expString.startsWith("-") || expString.startsWith("*") || expString.startsWith("/")) {
             if (nonNull(preResult)) {
@@ -39,65 +45,34 @@ public class Helper {
             }
         }
         String[] character = expString.split(" ");
-        double firstNum = checkNotation(character[0]);
-        double secondNum = checkNotation(character[2]);
-        expression.setFirst(firstNum);
-        expression.setSecond(secondNum);
-        switch (character[1]) {
-            case "+": {
-                expression.setOperator(ADDITION);
-                break;
-            }
-            case "-": {
-                expression.setOperator(SUBTRATION);
-                break;
-            }
-            case "*": {
-                expression.setOperator(MULTIPLICATIOM);
-                break;
-            }
-            case "/": {
-                expression.setOperator(DIVISION);
-                break;
-            }
-            default: {
-                throw new RuntimeException("Неверно введен оператор");
-            }
+        double first;
+        double second;
+        if (nonNull(character[0]) && nonNull(character[1]) && nonNull(character[2])) {
+            first = checkNotation(character[0]);
+            second = checkNotation(character[2]);
 
+            switch (character[1]) {
+                case "+":
+                    expression = new Addition();
+                    break;
+                case "-":
+                    expression = new Subtraction();
+                    break;
+                case "*":
+                    expression = new Multiplication();
+                    break;
+                case "/":
+                    expression = new Division();
+                    break;
+                default:
+                    throw new RuntimeException("Неверно введен оператор");
+            }
+        } else {
+            throw new RuntimeException("Неверное выражение");
         }
+        expression.setFirst(first);
+        expression.setSecond(second);
         return expression;
-    }
-
-    public static String calculateHelper(Expression expression) {
-        double first = expression.getFirst();
-        double second = expression.getSecond();
-        Operation operation = expression.getOperator();
-        double result = 0;
-        switch (operation) {
-            case ADDITION: {
-                result = first + second;
-                break;
-            }
-            case SUBTRATION: {
-                result = first - second;
-                break;
-            }
-            case MULTIPLICATIOM: {
-                result = first * second;
-                break;
-            }
-            case DIVISION: {
-                if (second == 0) {
-                    throw new RuntimeException("Делить на 0 нельзя!");
-                }
-                result = first / second;
-                break;
-            }
-
-        }
-        preResult = result;
-        return Double.toString(result);
-
     }
 
     public static Double checkNotation(String number) {

@@ -11,6 +11,5 @@ public class MainCalculatorTest {
         HelperTest helperTest = new HelperTest();
         helperTest.checkNotationTest();
         helperTest.parserTest();
-        helperTest.calculateHelperTest();
     }
 }

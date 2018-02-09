@@ -1,11 +1,8 @@
 package ru.sberbank.homework.kashin.main.model;
 
-import ru.sberbank.homework.your_lastname.Operation;
-
-public class Expression {
-    private double first;
-    private double second;
-    private Operation operator;
+public abstract class Expression {
+    protected double first;
+    protected double second;
 
     public double getFirst() {
         return first;
@@ -23,11 +20,5 @@ public class Expression {
         this.second = second;
     }
 
-    public Operation getOperator() {
-        return operator;
-    }
-
-    public void setOperator(Operation operator) {
-        this.operator = operator;
-    }
+    public abstract String calculate();
 }
