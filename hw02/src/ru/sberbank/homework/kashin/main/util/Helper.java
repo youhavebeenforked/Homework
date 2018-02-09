@@ -50,26 +50,10 @@ public class Helper {
         if (nonNull(character[0]) && nonNull(character[1]) && nonNull(character[2])) {
             first = checkNotation(character[0]);
             second = checkNotation(character[2]);
-
-            switch (character[1]) {
-                case "+":
-                    expression = new Addition();
-                    break;
-                case "-":
-                    expression = new Subtraction();
-                    break;
-                case "*":
-                    expression = new Multiplication();
-                    break;
-                case "/":
-                    expression = new Division();
-                    break;
-                default:
-                    throw new RuntimeException("Неверно введен оператор");
-            }
         } else {
             throw new RuntimeException("Неверное выражение");
         }
+        expression = Factory.getExpression(character[1]);
         expression.setFirst(first);
         expression.setSecond(second);
         return expression;
