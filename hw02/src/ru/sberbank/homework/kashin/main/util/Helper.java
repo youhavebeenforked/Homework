@@ -1,10 +1,6 @@
 package ru.sberbank.homework.kashin.main.util;
 
 import ru.sberbank.homework.kashin.main.model.Expression;
-import ru.sberbank.homework.kashin.main.model.expressions.Addition;
-import ru.sberbank.homework.kashin.main.model.expressions.Division;
-import ru.sberbank.homework.kashin.main.model.expressions.Multiplication;
-import ru.sberbank.homework.kashin.main.model.expressions.Subtraction;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -35,8 +31,6 @@ public class Helper {
     }
 
     public static Expression parser(String expString) {
-        Expression expression = null;
-
         if (expString.startsWith("+") || expString.startsWith("-") || expString.startsWith("*") || expString.startsWith("/")) {
             if (nonNull(preResult)) {
                 expString = preResult.toString() + " " + expString;
@@ -53,7 +47,7 @@ public class Helper {
         } else {
             throw new RuntimeException("Неверное выражение");
         }
-        expression = Factory.getExpression(character[1]);
+        Expression expression = Factory.getExpression(character[1]);
         expression.setFirst(first);
         expression.setSecond(second);
         return expression;
