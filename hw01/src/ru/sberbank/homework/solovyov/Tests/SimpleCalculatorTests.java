@@ -57,8 +57,8 @@ public class SimpleCalculatorTests {
             throw new AssertException("Uncatched Runtime Exception when sum of integers causes int overflow");
         } catch (RuntimeException ex) {
             Assert.assertEquals("Handle exception for int overflow at sum operation",
-                    expected,
-                    ex.getMessage());
+                    ex.getMessage(),
+                    expected);
         }
 
     }
@@ -72,8 +72,8 @@ public class SimpleCalculatorTests {
             throw new AssertException("Uncatched Runtime Exception when sum of integers causes int underflow");
         } catch (RuntimeException ex) {
             Assert.assertEquals("Handle exception for int underflow at sum operation",
-                    expected,
-                    ex.getMessage());
+                    ex.getMessage(),
+                    expected);
         }
 
     }
@@ -95,8 +95,8 @@ public class SimpleCalculatorTests {
             throw new AssertException("Uncatched Runtime Exception when difference of integers causes int overflow");
         } catch (RuntimeException ex) {
             Assert.assertEquals("Handle exception for int overflow at division operation",
-                    expected,
-                    ex.getMessage());
+                    ex.getMessage(),
+                    expected);
         }
 
     }
@@ -110,8 +110,8 @@ public class SimpleCalculatorTests {
             throw new AssertException("Uncatched Runtime Exception when difference of integers causes int underflow");
         } catch (RuntimeException ex) {
             Assert.assertEquals("Handle exception for int underflow at division operation",
-                    expected,
-                    ex.getMessage());
+                    ex.getMessage(),
+                    expected);
         }
 
     }
@@ -133,8 +133,8 @@ public class SimpleCalculatorTests {
             throw new AssertException("Uncatched Runtime Exception when product of integers causes int overflow");
         } catch (RuntimeException ex) {
             Assert.assertEquals("Handle exception for int overflow at multiplication operation",
-                    expected,
-                    ex.getMessage());
+                    ex.getMessage(),
+                    expected);
         }
 
     }
@@ -148,8 +148,8 @@ public class SimpleCalculatorTests {
             throw new AssertException("Uncatched Runtime Exception when product of integers causes int underflow");
         } catch (RuntimeException ex) {
             Assert.assertEquals("Handle exception for int underflow at multiplication operation",
-                    expected,
-                    ex.getMessage());
+                    ex.getMessage(),
+                    expected);
         }
 
     }
