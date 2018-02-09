@@ -10,7 +10,7 @@ public class Main {
         System.out.println("Testing Simple Calculator");
         System.out.println("***************************");
 
-        SimpleCalculatorTests.StartTests();
+        SimpleCalculatorTests.startTests();
     }
 }
 

@@ -4,63 +4,71 @@ import ru.sberbank.homework.solovyov.SimpleCalculator;
 
 public class SimpleCalculatorTests {
 
-    public static void StartTests() {
+    public static void startTests() {
         // int sum tests
-        FivePlusTenIsFifteen();
-        IntSumOverflowTest();
-        IntSumUnderflowTest();
+        fivePlusTenIsFifteen();
+        intSumOverflowTest();
+        intSumUnderflowTest();
 
         // int subtract tests
-        FiveMinusTenIsMinusFive();
-        IntSubtractOverflowTest();
-        IntSubtractUnderflowTest();
+        fiveMinusTenIsMinusFive();
+        intSubtractOverflowTest();
+        intSubtractUnderflowTest();
 
         // int multiply tests
-        FiveTimesTenIsFifty();
-        IntMultiplyOverflowTest();
-        IntMultiplyUnderflowTest();
+        fiveTimesTenIsFifty();
+        intMultiplyOverflowTest();
+        intMultiplyUnderflowTest();
 
         // int divide tests
-        EightDividedByFourIsTwo();
-        IntDividedByGreaterInt();
-        IntDividedByZero();
+        eightDividedByFourIsTwo();
+        intDividedByGreaterInt();
+        intDividedByZero();
 
         // double sum tests
-        DoubleSumTest();
-        // double subtract tests
-        DoubleSubtractTest();
-        // double multiply tests
-        DoubleMultiplyTest();
-        // double divide tests
-        DoubleDivideTest();
-        DoubleDividedByZero();
+        doubleSumTest();
 
+        // double subtract tests
+        doubleSubtractTest();
+
+        // double multiply tests
+        doubleMultiplyTest();
+
+        // double divide tests
+        doubleDivideTest();
+        doubleDividedByZero();
     }
 
     // int
-    static void FivePlusTenIsFifteen() {
-        int a = 5, b = 10, expected = 15;
+    static void fivePlusTenIsFifteen() {
+        int a = 5;
+        int b = 10;
+        int expected = 15;
         Assert.assertEquals("5 + 10 = 15",
-                SimpleCalculator.Sum(a, b), expected);
+                SimpleCalculator.sum(a, b), expected);
     }
-    static void IntSumOverflowTest(){
-        int a = Integer.MAX_VALUE, b = 1;
+
+    static void intSumOverflowTest() {
+        int a = Integer.MAX_VALUE;
+        int b = 1;
         String expected = "Overflow has occurred.";
-         try {
-             SimpleCalculator.Sum(a, b);
-             throw new AssertException("Uncatched Runtime Exception when sum of integers causes int overflow");
-         } catch (RuntimeException ex) {
-             Assert.assertEquals("Handle exception for int overflow at sum operation",
-                     expected,
-                     ex.getMessage());
-         }
+        try {
+            SimpleCalculator.sum(a, b);
+            throw new AssertException("Uncatched Runtime Exception when sum of integers causes int overflow");
+        } catch (RuntimeException ex) {
+            Assert.assertEquals("Handle exception for int overflow at sum operation",
+                    expected,
+                    ex.getMessage());
+        }
 
     }
-    static void IntSumUnderflowTest(){
-        int a = Integer.MIN_VALUE, b = -1;
+
+    static void intSumUnderflowTest() {
+        int a = Integer.MIN_VALUE;
+        int b = -1;
         String expected = "Underflow has occurred.";
         try {
-            SimpleCalculator.Sum(a, b);
+            SimpleCalculator.sum(a, b);
             throw new AssertException("Uncatched Runtime Exception when sum of integers causes int underflow");
         } catch (RuntimeException ex) {
             Assert.assertEquals("Handle exception for int underflow at sum operation",
@@ -70,16 +78,20 @@ public class SimpleCalculatorTests {
 
     }
 
-    static void FiveMinusTenIsMinusFive() {
-        int a = 5, b = 10, expected = -5;
+    static void fiveMinusTenIsMinusFive() {
+        int a = 5;
+        int b = 10;
+        int expected = -5;
         Assert.assertEquals("5 - 10 = -5",
-                SimpleCalculator.Subtract(a, b), expected);
+                SimpleCalculator.subtract(a, b), expected);
     }
-    static void IntSubtractOverflowTest(){
-        int a = Integer.MAX_VALUE, b = -1;
+
+    static void intSubtractOverflowTest() {
+        int a = Integer.MAX_VALUE;
+        int b = -1;
         String expected = "Overflow has occurred.";
         try {
-            SimpleCalculator.Subtract(a, b);
+            SimpleCalculator.subtract(a, b);
             throw new AssertException("Uncatched Runtime Exception when difference of integers causes int overflow");
         } catch (RuntimeException ex) {
             Assert.assertEquals("Handle exception for int overflow at division operation",
@@ -88,11 +100,13 @@ public class SimpleCalculatorTests {
         }
 
     }
-    static void IntSubtractUnderflowTest(){
-        int a = Integer.MIN_VALUE, b = 1;
+
+    static void intSubtractUnderflowTest() {
+        int a = Integer.MIN_VALUE;
+        int b = 1;
         String expected = "Underflow has occurred.";
         try {
-            SimpleCalculator.Subtract(a, b);
+            SimpleCalculator.subtract(a, b);
             throw new AssertException("Uncatched Runtime Exception when difference of integers causes int underflow");
         } catch (RuntimeException ex) {
             Assert.assertEquals("Handle exception for int underflow at division operation",
@@ -102,16 +116,20 @@ public class SimpleCalculatorTests {
 
     }
 
-    static void FiveTimesTenIsFifty() {
-        int a = 5, b = 10, expected = 50;
+    static void fiveTimesTenIsFifty() {
+        int a = 5;
+        int b = 10;
+        int expected = 50;
         Assert.assertEquals("5 * 10 = 50",
-                SimpleCalculator.Multiply(a, b), expected);
+                SimpleCalculator.multiply(a, b), expected);
     }
-    static void IntMultiplyOverflowTest(){
-        int a = Integer.MAX_VALUE, b = 2;
+
+    static void intMultiplyOverflowTest() {
+        int a = Integer.MAX_VALUE;
+        int b = 2;
         String expected = "Overflow has occurred.";
         try {
-            SimpleCalculator.Multiply(a, b);
+            SimpleCalculator.multiply(a, b);
             throw new AssertException("Uncatched Runtime Exception when product of integers causes int overflow");
         } catch (RuntimeException ex) {
             Assert.assertEquals("Handle exception for int overflow at multiplication operation",
@@ -120,11 +138,13 @@ public class SimpleCalculatorTests {
         }
 
     }
-    static void IntMultiplyUnderflowTest(){
-        int a = Integer.MIN_VALUE, b = 2;
+
+    static void intMultiplyUnderflowTest() {
+        int a = Integer.MIN_VALUE;
+        int b = 2;
         String expected = "Underflow has occurred.";
         try {
-            SimpleCalculator.Multiply(a, b);
+            SimpleCalculator.multiply(a, b);
             throw new AssertException("Uncatched Runtime Exception when product of integers causes int underflow");
         } catch (RuntimeException ex) {
             Assert.assertEquals("Handle exception for int underflow at multiplication operation",
@@ -135,64 +155,81 @@ public class SimpleCalculatorTests {
     }
 
 
-    static void EightDividedByFourIsTwo() {
-        int a = 8, b = 4, expected = 2;
+    static void eightDividedByFourIsTwo() {
+        int a = 8;
+        int b = 4;
+        int expected = 2;
         Assert.assertEquals("8 / 4 = 2",
-                SimpleCalculator.Divide(a, b), expected);
+                SimpleCalculator.divide(a, b), expected);
     }
-    static void IntDividedByGreaterInt(){
-        int a = 10, b = 20, expected = 0;
+
+    static void intDividedByGreaterInt() {
+        int a = 10;
+        int b = 20;
+        int expected = 0;
         Assert.assertEquals("10 / 20 = 0",
-                SimpleCalculator.Divide(a, b), expected);
+                SimpleCalculator.divide(a, b), expected);
     }
-    static void IntDividedByZero(){
-        int a = 25, b = 0;
+
+    static void intDividedByZero() {
+        int a = 25;
+        int b = 0;
         String expected = "Division by zero!";
         try {
-            SimpleCalculator.Divide(a, b);
+            SimpleCalculator.divide(a, b);
             throw new AssertException("Uncatched Runtime Exception for division int by zero");
-        } catch (RuntimeException ex) {
+        } catch (ArithmeticException ex) {
             Assert.assertEquals("Handle exception for division int by zero",
-                    expected,
-                    ex.getMessage());
+                    ex.getMessage(),
+                    expected);
         }
 
     }
 
     // double
-    static void DoubleSumTest() {
-        double a = 7.12, b = 2.8, expected = 9.92;
+    static void doubleSumTest() {
+        double a = 7.12;
+        double b = 2.8;
+        double expected = 9.92;
         Assert.assertEquals("7.12 + 2.8 = 9.92",
-                SimpleCalculator.Sum(a, b), expected);
+                SimpleCalculator.sum(a, b), expected);
     }
 
-    static void DoubleSubtractTest() {
-        double a = 11.22, b = 14.35, expected = -3.13;
+    static void doubleSubtractTest() {
+        double a = 11.22;
+        double b = 14.35;
+        double expected = -3.13;
         Assert.assertEquals("11.22 - 14.35 = -3.13",
-                SimpleCalculator.Subtract(a, b), expected);
+                SimpleCalculator.subtract(a, b), expected);
     }
 
-    static void DoubleMultiplyTest() {
-        double a = 8.125, b = 4.8, expected = 39.0;
+    static void doubleMultiplyTest() {
+        double a = 8.125;
+        double b = 4.8;
+        double expected = 39.0;
         Assert.assertEquals("8.125 * 4.8 = 39.0",
-                SimpleCalculator.Multiply(a, b), expected);
+                SimpleCalculator.multiply(a, b), expected);
     }
 
-    static void DoubleDivideTest() {
-        double a = 39.0, b = 8.125, expected = 4.8;
+    static void doubleDivideTest() {
+        double a = 39.0;
+        double b = 8.125;
+        double expected = 4.8;
         Assert.assertEquals("39.0 / 8.125 = 4.8",
-                SimpleCalculator.Divide(a, b), expected);
+                SimpleCalculator.divide(a, b), expected);
     }
-    static void DoubleDividedByZero(){
-        double a = 12.345, b = 0.0;
+
+    static void doubleDividedByZero() {
+        double a = 12.345;
+        double b = 0.0;
         String expected = "Division by zero!";
         try {
-            SimpleCalculator.Divide(a, b);
+            SimpleCalculator.divide(a, b);
             throw new AssertException("Uncatched Runtime Exception for division double by zero");
-        } catch (RuntimeException ex) {
+        } catch (ArithmeticException ex) {
             Assert.assertEquals("Handle exception for division double by zero",
-                    expected,
-                    ex.getMessage());
+                    ex.getMessage(),
+                    expected);
         }
 
     }

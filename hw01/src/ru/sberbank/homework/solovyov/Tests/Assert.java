@@ -21,18 +21,20 @@ public class Assert {
     }
 
     public static void assertEquals(String testDescription, String actual, String expected) {
-        if(expected != null) {
-            if (!expected.equals(actual)) {
-                throw new AssertException(testDescription);
-            } else {
-                System.out.println(testDescription + " - OK");
-            }
+        if (expected == null) {
+            System.out.println("No string to expect in test");
+            return;
+        }
+        if (!expected.equals(actual)) {
+            throw new AssertException(testDescription);
+        } else {
+            System.out.println(testDescription + " - OK");
         }
     }
 }
 
 class AssertException extends RuntimeException {
-    AssertException(String message){
+    AssertException(String message) {
         super(message);
     }
 }
