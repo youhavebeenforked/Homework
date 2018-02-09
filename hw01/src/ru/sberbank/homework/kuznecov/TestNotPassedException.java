@@ -1,8 +1,8 @@
 package ru.sberbank.homework.kuznecov;
 
-public class TestNotPassedException extends Exception {
+public class TestNotPassedException extends RuntimeException {
 
-    public TestNotPassedException(String message){
+    public TestNotPassedException(String message) {
         super(message);
     }
 

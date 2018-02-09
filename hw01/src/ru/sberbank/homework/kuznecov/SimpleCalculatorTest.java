@@ -4,7 +4,7 @@ public class SimpleCalculatorTest {
     public static void main(String[] args) {
         SimpleCalculator simpleCalculator = new SimpleCalculator();
 
-        try{
+        try {
             Assert.assertEquals("2 + 2", 4, simpleCalculator.sum(2, 2));
             Assert.assertEquals("2.5 + 3.4", 5.9, simpleCalculator.sum(2.5, 3.4), 0.000001);
 
@@ -20,11 +20,11 @@ public class SimpleCalculatorTest {
             //Division by zero
             //Assert.assertEquals("5 / 0", 0, simpleCalculator.div(5, 0));
             //Assert.assertEquals("5.0 / 0", 0, simpleCalculator.div(5.0, 0.0), 0.000001);
-        } catch (TestNotPassedException e){
+        } catch (TestNotPassedException e) {
             System.out.println(e.getMessage());
-        } catch (ArithmeticException e){
+        } catch (ArithmeticException e) {
             System.out.println(e.toString());
-        } catch (Exception e){
+        } catch (Exception e) {
             System.out.println("Unexpected exception " + e.toString());
         }
     }
