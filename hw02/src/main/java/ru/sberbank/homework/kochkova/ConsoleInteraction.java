@@ -8,11 +8,7 @@ import java.util.Scanner;
 
 public class ConsoleInteraction {
     private static Scanner scanner = new Scanner(System.in);
-    private CalculatorImpl calculator;
-
-    public ConsoleInteraction() {
-        this.calculator = new CalculatorImpl();
-    }
+    private CalculatorImpl calculator = new CalculatorImpl();
 
     public boolean getLineAndPrintResult() {
         String input = scanner.nextLine();
