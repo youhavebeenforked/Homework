@@ -17,7 +17,7 @@ public class SimpleCalculatorTest {
             Assert.assertEquals("4 / 3", 1, simpleCalculator.divide(4, 3));
             Assert.assertEquals("7 / 2", 3.5, simpleCalculator.divide(7.0, 2.0), 0.000001);
 
-            //Division by zero
+            //Division by zero.
             //Assert.assertEquals("5 / 0", 0, simpleCalculator.div(5, 0));
             //Assert.assertEquals("5.0 / 0", 0, simpleCalculator.div(5.0, 0.0), 0.000001);
         } catch (TestNotPassedException e) {
