@@ -28,9 +28,9 @@ public class CalculatorImpl implements Calculator {
                 throw new NumberFormatException();
             }
             String elem = valueSplit[i];
-            if (elem.isEmpty() || elem.startsWith("x") || elem.startsWith("L")
+            if (elem.isEmpty() || elem.startsWith("x") || elem.startsWith("l")
                     || elem.startsWith(".") || elem.startsWith("b")
-                    || elem.endsWith("x") || elem.endsWith("L")
+                    || elem.endsWith("x") || elem.endsWith("l")
                     || elem.endsWith(".") || elem.endsWith("b")) {
                 throw new NumberFormatException();
             }
