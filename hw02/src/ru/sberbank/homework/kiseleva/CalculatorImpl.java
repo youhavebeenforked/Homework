@@ -1,8 +1,5 @@
 package ru.sberbank.homework.kiseleva;
 
-import ru.sberbank.homework.your_lastname.Calculator;
-import ru.sberbank.homework.kiseleva.interfaces.CommonCalculator;
-
 import java.text.DecimalFormat;
 
 /**

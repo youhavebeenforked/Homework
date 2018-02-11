@@ -1,7 +1,5 @@
 package ru.sberbank.homework.kiseleva;
 
-import ru.sberbank.homework.kiseleva.interfaces.CommonCalculator;
-
 /**
  * Created by Ekaterina Kiseleva on 11.02.2018.
  */
