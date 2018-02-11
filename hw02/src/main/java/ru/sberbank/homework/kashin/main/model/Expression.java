@@ -2,6 +2,7 @@ package ru.sberbank.homework.kashin.main.model;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.DecimalFormat;
 
 import static ru.sberbank.homework.kashin.main.util.CalculateHelper.checkInteger;
 
@@ -31,7 +32,9 @@ public abstract class Expression {
         if (checkInteger(number)) {
             return Long.toString(Math.round(number));
         } else {
-            String roundedResult = new BigDecimal(number).setScale(3, RoundingMode.UP).toString();
+            DecimalFormat df = new DecimalFormat("#.###");
+            df.setRoundingMode(RoundingMode.HALF_UP);
+            String roundedResult = df.format(number).replaceAll(",", ".");
             while (roundedResult.contains(".") && roundedResult.endsWith("0")) {
                 roundedResult = roundedResult.substring(0, roundedResult.length() - 1);
             }

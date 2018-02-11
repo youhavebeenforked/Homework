@@ -57,10 +57,6 @@ public class CalculateHelper {
     }
 
     public static boolean checkInteger(double checkNumber) {
-        if ((checkNumber == Math.floor(checkNumber)) && !Double.isInfinite(checkNumber)) {
-            return true;
-        } else {
-            return false;
-        }
+        return (checkNumber == Math.floor(checkNumber)) && !Double.isInfinite(checkNumber);
     }
 }
