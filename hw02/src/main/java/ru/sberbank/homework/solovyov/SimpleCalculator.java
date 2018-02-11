@@ -3,12 +3,60 @@ package ru.sberbank.homework.solovyov;
 import ru.sberbank.homework.common.Calculator;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Scanner;
 
 public class SimpleCalculator implements Calculator {
 
+    private String resultString;
+    private boolean isNextStep;
+
+    public SimpleCalculator() {
+        System.out.println("**********************");
+        System.out.println("Welcome to Calculator!");
+        System.out.println("**********************");
+        System.out.println("Enter your arithmetic problem for calculation in the format a @ b, where @ is an operation +,-,*,/.");
+        System.out.println("or enter q(uit) for exit");
+
+        isNextStep = false;
+        resultString = null;
+    }
+
     @Override
     public String calculate(String userInput) {
+
+        switch (userInput.charAt(0)) {
+            case 'q':
+                System.out.println("See you later.");
+                return "quit";
+            case 'n':
+                isNextStep = false;
+                resultString = "";
+                return "new";
+            default:
+                if (isNextStep) {
+                    resultString += " " + userInput;
+                }
+        }
+
+        if (isNextStep) {
+            parseAndCalc(resultString);
+        } else {
+            parseAndCalc(userInput);
+        }
+
+        if (resultString != null) {
+            System.out.println("= " + resultString);
+            System.out.println("Type:\n- the next operation and the operand (format: @ c) to continue calculation\n" +
+                    "- n(ew) for new calculation example\n- q(uit) for exit.");
+            isNextStep = true;
+            return resultString;
+        } else {
+            return "error";
+        }
+    }
+
+    private void parseAndCalc(String userInput) {
         Scanner scanner = new Scanner(userInput);
 
         try {
@@ -30,11 +78,10 @@ public class SimpleCalculator implements Calculator {
                     break;
                 case DIVISION:
                     if (secondNumber.compareTo(BigDecimal.ZERO) != 0) {
-                        result = firstNumber.divide(secondNumber, BigDecimal.ROUND_HALF_UP);
+                        result = firstNumber.divide(secondNumber, 2, RoundingMode.HALF_UP);
                     } else {
                         throw new ArithmeticException("Division by zero!");
                     }
-                    break;
             }
 
             if (result.remainder(BigDecimal.ONE).signum() == 0) {
@@ -42,11 +89,14 @@ public class SimpleCalculator implements Calculator {
             } else {
                 result = result.setScale(2, BigDecimal.ROUND_HALF_UP);
             }
-            return result.toString();
+            resultString = result.toString();
         } catch (IllegalArgumentException | NullPointerException | ArithmeticException exception) {
             System.out.println("error > wrong expression: " + exception.getMessage());
+            isNextStep = false;
+            resultString = null;
+            System.out.println("Enter your arithmetic problem for calculation in the format a @ b, where @ is an operation +,-,*,/.");
+            System.out.println("or enter q(uit) for exit");
         }
-        return null;
     }
 
     private Operation getOperation(Scanner scanner) {

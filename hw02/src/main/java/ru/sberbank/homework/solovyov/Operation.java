@@ -16,7 +16,7 @@ public enum Operation {
     public static Operation getBySign(char sign) {
         Operation[] ops = Operation.values();
         for (Operation op : ops) {
-            if (op.getSign() == sign){
+            if (op.getSign() == sign) {
                 return op;
             }
         }

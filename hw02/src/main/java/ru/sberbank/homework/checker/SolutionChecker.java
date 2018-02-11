@@ -7,7 +7,7 @@ import ru.sberbank.homework.common.Calculator;
 public class SolutionChecker {
 
     private final CommandSequence[] sequences = {
-            cs(ex("2 + 2", "4"), ex("- 1", "3"),  ex("* 2", "6"),  ex("/ 4", "1.5"),  ex("1 - 1", "0")), //happy path all operations
+            cs(ex("2 + 2", "4"), ex("- 1", "3"),  ex("* 2", "6"),  ex("/ 4", "1.5"),  ex("n", "new"), ex("1 - 1", "0")), //happy path all operations
             cs(ex("1+1", "error > wrong expression"), ex("1 - foo", "error > foo")) // неаккуратный пользователь.
             // Остальные тесты пишите сами, своими не поделюсь ;)
     };
