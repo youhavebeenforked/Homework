@@ -1,6 +1,5 @@
 package ru.sberbank.homework.kashin.main.model;
 
-import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 
@@ -32,7 +31,7 @@ public abstract class Expression {
         if (checkInteger(number)) {
             return Long.toString(Math.round(number));
         } else {
-            DecimalFormat df = new DecimalFormat("#.###");
+            DecimalFormat df = new DecimalFormat("#.##");
             df.setRoundingMode(RoundingMode.HALF_UP);
             String roundedResult = df.format(number).replaceAll(",", ".");
             while (roundedResult.contains(".") && roundedResult.endsWith("0")) {
