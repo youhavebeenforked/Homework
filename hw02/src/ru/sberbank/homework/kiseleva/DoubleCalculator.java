@@ -28,16 +28,13 @@ public class DoubleCalculator implements CommonCalculator {
 
     @Override
     public Number cast(String num) {
-        if(num.length() > 1 && num.charAt(1) == 'b') {
+        if (num.length() > 1 && num.charAt(1) == 'b') {
             return Long.parseLong(num.substring(2), 2);
-        }
-        else if(num.length() > 1 && num.charAt(1) == 'x') {
+        } else if (num.length() > 1 && num.charAt(1) == 'x') {
             return Long.parseLong(num.substring(2), 16);
-        }
-        else if (num.length() > 1 && num.charAt(0) == '0' && num.charAt(1) != '.') {
+        } else if (num.length() > 1 && num.charAt(0) == '0' && num.charAt(1) != '.') {
             return Long.parseLong(num.substring(1), 8);
-        }
-        else {
+        } else {
             return Double.parseDouble(num);
         }
     }
