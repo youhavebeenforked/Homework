@@ -40,7 +40,7 @@ public class CalculateHelper {
         if (!checkWithRegExp(elements[2], "^-?(0b|0x)?\\d+(.\\d+)?$")) {
             throw new WrongExpression(String.format("error > %s", elements[2]));
         }
-        Expression expression = Factory.getExpression(elements[1]);
+        Expression expression = Factory.getExpression(elements[1].charAt(0));
         expression.setFirst(checkNotation(elements[0]));
         expression.setSecond(checkNotation(elements[2]));
         return expression;

@@ -7,18 +7,18 @@ import ru.sberbank.homework.kashin.main.model.expressions.Multiplication;
 import ru.sberbank.homework.kashin.main.model.expressions.Subtraction;
 
 public class Factory {
-    public static Expression getExpression(String operator) {
+    public static Expression getExpression(Character operator) {
         switch (operator) {
-            case "+":
+            case '+':
                 return new Addition();
-            case "-":
+            case '-':
                 return new Subtraction();
-            case "*":
+            case '*':
                 return new Multiplication();
-            case "/":
+            case '/':
                 return new Division();
             default:
-                throw new RuntimeException("Неверно введен оператор");
+                throw new RuntimeException(String.format("error > %s", operator));
         }
     }
 }
