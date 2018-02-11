@@ -1,12 +1,8 @@
 package ru.sberbank.homework.kashin.main.util;
 
-import ru.sberbank.homework.kashin.main.model.Expression;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-
-import static java.util.Objects.nonNull;
 
 public class ConsoleHelper {
 

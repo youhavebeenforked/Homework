@@ -6,9 +6,11 @@ import ru.sberbank.homework.kashin.main.model.Expression;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static java.util.Objects.nonNull;
-
 public class CalculateHelper {
+    private static final String binaryNumber = "^-?(0b|0B)(0|1)+$";
+    private static final String octalNumber = "^-?(0)([0-7])+$";
+    private static final String hexNumber = "^-?(0x|0X)([0-9]|[a-f]|[A-F])+$";
+    private static final String literalRegExp = "^-?(0b|0x)?\\d+(.\\d+)?$";
     private static Double preResult;
 
     public static Double getPreResult() {
@@ -22,11 +24,11 @@ public class CalculateHelper {
     public static Double checkNotation(String number) {
         String result = number;
 
-        if (checkWithRegExp(number, "^-?(0b|0B)(0|1)+$")) {
+        if (checkWithRegExp(number, binaryNumber)) {
             result = String.valueOf(Integer.parseInt(number.substring(2, number.length()), 2));
-        } else if (checkWithRegExp(number, "^-?(0)([0-7])+$")) {
+        } else if (checkWithRegExp(number, octalNumber)) {
             result = String.valueOf(Integer.parseInt(number.substring(1, number.length()), 8));
-        } else if (checkWithRegExp(number, "^-?(0x|0X)([0-9]|[a-f]|[A-F])+$")) {
+        } else if (checkWithRegExp(number, hexNumber)) {
             result = String.valueOf(Integer.parseInt(number.substring(2, number.length()), 16));
         }
         return Double.valueOf(result);
@@ -34,10 +36,10 @@ public class CalculateHelper {
 
     public static Expression parser(String expString) {
         String[] elements = expString.split(" ");
-        if (!checkWithRegExp(elements[0], "^-?(0b|0x)?\\d+(.\\d+)?$")) {
+        if (!checkWithRegExp(elements[0], literalRegExp)) {
             throw new WrongExpression(String.format("error > %s", elements[0]));
         }
-        if (!checkWithRegExp(elements[2], "^-?(0b|0x)?\\d+(.\\d+)?$")) {
+        if (!checkWithRegExp(elements[2], literalRegExp)) {
             throw new WrongExpression(String.format("error > %s", elements[2]));
         }
         Expression expression = Factory.getExpression(elements[1].charAt(0));

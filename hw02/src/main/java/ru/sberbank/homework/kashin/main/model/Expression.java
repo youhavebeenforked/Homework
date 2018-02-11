@@ -32,7 +32,7 @@ public abstract class Expression {
             return Long.toString(Math.round(number));
         } else {
             String roundedResult = new BigDecimal(number).setScale(3, RoundingMode.UP).toString();
-            while (roundedResult.endsWith("0")) {
+            while (roundedResult.contains(".") && roundedResult.endsWith("0")) {
                 roundedResult = roundedResult.substring(0, roundedResult.length() - 1);
             }
             return roundedResult;
