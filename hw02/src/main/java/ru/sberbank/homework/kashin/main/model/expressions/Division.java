@@ -21,7 +21,11 @@ public class Division extends Expression {
         if (checkInteger(result)) {
             return Long.toString(Math.round(result));
         } else {
-            return new BigDecimal(result).setScale(3, RoundingMode.UP).toString();
+            String roundedResult = new BigDecimal(result).setScale(3, RoundingMode.UP).toString();
+            while (roundedResult.endsWith("0")) {
+                roundedResult = roundedResult.substring(0, roundedResult.length() - 1);
+            }
+            return roundedResult;
         }
     }
 }

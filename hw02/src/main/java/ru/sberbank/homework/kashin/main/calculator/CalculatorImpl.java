@@ -24,7 +24,7 @@ public class CalculatorImpl implements Calculator {
      */
     @Override
     public String calculate(String userInput) {
-        if (checkWithRegExp(userInput,"^\\w+ (\\+|-|\\*|/) \\w+$")) {
+        if (checkWithRegExp(userInput.trim(),"^\\w+(.\\w+)? (\\+|-|\\*|/) \\w+(.\\w+)?$")) {
             //goto
             try {
                 return parser(userInput.trim()).calculate();
@@ -32,7 +32,7 @@ public class CalculatorImpl implements Calculator {
                 return e.getMessage();
             }
 
-        } else if (checkWithRegExp(userInput, "^(\\+|-|\\*|/) \\w+$") && nonNull(getPreResult())) {
+        } else if (checkWithRegExp(userInput.trim(), "^(\\+|-|\\*|/) \\w+(.\\w+)?$") && nonNull(getPreResult())) {
             userInput = getPreResult() + " " + userInput;
             try {
                 return parser(userInput.trim()).calculate();
