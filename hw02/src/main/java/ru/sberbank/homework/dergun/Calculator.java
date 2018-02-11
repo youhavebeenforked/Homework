@@ -1,4 +1,4 @@
-package ru.sberbank.homework.your_lastname;
+package ru.sberbank.homework.dergun;
 
 /**
  * Вот такой простой интерфейс
