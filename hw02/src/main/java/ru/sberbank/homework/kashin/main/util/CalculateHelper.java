@@ -10,7 +10,7 @@ public class CalculateHelper {
     private static final String binaryNumber = "^-?(0b)(0|1)+(l)?$";
     private static final String octalNumber = "^-?(0)([0-7])+(l)?$";
     private static final String hexNumber = "^-?(0x)([0-9]|[a-f])+(l)?$";
-    private static final String correctLiteralRegExp = "^-?(0b|0x)?\\d+(.\\d+)?(l)?$";
+    private static final String correctLiteralRegExp = "^(-)?(0b|0x)?(\\d|[a-f])+(.(\\d|[a-f])+)?(l)?$";
     private static Double preResult;
 
     public static Double getPreResult() {
@@ -26,17 +26,25 @@ public class CalculateHelper {
             number = number.substring(0, number.length() - 1);
         }
         if (checkWithRegExp(number, binaryNumber)) {
-            number = String.valueOf(Integer.parseInt(number.substring(2, number.length()), 2));
+            number = String.valueOf(Long.parseLong(number.substring(2, number.length()), 2));
         } else if (checkWithRegExp(number, octalNumber)) {
-            number = String.valueOf(Integer.parseInt(number.substring(1, number.length()), 8));
+            number = String.valueOf(Long.parseLong(number.substring(1, number.length()), 8));
         } else if (checkWithRegExp(number, hexNumber)) {
-            number = String.valueOf(Integer.parseInt(number.substring(2, number.length()), 16));
+            number = String.valueOf(Long.parseLong(number.substring(2, number.length()), 16));
         }
         return Double.valueOf(number);
     }
 
     public static Expression parser(String expString) {
         String[] elements = expString.split(" ");
+        if (checkIncorrectUnderscore(elements[0])) {
+            throw new WrongExpression(String.format("error > %s", elements[0]));
+        }
+        if (checkIncorrectUnderscore(elements[2])) {
+            throw new WrongExpression(String.format("error > %s", elements[2]));
+        }
+        elements[0] = elements[0].replaceAll("_", "");
+        elements[2] = elements[2].replaceAll("_", "");
         if (!checkWithRegExp(elements[0], correctLiteralRegExp)) {
             throw new WrongExpression(String.format("error > %s", elements[0]));
         }
@@ -58,5 +66,9 @@ public class CalculateHelper {
 
     public static boolean checkInteger(double checkNumber) {
         return (checkNumber == Math.floor(checkNumber)) && !Double.isInfinite(checkNumber);
+    }
+
+    public static boolean checkIncorrectUnderscore(String element) {
+        return (element.startsWith("_") || element.endsWith("_") || element.contains("_.") ||element.contains("._"));
     }
 }
