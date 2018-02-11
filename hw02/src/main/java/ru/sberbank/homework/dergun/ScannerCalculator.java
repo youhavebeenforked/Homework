@@ -17,13 +17,9 @@ public class ScannerCalculator {
 
     public void start() {
         while (true) {
-            try {
-                final String line = input.nextLine();
-                final String result = calculator.calculate(line);
-                output.println(result);
-            } catch (IllegalArgumentException | ArithmeticException e) {
-                output.printf("Error: %s%n", e.getMessage());
-            }
+            final String line = input.nextLine();
+            final String result = calculator.calculate(line);
+            output.println(result);
         }
     }
 }
