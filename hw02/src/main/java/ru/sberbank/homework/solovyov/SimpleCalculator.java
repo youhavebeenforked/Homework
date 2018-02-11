@@ -4,140 +4,117 @@ import ru.sberbank.homework.common.Calculator;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
+import java.util.Locale;
 import java.util.Scanner;
 
 public class SimpleCalculator implements Calculator {
 
-    private String resultString;
+    private BigDecimal lastResult;
     private boolean isNextStep;
 
     public SimpleCalculator() {
-        System.out.println("**********************");
-        System.out.println("Welcome to Calculator!");
-        System.out.println("**********************");
-        System.out.println("Enter your arithmetic problem for calculation in the format a @ b, where @ is an operation +,-,*,/.");
-        System.out.println("or enter q(uit) for exit");
-
         isNextStep = false;
-        resultString = null;
+        lastResult = new BigDecimal(0);
     }
 
     @Override
     public String calculate(String userInput) {
 
-        switch (userInput.charAt(0)) {
-            case 'q':
-                System.out.println("See you later.");
-                return "quit";
-            case 'n':
-                isNextStep = false;
-                resultString = "";
-                return "new";
-            default:
-                if (isNextStep) {
-                    resultString += " " + userInput;
-                }
+        if (userInput.compareTo("quit") == 0) {
+            return userInput;
         }
-
-        if (isNextStep) {
-            parseAndCalc(resultString);
-        } else {
-            parseAndCalc(userInput);
-        }
-
-        if (resultString != null) {
-            System.out.println("= " + resultString);
-            System.out.println("Type:\n- the next operation and the operand (format: @ c) to continue calculation\n" +
-                    "- n(ew) for new calculation example\n- q(uit) for exit.");
-            isNextStep = true;
-            return resultString;
-        } else {
-            return "error";
-        }
-    }
-
-    private void parseAndCalc(String userInput) {
-        Scanner scanner = new Scanner(userInput);
 
         try {
-            BigDecimal firstNumber = getNumber(scanner);
-            Operation operation = getOperation(scanner);
-            BigDecimal secondNumber = getNumber(scanner);
+            Scanner scanner = new Scanner(userInput);
+            int tokenCount = 0;
+            while (scanner.hasNext()) {
+                scanner.next();
+                tokenCount++;
+            }
+            if (tokenCount != 3 & tokenCount != 2) {
+                throw new IllegalArgumentException("wrong expression");
+            }
+            scanner = new Scanner(userInput);
 
+            BigDecimal firstNumber = lastResult;
+            String inputToken = "";
+            try {
+                inputToken = scanner.next();
+                firstNumber = getNumber(inputToken);
+                isNextStep = false;
+            } catch (NumberFormatException exception) {
+                isNextStep = true;
+            }
 
-            BigDecimal result = null;
+            if (!isNextStep) {
+                inputToken = scanner.next();
+            }
+            Operation operation = getOperation(inputToken);
+
+            inputToken = scanner.next();
+            BigDecimal secondNumber = getNumber(inputToken);
+
             switch (operation) {
                 case PLUS:
-                    result = firstNumber.add(secondNumber);
+                    lastResult = firstNumber.add(secondNumber);
                     break;
                 case SUBTRACTION:
-                    result = firstNumber.subtract(secondNumber);
+                    lastResult = firstNumber.subtract(secondNumber);
                     break;
                 case MULTIPLICATION:
-                    result = firstNumber.multiply(secondNumber);
+                    lastResult = firstNumber.multiply(secondNumber);
                     break;
                 case DIVISION:
                     if (secondNumber.compareTo(BigDecimal.ZERO) != 0) {
-                        result = firstNumber.divide(secondNumber, 2, RoundingMode.HALF_UP);
+                        lastResult = firstNumber.divide(secondNumber, 2, RoundingMode.HALF_UP);
                     } else {
                         throw new ArithmeticException("Division by zero!");
                     }
             }
-
-            if (result.remainder(BigDecimal.ONE).signum() == 0) {
-                result = result.setScale(0, BigDecimal.ROUND_HALF_UP);
-            } else {
-                result = result.setScale(2, BigDecimal.ROUND_HALF_UP);
-            }
-            resultString = result.toString();
-        } catch (IllegalArgumentException | NullPointerException | ArithmeticException exception) {
-            System.out.println("error > wrong expression: " + exception.getMessage());
-            isNextStep = false;
-            resultString = null;
-            System.out.println("Enter your arithmetic problem for calculation in the format a @ b, where @ is an operation +,-,*,/.");
-            System.out.println("or enter q(uit) for exit");
+            return formatOutput(lastResult);
+        } catch (IllegalArgumentException | ArithmeticException exception) {
+            return "error > " + exception.getMessage();
         }
     }
 
-    private Operation getOperation(Scanner scanner) {
-        if (!scanner.hasNext()) {
-            throw new NullPointerException("No operation to recognize in string.");
+    private String formatOutput(BigDecimal number) {
+        DecimalFormat df = new DecimalFormat("###.##", DecimalFormatSymbols.getInstance(Locale.ENGLISH));
+        return df.format(number);
+    }
+
+    private Operation getOperation(String signString) {
+        if (signString.length() > 1) {
+            throw new IllegalArgumentException(signString);
         }
-        String sign = scanner.next();
-        if (sign.length() > 1) {
-            throw new IllegalArgumentException("Not valid math sign " + sign);
-        }
-        Operation operation = Operation.getBySign(sign.charAt(0));
+        Operation operation = Operation.getBySign(signString.charAt(0));
         if (operation == null) {
-            throw new IllegalArgumentException("Can't parse operation " + sign);
+            throw new IllegalArgumentException(signString);
         }
         return operation;
     }
 
-    private BigDecimal getNumber(Scanner scanner) {
-        if (!scanner.hasNext()) {
-            throw new NullPointerException("No number to recognize in string.");
-        }
-
-        String input = scanner.next().replace("_", "");
-        boolean isLongNumber = input.endsWith("L");
-        boolean isRealNumber = input.indexOf('.') != -1;
+    private BigDecimal getNumber(String numberString) {
+        boolean isLongNumber = numberString.endsWith("L");
+        boolean isRealNumber = numberString.indexOf('.') != -1;
 
         if (isRealNumber & isLongNumber) {
-            throw new NumberFormatException("Number format is not valid: " + input);
+            throw new NumberFormatException(numberString);
         }
 
         if (isRealNumber) {
-            return new BigDecimal(input);
+            return new BigDecimal(numberString);
         }
 
         if (isLongNumber) {
-            input = input.substring(0, input.length() - 1);
+            numberString = numberString.substring(0, numberString.length() - 1);
         }
 
         int prefixPointer = 0;
         int sign;
-        switch (input.charAt(prefixPointer)) {
+        switch (numberString.charAt(prefixPointer)) {
             case '+':
                 sign = 1;
                 prefixPointer++;
@@ -149,29 +126,33 @@ public class SimpleCalculator implements Calculator {
             default:
                 sign = 1;
         }
-        if (prefixPointer >= input.length()) {
-            throw new IllegalArgumentException("Number format is not valid: " + input);
+        if (prefixPointer >= numberString.length()) {
+            throw new NumberFormatException(numberString);
         }
 
         try {
-            if (input.charAt(prefixPointer) == '0' & prefixPointer + 1 < input.length()) {
+            if (numberString.charAt(prefixPointer) == '0' & prefixPointer + 1 < numberString.length()) {
                 String number;
-                switch (input.charAt(prefixPointer + 1)) {
+                switch (numberString.charAt(prefixPointer + 1)) {
                     case 'x':
-                        number = input.substring(prefixPointer + 2);
-                        return new BigDecimal(sign * (isLongNumber ? Long.parseLong(number, 16) : Integer.parseInt(number, 16)));
+                        number = numberString.substring(prefixPointer + 2);
+                        number = number.replace("_", "");
+                        return new BigDecimal(sign * Long.parseLong(number, 16));
                     case 'b':
-                        number = input.substring(prefixPointer + 2);
-                        return new BigDecimal(sign * (isLongNumber ? Long.parseLong(number, 2) : Integer.parseInt(number, 2)));
+                        number = numberString.substring(prefixPointer + 2);
+                        number = number.replace("_", "");
+                        return new BigDecimal(sign * Long.parseLong(number, 2) );
                     default:
-                        number = input.substring(prefixPointer + 1);
-                        return new BigDecimal(sign * (isLongNumber ? Long.parseLong(number, 8) : Integer.parseInt(number, 8)));
+                        number = numberString.substring(prefixPointer + 1);
+                        number = number.replace("_", "");
+                        return new BigDecimal(sign * Long.parseLong(number, 8) );
                 }
             } else {
-                return new BigDecimal(input);
+                numberString = numberString.replace("_", "");
+                return new BigDecimal(numberString);
             }
         } catch (NumberFormatException exception) {
-            throw new NumberFormatException("Number format is not valid: " + input);
+            throw new NumberFormatException(numberString);
         }
     }
 }
