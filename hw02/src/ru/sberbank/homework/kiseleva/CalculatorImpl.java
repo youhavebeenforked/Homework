@@ -1,6 +1,8 @@
 package ru.sberbank.homework.kiseleva;
 
 import java.text.DecimalFormat;
+import ru.sberbank.homework.common.Calculator;
+import ru.sberbank.homework.kiseleva.interfaces.CommonCalculator;
 
 /**
  * Created by Ekaterina Kiseleva on 08.02.2018.
@@ -43,16 +45,16 @@ public class CalculatorImpl implements Calculator {
             }
             switch (operation) {
                 case ("+"):
-                    result = commonCalculator.addition(numOne, numTwo);
+                    result = commonCalculator.addition(commonCalculator.cast(numOne), commonCalculator.cast(numTwo));
                     break;
                 case ("-"):
-                    result = commonCalculator.subtraction(numOne, numTwo);
+                    result = commonCalculator.subtraction(commonCalculator.cast(numOne), commonCalculator.cast(numTwo));
                     break;
                 case ("*"):
-                    result = commonCalculator.multiplication(numOne, numTwo);
+                    result = commonCalculator.multiplication(commonCalculator.cast(numOne), commonCalculator.cast(numTwo));
                     break;
                 case ("/"):
-                    result = commonCalculator.division(numOne, numTwo);
+                    result = commonCalculator.division(commonCalculator.cast(numOne), commonCalculator.cast(numTwo));
                     break;
             }
         } catch (IllegalArgumentException e) {
