@@ -4,8 +4,8 @@ import ru.sberbank.homework.kashin.main.model.Expression;
 import ru.sberbank.homework.kashin.main.model.expressions.Multiplication;
 
 import static ru.sberbank.homework.kashin.main.util.Assert.assertEquals;
-import static ru.sberbank.homework.kashin.main.util.Helper.checkNotation;
-import static ru.sberbank.homework.kashin.main.util.Helper.parser;
+import static ru.sberbank.homework.kashin.main.util.CalculateHelper.checkNotation;
+import static ru.sberbank.homework.kashin.main.util.CalculateHelper.parser;
 
 public class HelperTest {
 

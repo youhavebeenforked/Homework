@@ -3,8 +3,12 @@ package ru.sberbank.homework.kashin.main.calculator;
 import ru.sberbank.homework.kashin.main.model.Expression;
 import ru.sberbank.homework.common.Calculator;
 
-import static ru.sberbank.homework.kashin.main.util.Helper.parser;
-import static ru.sberbank.homework.kashin.main.util.Helper.print;
+import java.util.Objects;
+
+import static java.util.Objects.nonNull;
+import static ru.sberbank.homework.kashin.main.util.CalculateHelper.checkWithRegExp;
+import static ru.sberbank.homework.kashin.main.util.CalculateHelper.getPreResult;
+import static ru.sberbank.homework.kashin.main.util.CalculateHelper.parser;
 
 public class CalculatorImpl implements Calculator {
 
@@ -20,11 +24,24 @@ public class CalculatorImpl implements Calculator {
      */
     @Override
     public String calculate(String userInput) {
-        if (userInput.equalsIgnoreCase("(-?(0b|0x)?\\d+(.\\d+)? )(\\+|-|\\*|/) -?(0b|0x)?\\d+(.\\d+)?")) {
+        if (checkWithRegExp(userInput,"^\\w+ (\\+|-|\\*|/) \\w+$")) {
+            //goto
+            try {
+                return parser(userInput.trim()).calculate();
+            } catch (Exception e) {
+                return e.getMessage();
+            }
 
+        } else if (checkWithRegExp(userInput, "^(\\+|-|\\*|/) \\w+$") && nonNull(getPreResult())) {
+            userInput = getPreResult() + " " + userInput;
+            try {
+                return parser(userInput.trim()).calculate();
+            } catch (Exception e) {
+                return e.getMessage();
+            }
+
+        } else {
+            return "error > wrong expression";
         }
-        Expression expression = parser(userInput.trim().replaceAll(",", "."));
-        String result = expression.calculate();
-        return result;
     }
 }
