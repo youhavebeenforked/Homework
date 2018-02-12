@@ -1,4 +1,4 @@
-package ru.sberbank.homework.dergun;
+package ru.sberbank.homework.common;
 
 /**
  * Вот такой простой интерфейс

@@ -1,5 +1,7 @@
 package ru.sberbank.homework.dergun;
 
+import ru.sberbank.homework.common.Calculator;
+
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.Scanner;
