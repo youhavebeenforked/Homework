@@ -46,14 +46,17 @@ public class CalculatorImpl implements Calculator {
         if (value.endsWith("l")) {
             value = value.substring(0, value.length() - 1);
         }
-        if (value.startsWith("0b")) {
-            return Long.valueOf(value.substring(2), 2);
+        if (value.startsWith("0b") || value.startsWith("-0b") || value.startsWith("+0b")) {
+            return Long.valueOf(value.replace("0b", ""), 2);
         }
-        if (value.startsWith("0x")) {
-            return Long.valueOf(value.substring(2), 16);
+        if (value.startsWith("0x") || value.startsWith("-0x") || value.startsWith("+0x")) {
+            return Long.valueOf(value.replace("0x", ""), 16);
         }
         if (value.startsWith("0")) {
             return Long.valueOf(value.substring(1), 8);
+        }
+        if (value.startsWith("-0") || value.startsWith("+0")) {
+            return Long.valueOf(value.substring(2), 8);
         }
         return Long.valueOf(value);
     }
