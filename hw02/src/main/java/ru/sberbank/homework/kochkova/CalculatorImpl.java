@@ -12,7 +12,6 @@ import java.math.RoundingMode;
 public class CalculatorImpl implements Calculator {
 
     private double currentResult;
-    private boolean currentIntegral = true;
 
     private double parseString(String value) throws NumberFormatException {
         if (value.equals("0")) {
@@ -34,7 +33,6 @@ public class CalculatorImpl implements Calculator {
         }
         value = value.replace("_", "");
         if (value.contains(".")) {
-            currentIntegral = false;
             return Double.parseDouble(value);
         }
         if (value.endsWith("l")) {
