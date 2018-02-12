@@ -26,7 +26,7 @@ public class CalculateHelper {
             number = number.substring(0, number.length() - 1);
         }
         if (checkWithRegExp(number, binaryNumber)) {
-            number = String.valueOf(Long.parseLong(number.substring(2, number.length()), 2));
+            number = BinaryToDecimal(number);
         } else if (checkWithRegExp(number, octalNumber)) {
             number = String.valueOf(Long.parseLong(number.substring(1, number.length()), 8));
         } else if (checkWithRegExp(number, hexNumber)) {
@@ -58,7 +58,7 @@ public class CalculateHelper {
 
     }
 
-    public static boolean checkWithRegExp(String checkExp, String regExp){
+    public static boolean checkWithRegExp(String checkExp, String regExp) {
         Pattern p = Pattern.compile(regExp);
         Matcher m = p.matcher(checkExp);
         return m.matches();
@@ -69,6 +69,19 @@ public class CalculateHelper {
     }
 
     public static boolean checkIncorrectUnderscore(String element) {
-        return (element.startsWith("_") || element.endsWith("_") || element.contains("_.") ||element.contains("._"));
+        return (element.startsWith("_") || element.endsWith("_") || element.contains("_.") ||element.contains("._") || element.startsWith("0b_") || element.startsWith("0x_"));
+    }
+
+    public static String BinaryToDecimal(String base2) {
+        char[] chars = base2.toCharArray();
+        Long result = 0L;
+        int mult = 1;
+        for (int i = base2.length() - 1; i >= 0; i--) {
+            if (chars[i] == '1') {
+                result += mult;
+            }
+            mult *= 2;
+        }
+        return result.toString().replaceAll("L", "");
     }
 }
