@@ -99,6 +99,6 @@ public class CalculatorImpl implements Calculator {
         }
         DecimalFormat decimalFormat = new DecimalFormat("#.##");
         decimalFormat.setRoundingMode(RoundingMode.CEILING);
-        return String.valueOf(decimalFormat.format(currentResult));
+        return String.valueOf(decimalFormat.format(currentResult)).replace(",", ".");
     }
 }
