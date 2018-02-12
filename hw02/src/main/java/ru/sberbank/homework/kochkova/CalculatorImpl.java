@@ -12,21 +12,25 @@ import java.math.RoundingMode;
 public class CalculatorImpl implements Calculator {
 
     private double currentResult;
+    private boolean errorOccured;
 
     private double parseString(String value) throws NumberFormatException {
         if (value.equals("0")) {
             return 0;
         }
+        if (value.startsWith("_") || value.endsWith("_")) {
+            throw new NumberFormatException();
+        }
         value = value.toLowerCase().replaceAll("[_]+", "_");
-        String tmpValue = value.replace("l", "");
-        String[] valueSplit = tmpValue.split("_");
-        for (String elem : valueSplit) {
+        String[] valueSplit = value.split("_");
+        for (int i = 0; i < valueSplit.length; i++) {
             if (valueSplit.length == 1) {
                 break;
             }
+            String elem = valueSplit[i];
             if (elem.isEmpty() || elem.startsWith("x") || elem.startsWith("l")
                     || elem.startsWith(".") || elem.startsWith("b")
-                    || elem.endsWith("x") || elem.endsWith("l")
+                    || elem.endsWith("x") || (elem.endsWith("l") && i != valueSplit.length - 1)
                     || elem.endsWith(".") || elem.endsWith("b")) {
                 throw new NumberFormatException();
             }
@@ -56,15 +60,22 @@ public class CalculatorImpl implements Calculator {
     @Override
     public String calculate(String userInput) {
         String[] expression = userInput.split(" ");
+        if (errorOccured) {
+            currentResult = 0;
+            if (expression.length != 3) {
+                return "error > wrong expression";
+            }
+        }
         if (expression.length != 2 && expression.length != 3) {
+            errorOccured = true;
             return "error > wrong expression";
         }
         double first = 0;
         if (!(expression[0].length() == 1 && Operation.isOperation(expression[0].charAt(0)))) {
-            currentResult = 0;
             try {
                 first = parseString(expression[0]);
             } catch (NumberFormatException e) {
+                errorOccured = true;
                 return "error > " + expression[0];
             }
         }
@@ -72,7 +83,7 @@ public class CalculatorImpl implements Calculator {
         try {
             second = parseString(expression[expression.length - 1]);
         } catch (NumberFormatException e) {
-            currentResult = 0;
+            errorOccured = true;
             return "error > " + expression[expression.length - 1];
         }
 
@@ -80,15 +91,18 @@ public class CalculatorImpl implements Calculator {
             try {
                 currentResult = Operation.completeOperation(currentResult, second, expression[0].charAt(0));
             } catch (RuntimeException e) {
+                errorOccured = true;
                 return "error > wrong expression";
             }
         } else {
             try {
                 currentResult = Operation.completeOperation(first, second, expression[1].charAt(0));
             } catch (RuntimeException e) {
+                errorOccured = true;
                 return "error > wrong expression";
             }
         }
+        errorOccured = false;
         BigDecimal bd = new BigDecimal(Double.toString(currentResult));
         bd = bd.setScale(2, RoundingMode.HALF_UP);
         String ans = bd.toString();
