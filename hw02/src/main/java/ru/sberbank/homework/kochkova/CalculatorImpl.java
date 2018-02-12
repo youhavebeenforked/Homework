@@ -2,8 +2,8 @@ package ru.sberbank.homework.kochkova;
 
 import ru.sberbank.homework.common.Calculator;
 
+import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.text.DecimalFormat;
 
 /**
  * Created by sofya on 09.02.2018.
@@ -12,6 +12,7 @@ import java.text.DecimalFormat;
 public class CalculatorImpl implements Calculator {
 
     private double currentResult;
+    private boolean currentIntegral = true;
 
     private double parseString(String value) throws NumberFormatException {
         if (value.equals("0")) {
@@ -20,27 +21,20 @@ public class CalculatorImpl implements Calculator {
         value = value.toLowerCase().replaceAll("[_]+", "_");
         String tmpValue = value.replace("l", "");
         String[] valueSplit = tmpValue.split("_");
-        for (int i = 0; i < valueSplit.length; i++) {
+        for (String elem : valueSplit) {
             if (valueSplit.length == 1) {
                 break;
             }
-            if (i != 0 && (valueSplit[i].length() != 3 &&
-                    ((value.startsWith("0b") || value.startsWith("0x") || value.startsWith("0")) && valueSplit[i].length() != 4))) {
-                throw new NumberFormatException();
-            }
-            String elem = valueSplit[i];
             if (elem.isEmpty() || elem.startsWith("x") || elem.startsWith("l")
                     || elem.startsWith(".") || elem.startsWith("b")
                     || elem.endsWith("x") || elem.endsWith("l")
                     || elem.endsWith(".") || elem.endsWith("b")) {
                 throw new NumberFormatException();
             }
-            if (i == 0 && valueSplit[i].replaceAll("0b|0x", "").matches("[0]+")) {
-                throw new NumberFormatException();
-            }
         }
         value = value.replace("_", "");
         if (value.contains(".")) {
+            currentIntegral = false;
             return Double.parseDouble(value);
         }
         if (value.endsWith("l")) {
@@ -97,8 +91,15 @@ public class CalculatorImpl implements Calculator {
                 return "error > wrong expression";
             }
         }
-        DecimalFormat decimalFormat = new DecimalFormat("#.##");
-        decimalFormat.setRoundingMode(RoundingMode.CEILING);
-        return String.valueOf(decimalFormat.format(currentResult)).replace(",", ".");
+        BigDecimal bd = new BigDecimal(Double.toString(currentResult));
+        bd = bd.setScale(2, RoundingMode.HALF_UP);
+        String ans = bd.toString();
+        if (ans.endsWith(".00")) {
+            return ans.substring(0, ans.length() - 3);
+        } else if (ans.endsWith("0")) {
+            return ans.substring(0, ans.length() - 1);
+        }
+        return ans;
+
     }
 }
