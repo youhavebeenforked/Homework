@@ -17,14 +17,15 @@ public class CalculatorImpl implements Calculator {
         if (value.equals("0")) {
             return 0;
         }
-        value = value.toLowerCase();
-        String[] valueSplit = value.split("_");
+        value = value.toLowerCase().replaceAll("[_]+", "_");
+        String tmpValue = value.replace("l", "");
+        String[] valueSplit = tmpValue.split("_");
         for (int i = 0; i < valueSplit.length; i++) {
             if (valueSplit.length == 1) {
                 break;
             }
-            if (i != 0 && valueSplit[i].length() != 3) {
-                System.out.println(valueSplit.length);
+            if (i != 0 && (valueSplit[i].length() != 3 &&
+                    ((value.startsWith("0b") || value.startsWith("0x") || value.startsWith("0")) && valueSplit[i].length() != 4))) {
                 throw new NumberFormatException();
             }
             String elem = valueSplit[i];
@@ -34,11 +35,8 @@ public class CalculatorImpl implements Calculator {
                     || elem.endsWith(".") || elem.endsWith("b")) {
                 throw new NumberFormatException();
             }
-            if (i == 0) {
-                String tmpValue = valueSplit[i].replaceAll("0b|0x", "");
-                if (Integer.parseInt(tmpValue) == 0) {
-                    throw new NumberFormatException();
-                }
+            if (i == 0 && valueSplit[i].replaceAll("0b|0x", "").matches("[0]+")) {
+                throw new NumberFormatException();
             }
         }
         value = value.replace("_", "");
@@ -46,18 +44,18 @@ public class CalculatorImpl implements Calculator {
             return Double.parseDouble(value);
         }
         if (value.endsWith("l")) {
-            return Long.parseLong(value.substring(0, value.length() - 1));
+            value = value.substring(0, value.length() - 1);
         }
         if (value.startsWith("0b")) {
-            return Integer.parseInt(value.substring(2), 2);
+            return Long.valueOf(value.substring(2), 2);
         }
         if (value.startsWith("0x")) {
-            return Integer.parseInt(value.substring(2), 16);
+            return Long.valueOf(value.substring(2), 16);
         }
         if (value.startsWith("0")) {
-            return Integer.parseInt(value.substring(1), 8);
+            return Long.valueOf(value.substring(1), 8);
         }
-        return Integer.parseInt(value);
+        return Long.valueOf(value);
     }
 
     @Override
@@ -67,7 +65,8 @@ public class CalculatorImpl implements Calculator {
             return "error > wrong expression";
         }
         double first = 0;
-        if (!Operation.isOperation(expression[0].charAt(0))) {
+        if (!(expression[0].length() == 1 && Operation.isOperation(expression[0].charAt(0)))) {
+            currentResult = 0;
             try {
                 first = parseString(expression[0]);
             } catch (NumberFormatException e) {
@@ -78,6 +77,7 @@ public class CalculatorImpl implements Calculator {
         try {
             second = parseString(expression[expression.length - 1]);
         } catch (NumberFormatException e) {
+            currentResult = 0;
             return "error > " + expression[expression.length - 1];
         }
 

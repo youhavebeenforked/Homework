@@ -17,7 +17,7 @@ public enum Operation {
 
     private char symbol;
     private BinaryOperator<Double> operation;
-    private static Map<Character, Operation> operations = Arrays.asList(Operation.values()).stream()
+    private static final Map<Character, Operation> operations = Arrays.stream(Operation.values())
                                                                 .collect(HashMap<Character, Operation>::new,
                                                                         (m, o) -> m.put(o.symbol, o),
                                                                         (m, u) -> {});
