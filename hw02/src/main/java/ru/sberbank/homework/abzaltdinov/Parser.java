@@ -1,33 +1,41 @@
 package ru.sberbank.homework.abzaltdinov;
 
-import ru.sberbank.homework.your_lastname.Operation;
-
 public class Parser {
-    public static long parseLong(String number) {
+
+    public static double parseNumber(String number) throws NumberFormatException {
+        double result;
+        if (number.contains("."))
+            result = Parser.parseLong(number);
+        else
+            result = Parser.parseDouble(number);
+        return result;
+    }
+
+    private static long parseLong(String number) throws UnsupportedOperationException {
         Tuple<String, Integer> result = removePrefix(removeSuffix(number));
         String formattedNumber = removeUnderscopes(result.first);
         int radix = result.second;
         return Long.valueOf(formattedNumber, radix);
     }
 
-    public static double parseDouble(String number) {
-        return null;
+    private static double parseDouble(String number) {
+        return Double.valueOf(removeUnderscopes(removeSuffix(number)));
     }
 
-    public static Operation parseOperation(String operation) {
+    public static MyOperation parseOperation(String operation) {
         if (operation.length() != 1) {
-            throw new UnsupportedOperationException("Operation must contain only one character!");
+            throw new UnsupportedOperationException("MyOperation must contain only one character!");
         }
         char operationChar = operation.charAt(0);
         switch (operationChar) {
             case '+':
-                return Operation.ADDITION;
+                return new Addition();
             case '-':
-                return Operation.SUBTRACTION;
+                return new Subtraction();
             case '*':
-                return Operation.MULTIPLICATION;
+                return new Multiplication();
             case '/':
-                return Operation.DIVISION;
+                return new Division();
             default:
                 throw new UnsupportedOperationException("Not supported operation");
         }
@@ -35,7 +43,7 @@ public class Parser {
 
     private static String removeSuffix(String number) {
         String formattedNumber;
-        if (number.matches(".*[dflDFL]{1}$")) {
+        if (number.endsWith("l") || number.endsWith("L")) {
             formattedNumber = number.substring(0, number.length() - 1);
         } else {
             formattedNumber = number;
@@ -49,9 +57,9 @@ public class Parser {
             throw new RuntimeException("!!!");
         }
         //for floating numbers
-        if (number.contains("_.") || number.contains("._")) {
-            throw new RuntimeException("!!!");
-        }
+        //if (number.contains("_.") || number.contains("._")) {
+        //    throw new RuntimeException("!!!");
+        //}
     }
 
     private static String removeUnderscopes(String number) {
@@ -83,7 +91,7 @@ public class Parser {
             }
             checkUnderscopes(number);
         }
-        return new Tuple<String, Integer>(number, radix);
+        return new Tuple<>(number, radix);
     }
 
     private static class Tuple<X, Y> {
