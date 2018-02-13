@@ -13,6 +13,7 @@ public class AccountImpl implements Account {
     @Override
     public long withdrawMoney(long money) {
         if (checkWithdrawMoney(money)) {
+            moneyAccount = moneyAccount - money;
             return money;
         } else {
             throw new NotEnoughMoneyException("Недостаточно денег на счете. Попробуйте снять меньшую сумму.");

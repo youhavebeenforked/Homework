@@ -21,10 +21,9 @@ public class MainTerminal {
     }
 
     void putMoney(long money) {
-        boolean result = false;
         try {
             terminal.putMoney(money);
-            writer.print(String.format("Вы положили %s на ваш счет.", result));
+            writer.print(String.format("Вы положили %s на ваш счет.", money));
         } catch (RuntimeException e) {
             writer.print(e.getMessage());
         }
@@ -54,6 +53,48 @@ public class MainTerminal {
     }
 
     public static void main(String[] args) {
-
+        MainTerminal mainTerminal = new MainTerminal();
+        mainTerminal.enterPin("7812");
+        mainTerminal.checkBalance();
+        mainTerminal.enterPin("7812");
+        mainTerminal.checkBalance();
+        mainTerminal.enterPin("7812");
+        mainTerminal.checkBalance();
+        mainTerminal.enterPin("7812");
+        mainTerminal.checkBalance();
+        try {
+            Thread.sleep(1500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        mainTerminal.checkBalance();
+        try {
+            Thread.sleep(1500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        mainTerminal.enterPin("0000");
+        mainTerminal.checkBalance();
+        try {
+            Thread.sleep(2100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        mainTerminal.checkBalance();
+        mainTerminal.enterPin("0000");
+        mainTerminal.checkBalance();
+        mainTerminal.withdrawMoney(152);
+        mainTerminal.checkBalance();
+        mainTerminal.withdrawMoney(200);
+        mainTerminal.checkBalance();
+        mainTerminal.putMoney(45);
+        mainTerminal.checkBalance();
+        mainTerminal.putMoney(100);
+        mainTerminal.checkBalance();
+        mainTerminal.withdrawMoney(100000);
+        mainTerminal.checkBalance();
+        mainTerminal.withdrawMoney(900);
+        mainTerminal.checkBalance();
+        mainTerminal.checkBalance();
     }
 }

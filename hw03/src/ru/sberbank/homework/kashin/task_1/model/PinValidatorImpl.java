@@ -31,7 +31,7 @@ public class PinValidatorImpl implements PinValidator {
 
     public void checkBlock() {
         if (startTime + 5000 > System.currentTimeMillis()){
-            throw new AccountIsLockedException("Аккаунт заблокирован. Попробуй войти позже.");
+            throw new AccountIsLockedException(String.format("Ваш аккаунт заблокирован. Разблокируется через %s секунд", (startTime + 5000 - System.currentTimeMillis()) / 1000));
         }
     }
 
