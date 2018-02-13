@@ -5,9 +5,9 @@ public class Parser {
     public static double parseNumber(String number) throws NumberFormatException {
         double result;
         if (number.contains("."))
-            result = Parser.parseLong(number);
-        else
             result = Parser.parseDouble(number);
+        else
+            result = Parser.parseLong(number);
         return result;
     }
 
@@ -54,7 +54,7 @@ public class Parser {
 
     private static void checkUnderscopes(String number) {
         if (number.startsWith("_") || number.endsWith("_")) {
-            throw new RuntimeException("!!!");
+            throw new NumberFormatException("Underscopes must not be at the beginning and end numbers");
         }
         //for floating numbers
         //if (number.contains("_.") || number.contains("._")) {
@@ -81,10 +81,12 @@ public class Parser {
 
             switch (number.charAt(0)) {
                 case 'x':
+                case 'X':
                     radix = 16;
                     number = number.substring(1);
                     break;
                 case 'b':
+                case 'B':
                     radix = 2;
                     number = number.substring(1);
                     break;
