@@ -1,24 +1,12 @@
 package ru.sberbank.homework.dergun.hw1;
 
+import ru.sberbank.homework.dergun.hw1.exeptions.ValidateMoneyExeption;
+
 public class MoneyValidator {
-    public boolean validWithdrawMoney(int money) {
+    public void validMoney(int money) {
         if (money % 100 != 0 || money <= 0) {
-            throw new FailedValidateMoney("You can withdraw money only multiples of 100");
+            throw new ValidateMoneyExeption("The amount entered must be a multiple of 100");
         }
-        return true;
     }
-
-    public boolean validPutMoney(int money) {
-        if (money % 100 != 0 || money <= 0) {
-            throw new FailedValidateMoney("You can put money only multiples of 100");
-        }
-        return true;
-    }
-
 }
 
-class FailedValidateMoney extends RuntimeException {
-    public FailedValidateMoney(String message) {
-        super(message);
-    }
-}

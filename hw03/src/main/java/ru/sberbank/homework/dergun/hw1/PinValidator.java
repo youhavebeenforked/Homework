@@ -1,16 +1,12 @@
 package ru.sberbank.homework.dergun.hw1;
 
+import ru.sberbank.homework.dergun.hw1.exeptions.ValidatePinExeption;
+
 public class PinValidator {
-    public boolean validPin(int pin) {
+    public void validPin(int pin) {
         if (pin > 9999 || pin < 1000) {
-            throw new FailedValidatePin("Incorrect format PIN, expected: ****");
+            throw new ValidatePinExeption("Incorrect format PIN, expected: ****");
         }
-        return true;
     }
 }
 
-class FailedValidatePin extends RuntimeException {
-    public FailedValidatePin(String message) {
-        super(message);
-    }
-}

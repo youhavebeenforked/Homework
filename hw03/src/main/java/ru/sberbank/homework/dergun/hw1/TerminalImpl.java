@@ -1,14 +1,23 @@
 package ru.sberbank.homework.dergun.hw1;
 
+import ru.sberbank.homework.dergun.hw1.exeptions.*;
+
 public class TerminalImpl implements Terminal {
     private final TerminalServer server = new TerminalServer();
     private final PinValidator pinValidator = new PinValidator();
     private final MoneyValidator moneyValidator = new MoneyValidator();
+    private final int MAX_INCORRECT_ATTEMP = 3;
+    private final int TIME_BLOCK = 5000; //mlsec
     private long startTime = 0L;
     private long currentTime = 0L;
     private boolean correctPin = false;
-    private int numberIncorrect = 0;
+    private int currentIncorrectAttemp = 0;
     private boolean time = true;
+
+    @Override
+    public void setPinStorage(PinStorage pinStorage) {
+        server.setPinStorage(pinStorage);
+    }
 
     @Override
     public void setPin(int pin) {
@@ -20,21 +29,23 @@ public class TerminalImpl implements Terminal {
         try {
             if (!time) {
                 throw new AccountIsLockedException("Your account is locked, please try again after:" +
-                        (5 - (int) ((currentTime - startTime) / 1000)) + " seconds");
+                        (TIME_BLOCK - (int) (currentTime - startTime)) / 1000 + " seconds");
             }
-            if (numberIncorrect < 3 && pinValidator.validPin(pin) && server.checkPin(pin)) {
+            if (currentIncorrectAttemp < MAX_INCORRECT_ATTEMP) {
+                pinValidator.validPin(pin);
+                server.checkPin(pin);
                 correctPin = true;
-                numberIncorrect = 0;
+                currentIncorrectAttemp = 0;
                 System.out.println("Access");
             }
-        } catch (FailedValidatePin | NotCorrectPin e) {
+        } catch (ValidatePinExeption | NotCorrectPinExeption e) {
             System.out.println(e.getMessage());
-            numberIncorrect++;
-            if (numberIncorrect >= 3) {
-                numberIncorrect = 0;
+            currentIncorrectAttemp++;
+            if (currentIncorrectAttemp >= MAX_INCORRECT_ATTEMP) {
+                currentIncorrectAttemp = 0;
                 block();
             }
-        } catch (NetworkConnectionProblem | AccountIsLockedException e) {
+        } catch (NetworkConnectionExeption | AccountIsLockedException e) {
             System.out.println(e.getMessage());
         }
     }
@@ -42,11 +53,10 @@ public class TerminalImpl implements Terminal {
     @Override
     public int getBankBook() {
         try {
-            if (isCorrectPin()) {
-                System.out.println(server.getBankBook());
-                return server.getBankBook();
-            }
-        } catch (NetworkConnectionProblem | NotLoggedIn e) {
+            isCorrectPin();
+            System.out.println(server.getBankBook());
+            return server.getBankBook();
+        } catch (NetworkConnectionExeption | LoggedExeption e) {
             System.out.println(e.getMessage());
         }
         return 0;
@@ -55,10 +65,11 @@ public class TerminalImpl implements Terminal {
     @Override
     public void withdrawMoney(int money) {
         try {
-            if (isCorrectPin() && moneyValidator.validWithdrawMoney(money)) {
-                server.withdrawMoney(money);
-            }
-        } catch (NetworkConnectionProblem | FailedValidateMoney | NotLoggedIn | InsufficientFunds e) {
+            isCorrectPin();
+            moneyValidator.validMoney(money);
+            server.withdrawMoney(money);
+
+        } catch (NetworkConnectionExeption | ValidateMoneyExeption | LoggedExeption | InsufficientFundsExeption e) {
             System.out.println(e.getMessage());
         }
     }
@@ -66,19 +77,18 @@ public class TerminalImpl implements Terminal {
     @Override
     public void putMoney(int money) {
         try {
-            if (isCorrectPin() && moneyValidator.validPutMoney(money)) {
-                server.putMoney(money);
-            }
-        } catch (NetworkConnectionProblem | FailedValidateMoney | NotLoggedIn e) {
+            isCorrectPin();
+            moneyValidator.validMoney(money);
+            server.putMoney(money);
+        } catch (NetworkConnectionExeption | ValidateMoneyExeption | LoggedExeption e) {
             System.out.println(e.getMessage());
         }
     }
 
-    private boolean isCorrectPin() {
-        if (correctPin) {
-            return true;
+    private void isCorrectPin() {
+        if (!correctPin) {
+            throw new LoggedExeption();
         }
-        throw new NotLoggedIn();
     }
 
     private void block() {
@@ -88,20 +98,9 @@ public class TerminalImpl implements Terminal {
 
     private void unblock() {
         currentTime = System.currentTimeMillis();
-        if (currentTime - startTime >= 5000) {
+        if (currentTime - startTime >= TIME_BLOCK) {
             time = true;
         }
     }
 }
 
-class AccountIsLockedException extends RuntimeException {
-    AccountIsLockedException(String message) {
-        super(message);
-    }
-}
-
-class NotLoggedIn extends RuntimeException {
-    NotLoggedIn() {
-        super("Not logged in.");
-    }
-}
