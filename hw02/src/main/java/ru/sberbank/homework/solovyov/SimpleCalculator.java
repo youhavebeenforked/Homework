@@ -3,10 +3,8 @@ package ru.sberbank.homework.solovyov;
 import ru.sberbank.homework.common.Calculator;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
-import java.text.NumberFormat;
 import java.util.Locale;
 import java.util.Scanner;
 
@@ -22,10 +20,6 @@ public class SimpleCalculator implements Calculator {
 
     @Override
     public String calculate(String userInput) {
-
-        if (userInput.compareTo("quit") == 0) {
-            return userInput;
-        }
 
         try {
             Scanner scanner = new Scanner(userInput);
@@ -57,25 +51,10 @@ public class SimpleCalculator implements Calculator {
             inputToken = scanner.next();
             BigDecimal secondNumber = getNumber(inputToken);
 
-            switch (operation) {
-                case PLUS:
-                    lastResult = firstNumber.add(secondNumber);
-                    break;
-                case SUBTRACTION:
-                    lastResult = firstNumber.subtract(secondNumber);
-                    break;
-                case MULTIPLICATION:
-                    lastResult = firstNumber.multiply(secondNumber);
-                    break;
-                case DIVISION:
-                    if (secondNumber.compareTo(BigDecimal.ZERO) != 0) {
-                        lastResult = firstNumber.divide(secondNumber, 2, RoundingMode.HALF_UP);
-                    } else {
-                        throw new ArithmeticException("Division by zero!");
-                    }
-            }
+            lastResult = operation.executeOperation(firstNumber,secondNumber);
             return formatOutput(lastResult);
         } catch (IllegalArgumentException | ArithmeticException exception) {
+            lastResult = new BigDecimal(0);
             return "error > " + exception.getMessage();
         }
     }
@@ -96,63 +75,79 @@ public class SimpleCalculator implements Calculator {
         return operation;
     }
 
-    private BigDecimal getNumber(String numberString) {
-        boolean isLongNumber = numberString.endsWith("L");
-        boolean isRealNumber = numberString.indexOf('.') != -1;
+    private BigDecimal getNumber(String inputString) {
+        String numberString = inputString.toLowerCase();
 
-        if (isRealNumber & isLongNumber) {
-            throw new NumberFormatException(numberString);
-        }
-
-        if (isRealNumber) {
-            return new BigDecimal(numberString);
-        }
-
-        if (isLongNumber) {
-            numberString = numberString.substring(0, numberString.length() - 1);
-        }
-
-        int prefixPointer = 0;
-        int sign;
-        switch (numberString.charAt(prefixPointer)) {
-            case '+':
-                sign = 1;
-                prefixPointer++;
-                break;
-            case '-':
-                sign = -1;
-                prefixPointer++;
-                break;
-            default:
-                sign = 1;
-        }
-        if (prefixPointer >= numberString.length()) {
-            throw new NumberFormatException(numberString);
-        }
+        boolean isLongNumber = numberString.endsWith("l");
+        boolean isRealNumber = numberString.contains(".");
 
         try {
-            if (numberString.charAt(prefixPointer) == '0' & prefixPointer + 1 < numberString.length()) {
-                String number;
-                switch (numberString.charAt(prefixPointer + 1)) {
-                    case 'x':
-                        number = numberString.substring(prefixPointer + 2);
-                        number = number.replace("_", "");
-                        return new BigDecimal(sign * Long.parseLong(number, 16));
-                    case 'b':
-                        number = numberString.substring(prefixPointer + 2);
-                        number = number.replace("_", "");
-                        return new BigDecimal(sign * Long.parseLong(number, 2) );
-                    default:
-                        number = numberString.substring(prefixPointer + 1);
-                        number = number.replace("_", "");
-                        return new BigDecimal(sign * Long.parseLong(number, 8) );
+            //Если вещественное и суффикс long, то ошибка
+            if (isRealNumber & isLongNumber) {
+                throw new NumberFormatException();
+            }
+
+            //Убираем суффикс для long
+            if (isLongNumber) {
+                numberString = numberString.substring(0, numberString.length() - 1);
+            }
+
+            //Знак числа в начале
+            boolean isPositive = true;
+            if (numberString.length() > 0) {
+                switch (numberString.charAt(0)) {
+                    case '-':
+                        isPositive = false;
+                    case '+':
+                        numberString = numberString.substring(1);
                 }
-            } else {
+            }
+
+            numberString = numberString.replaceAll("[_]+", "_");
+
+            //Литералы не могут начианться с _ и заканчиваться _
+            if (numberString.startsWith("_") || numberString.endsWith("_")) {
+                throw new NumberFormatException();
+            }
+
+            //Проверка количества точек и расстановки _ в вещественном числе
+            if (isRealNumber) {
+                String[] realNumberParts = numberString.split("[.]");
+                if (realNumberParts.length > 2) {
+                    throw new NumberFormatException();
+                }
+                if (realNumberParts[0].endsWith("_") | realNumberParts[1].startsWith("_")) {
+                    throw new NumberFormatException();
+                }
                 numberString = numberString.replace("_", "");
+
                 return new BigDecimal(numberString);
             }
+
+            String number;
+
+            if (numberString.matches("^0x[0-9a-f][0-9af_]*")) {
+                number = numberString.substring(2);
+                number = number.replace("_", "");
+                return new BigDecimal((isPositive ? 1 : -1) * Long.parseLong(number, 16));
+            }
+
+            if (numberString.matches("^0b[01][01_]*")) {
+                number = numberString.substring(2);
+                number = number.replace("_", "");
+                return new BigDecimal((isPositive ? 1 : -1) * Long.parseLong(number, 2));
+            }
+            if (numberString.matches("^0[0-7][0-7_]*")) {
+                number = numberString.substring(1);
+                number = number.replace("_", "");
+                return new BigDecimal((isPositive ? 1 : -1) * Long.parseLong(number, 8));
+            }
+
+            numberString = numberString.replace("_", "");
+            return new BigDecimal(numberString);
+
         } catch (NumberFormatException exception) {
-            throw new NumberFormatException(numberString);
+            throw new NumberFormatException(inputString);
         }
     }
 }
