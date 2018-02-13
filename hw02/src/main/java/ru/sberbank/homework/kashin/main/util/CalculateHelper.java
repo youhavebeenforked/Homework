@@ -11,7 +11,8 @@ public class CalculateHelper {
     private static final String octalNumber = "^-?(0)([0-7])+(l)?$";
     private static final String hexNumber = "^-?(0x)([0-9]|[a-f])+(l)?$";
     private static final String correctLiteralRegExp = "^(-)?(0b|0x)?(\\d|[a-f])+(.(\\d|[a-f])+)?(l)?$";
-    private static final String decNumber = "^-?[1-9][0-9]*(.)?([0-9]+)?$";
+    private static String firstOriginalLit;
+    private static String secondOriginalLit;
     private static Double preResult;
 
     public static Double getPreResult() {
@@ -32,33 +33,33 @@ public class CalculateHelper {
             number = String.valueOf(Long.parseLong(number.substring(1, number.length()), 8));
         } else if (checkWithRegExp(number, hexNumber)) {
             number = String.valueOf(Long.parseLong(number.substring(2, number.length()), 16));
-        } else if (checkWithRegExp(number, decNumber)) {
-
-        } else {
-            throw new RuntimeException(String.format("error > %s", number));
         }
         return Double.valueOf(number);
     }
 
     public static Expression parser(String expString) {
         String[] elements = expString.split(" ");
-        if (checkIncorrectUnderscore(elements[0])) {
-            throw new WrongExpression(String.format("error > %s", elements[0]));
+        firstOriginalLit = elements[0];
+        secondOriginalLit = elements[2];
+        String firstElement = elements[0].toLowerCase();
+        String secondElement = elements[2].toLowerCase();
+        if (checkIncorrectUnderscore(firstElement)) {
+            throw new WrongExpression(String.format("error > %s", firstOriginalLit));
         }
-        if (checkIncorrectUnderscore(elements[2])) {
-            throw new WrongExpression(String.format("error > %s", elements[2]));
+        if (checkIncorrectUnderscore(secondElement)) {
+            throw new WrongExpression(String.format("error > %s", secondOriginalLit));
         }
-        elements[0] = elements[0].replaceAll("_", "");
-        elements[2] = elements[2].replaceAll("_", "");
-        if (!checkWithRegExp(elements[0], correctLiteralRegExp)) {
-            throw new WrongExpression(String.format("error > %s", elements[0]));
+        firstElement = firstElement.replaceAll("_", "");
+        secondElement = secondElement.replaceAll("_", "");
+        if (!checkWithRegExp(firstElement, correctLiteralRegExp) || checkIncorrectOctal(firstElement)) {
+            throw new WrongExpression(String.format("error > %s", firstOriginalLit));
         }
-        if (!checkWithRegExp(elements[2], correctLiteralRegExp)) {
-            throw new WrongExpression(String.format("error > %s", elements[2]));
+        if (!checkWithRegExp(secondElement, correctLiteralRegExp) || checkIncorrectOctal(secondElement)) {
+            throw new WrongExpression(String.format("error > %s", secondOriginalLit));
         }
         Expression expression = Factory.getExpression(elements[1].charAt(0));
-        expression.setFirst(checkNotation(elements[0]));
-        expression.setSecond(checkNotation(elements[2]));
+        expression.setFirst(checkNotation(firstElement));
+        expression.setSecond(checkNotation(secondElement));
         return expression;
 
     }
@@ -76,6 +77,11 @@ public class CalculateHelper {
     public static boolean checkIncorrectUnderscore(String element) {
         return (element.startsWith("_") || element.endsWith("_") || element.contains("_.") ||element.contains("._") || element.startsWith("0b_") || element.startsWith("0x_"));
     }
+
+    public static boolean checkIncorrectOctal(String element) {
+        return (element.startsWith("0") && !element.startsWith("0b") && !element.startsWith("0x") && !checkWithRegExp(element, octalNumber));
+    }
+
 
     public static String BinaryToDecimal(String base2) {
         char[] chars = base2.toCharArray();

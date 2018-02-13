@@ -23,7 +23,6 @@ public class CalculatorImpl implements Calculator {
      */
     @Override
     public String calculate(String userInput) {
-        userInput = userInput.toLowerCase();
         if (checkWithRegExp(userInput.trim(),regExpTwoLiterals)) {
             try {
                 return parser(userInput.trim()).calculate();
