@@ -11,6 +11,7 @@ public class CalculateHelper {
     private static final String octalNumber = "^-?(0)([0-7])+(l)?$";
     private static final String hexNumber = "^-?(0x)([0-9]|[a-f])+(l)?$";
     private static final String correctLiteralRegExp = "^(-)?(0b|0x)?(\\d|[a-f])+(.(\\d|[a-f])+)?(l)?$";
+    private static final String decNumber = "^-?[1-9][0-9]*(.)?([0-9]+)?$";
     private static Double preResult;
 
     public static Double getPreResult() {
@@ -31,6 +32,10 @@ public class CalculateHelper {
             number = String.valueOf(Long.parseLong(number.substring(1, number.length()), 8));
         } else if (checkWithRegExp(number, hexNumber)) {
             number = String.valueOf(Long.parseLong(number.substring(2, number.length()), 16));
+        } else if (checkWithRegExp(number, decNumber)) {
+
+        } else {
+            throw new RuntimeException(String.format("error > %s", number));
         }
         return Double.valueOf(number);
     }
