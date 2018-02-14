@@ -8,7 +8,7 @@ public enum Operation {
     PLUS('+', (a, b) -> a.add(b)),
     SUBTRACTION('-', (a, b) -> a.subtract(b)),
     MULTIPLICATION('*', (a, b) -> a.multiply(b)),
-    DIVISION('/', (a, b) -> a.divide(b,2, RoundingMode.HALF_UP));
+    DIVISION('/', (a, b) -> a.divide(b, 2, RoundingMode.HALF_UP));
 
     private char sign;
     private BinaryOperator<BigDecimal> bigDecimalBinaryOperator;

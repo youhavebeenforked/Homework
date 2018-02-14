@@ -51,7 +51,7 @@ public class SimpleCalculator implements Calculator {
             inputToken = scanner.next();
             BigDecimal secondNumber = getNumber(inputToken);
 
-            lastResult = operation.executeOperation(firstNumber,secondNumber);
+            lastResult = operation.executeOperation(firstNumber, secondNumber);
             return formatOutput(lastResult);
         } catch (IllegalArgumentException | ArithmeticException exception) {
             lastResult = new BigDecimal(0);
@@ -81,74 +81,44 @@ public class SimpleCalculator implements Calculator {
         boolean isLongNumber = numberString.endsWith("l");
         boolean isRealNumber = numberString.contains(".");
 
-        try {
-            //Если вещественное и суффикс long, то ошибка
-            if (isRealNumber & isLongNumber) {
-                throw new NumberFormatException();
-            }
-
-            //Убираем суффикс для long
-            if (isLongNumber) {
-                numberString = numberString.substring(0, numberString.length() - 1);
-            }
-
-            //Знак числа в начале
-            boolean isPositive = true;
-            if (numberString.length() > 0) {
-                switch (numberString.charAt(0)) {
-                    case '-':
-                        isPositive = false;
-                    case '+':
-                        numberString = numberString.substring(1);
-                }
-            }
-
-            numberString = numberString.replaceAll("[_]+", "_");
-
-            //Литералы не могут начианться с _ и заканчиваться _
-            if (numberString.startsWith("_") || numberString.endsWith("_")) {
-                throw new NumberFormatException();
-            }
-
-            //Проверка количества точек и расстановки _ в вещественном числе
-            if (isRealNumber) {
-                String[] realNumberParts = numberString.split("[.]");
-                if (realNumberParts.length > 2) {
-                    throw new NumberFormatException();
-                }
-                if (realNumberParts[0].endsWith("_") | realNumberParts[1].startsWith("_")) {
-                    throw new NumberFormatException();
-                }
-                numberString = numberString.replace("_", "");
-
-                return new BigDecimal(numberString);
-            }
-
-            String number;
-
-            if (numberString.matches("^0x[0-9a-f][0-9af_]*")) {
-                number = numberString.substring(2);
-                number = number.replace("_", "");
-                return new BigDecimal((isPositive ? 1 : -1) * Long.parseLong(number, 16));
-            }
-
-            if (numberString.matches("^0b[01][01_]*")) {
-                number = numberString.substring(2);
-                number = number.replace("_", "");
-                return new BigDecimal((isPositive ? 1 : -1) * Long.parseLong(number, 2));
-            }
-            if (numberString.matches("^0[0-7][0-7_]*")) {
-                number = numberString.substring(1);
-                number = number.replace("_", "");
-                return new BigDecimal((isPositive ? 1 : -1) * Long.parseLong(number, 8));
-            }
-
-            numberString = numberString.replace("_", "");
-            return new BigDecimal(numberString);
-
-        } catch (NumberFormatException exception) {
+        //Если вещественное и суффикс long, то ошибка
+        if (isRealNumber & isLongNumber) {
             throw new NumberFormatException(inputString);
         }
+
+        //Убираем суффикс для long
+        if (isLongNumber) {
+            numberString = numberString.substring(0, numberString.length() - 1);
+        }
+
+        if (numberString.length() < 1) {
+            throw new NumberFormatException(inputString);
+        }
+
+        if (isRealNumber) {
+            if (numberString.matches("^[+-]?\\d+(_+\\d+)*\\.\\d+(_+\\d+)*$")) {
+                return NumberNotation.DECIMAL.getDecimal(numberString);
+            }
+            throw new NumberFormatException(inputString);
+        }
+
+        if (numberString.matches("^[+-]?0x[\\da-f]+(_+[\\da-f]+)*$")) {
+            return NumberNotation.HEXADECIMAL.getDecimal(numberString);
+        }
+
+        if (numberString.matches("^[+-]?0b[01]+(_+[01]+)*$")) {
+            return NumberNotation.BINARY.getDecimal(numberString);
+
+        }
+        if (numberString.matches("^[+-]?0[0-7]+(_+[0-7]+)*$")) {
+            return NumberNotation.OCTAL.getDecimal(numberString);
+        }
+
+        if (numberString.matches("^[+-]?\\d+(_+\\d+)*$")) {
+            return NumberNotation.DECIMAL.getDecimal(numberString);
+        }
+
+        throw new NumberFormatException(inputString);
     }
 }
 

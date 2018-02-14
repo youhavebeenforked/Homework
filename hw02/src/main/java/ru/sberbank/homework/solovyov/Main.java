@@ -11,10 +11,9 @@ public class Main {
 
         while (true) {
             userInput = scanner.nextLine();
-            if (userInput.compareTo("quit") == 0) {
+            if (userInput.equals("quit")) {
                 return;
             }
-
             System.out.println(calculator.calculate(userInput));
         }
 
