@@ -3,8 +3,6 @@ package ru.sberbank.homework.kiseleva;
 import ru.sberbank.homework.kiseleva.exceptions.NotEnoughMoneyException;
 import ru.sberbank.homework.kiseleva.interfaces.Terminal;
 
-import java.util.Scanner;
-
 /**
  * Created by Ekaterina Kiseleva on 14.02.2018.
  */
