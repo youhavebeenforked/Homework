@@ -17,12 +17,12 @@ public class ExpressionParser implements Calculator {
     public String calculate(String userInput) {
         this.userInput = userInput;
         index = 0;
-        CheckValidExpression checker = new CheckValidExpression(userInput);
+        ExpressionChecker checker = new ExpressionChecker(userInput);
         if (checker.isValid()) {
             this.userInput = checker.getRefactorString().toString();
             dividingExpression = this.userInput.split("\\s");
-            double ans = sum();
-            return String.valueOf(ans);
+            Expression ans = sum();
+            return String.valueOf(ans.evaluate());
         } else {
             return null;
         }
@@ -32,7 +32,7 @@ public class ExpressionParser implements Calculator {
         if (index == dividingExpression.length) {
             return;
         }
-        if (dividingExpression[index].matches("^[0-9]*[.][0-9]+$")) {
+        if (dividingExpression[index].matches("^[0-9]*[.][0-9]+$") || (dividingExpression[index].startsWith("-") && dividingExpression[index].length() > 1)) {
             number = Double.parseDouble(dividingExpression[index]);
             index++;
             operation = Operation.NUMBER;
@@ -59,12 +59,12 @@ public class ExpressionParser implements Calculator {
         }
     }
 
-    private double end() {
+    private Expression end() {
         getNext();
-        double result;
+        Expression result;
         switch (operation) {
             case NUMBER:
-                result = number;
+                result = new Number(number);
                 getNext();
                 break;
             case BRACKET:
@@ -72,21 +72,21 @@ public class ExpressionParser implements Calculator {
                 getNext();
                 break;
             default:
-                result = 0;
+                result = null;
                 break;
         }
         return result;
     }
 
-    private double multiply() {
-        double left = end();
+    private Expression multiply() {
+        Expression left = end();
         while (true) {
             switch (operation) {
                 case MULTIPLICATION:
-                    left = left * end();
+                    left = new Multiplication(left,end());
                     break;
                 case DIVISION:
-                    left = left / end();
+                    left = new Division(left,end());
                     break;
                 default:
                     return left;
@@ -94,15 +94,15 @@ public class ExpressionParser implements Calculator {
         }
     }
 
-    private double sum() {
-        double left = multiply();
+    private Expression sum() {
+        Expression left = multiply();
         while (true) {
             switch (operation) {
                 case SUBTRACTION:
-                    left = left - multiply();
+                    left = new Subtraction(left,multiply());
                     break;
                 case ADDITION:
-                    left = left + multiply();
+                    left = new Addition(left,multiply());
                     break;
                 default:
                     return left;

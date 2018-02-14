@@ -5,13 +5,13 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 
-public class CheckValidExpression {
+public class ExpressionChecker {
     private String expression;
     private StringBuilder refactorString;
     private HashMap<Integer, Character> validLiterals = new HashMap<>();
     private static HashMap<Integer, Character> operations = new HashMap<>();
 
-    CheckValidExpression(String expression) {
+    ExpressionChecker(String expression) {
         this.expression = expression;
         fillValidLiterals();
     }
@@ -50,12 +50,11 @@ public class CheckValidExpression {
                         num = Integer.parseInt(currentString);
                     }
                 } catch (RuntimeException e) {
-                    System.out.println("Некорректный ввод");
+                    System.err.println("error > wrong expression");
                     return false;
                 }
                 refactorString.append(String.valueOf(num)).append(" ");
             }
-            System.out.println(refactorString.toString());
         } else {
             return false;
         }
@@ -83,20 +82,20 @@ public class CheckValidExpression {
                     break;
             }
             if (bracketsBalance < 0) {
-                System.out.println("Лишняя закрывающаяся скобка на позиции" + String.valueOf(i + 1));
+                System.err.println("error > wrong expression");
                 return false;
             }
             if (!validLiterals.containsValue(expression.charAt(i))) {
-                System.out.println("Неизвестный символ на позиции " + String.valueOf(i + 1));
+                System.err.println(String.format("%s %s%n","error > ",expression.charAt(i)));
                 return false;
             }
             if (k == 2) {
-                System.out.println("Лишний пробел на позиции " + String.valueOf(i + 1));
+                System.err.println("error > wrong expression");
                 return false;
             }
         }
         if (bracketsBalance > 0) {
-            System.out.println("Не хватает закрывающейся скобки");
+            System.err.println("error > wrong expression");
             return false;
         }
         return true;
