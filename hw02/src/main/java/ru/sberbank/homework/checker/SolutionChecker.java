@@ -1,15 +1,15 @@
 package ru.sberbank.homework.checker;
 
 import lombok.extern.slf4j.Slf4j;
-import ru.sberbank.homework.common.Calculator;
+import ru.sberbank.homework.common.*;
 
 @Slf4j
 public class SolutionChecker {
 
     private final CommandSequence[] sequences = {
             cs(ex("2 + 2", "4"), ex("- 1", "3"),  ex("* 2", "6"),  ex("/ 4", "1.5"),  ex("1 - 1", "0")), //happy path all operations
-            cs(ex("1+1", "error > wrong expression"), ex("1 - foo", "error > foo")) // неаккуратный пользователь.
-            // Остальные тесты пишите сами, своими не поделюсь ;)
+            cs(ex("1+1", "error > wrong expression"), ex("1 - foo", "error > foo")), // неаккуратный пользователь.
+            cs(ex("1 / 0", "error > Division by zero"), ex("1 + 1", "2"), ex("/ 0", "error > Division by zero"), ex("1 _ 1", "error > _"))// Остальные тесты пишите сами, своими не поделюсь ;)
     };
 
     public void startTesting(Calculator calculator) {
