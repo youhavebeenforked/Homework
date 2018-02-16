@@ -60,6 +60,9 @@ public class Parser {
             isNegative = true;
             number = number.substring(1);
         }
+        if (number.startsWith("+")) {
+            number = number.substring(1);
+        }
         int radix = getRadix(number);
         int maxBitCount = getMaxBitCount(number);
         int maxLength = maxBitCount / (int) (Math.log(radix) / Math.log(2));
