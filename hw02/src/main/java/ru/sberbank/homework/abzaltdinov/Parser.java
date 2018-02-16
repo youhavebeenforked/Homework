@@ -1,44 +1,133 @@
 package ru.sberbank.homework.abzaltdinov;
 
+import java.util.HashMap;
+
 public class Parser {
+
+    private static HashMap<Character, Operation> operations;
+
+    static {
+        operations = new HashMap<>();
+        operations.put('+', new Addition());
+        operations.put('-', new Subtraction());
+        operations.put('*', new Multiplication());
+        operations.put('/', new Division());
+    }
+
+    private static HashMap<Character, Integer> alphabet;
+
+    static {
+        alphabet = new HashMap<>();
+        for (int i = 0; i < 10; ++i) {
+            alphabet.put((char) (i + '0'), i);
+        }
+        alphabet.put('A', 10);
+        alphabet.put('B', 11);
+        alphabet.put('C', 12);
+        alphabet.put('D', 13);
+        alphabet.put('E', 14);
+        alphabet.put('F', 15);
+    }
+
+    private static HashMap<Integer, Character> reverseAlphabet;
+
+    static {
+        reverseAlphabet = new HashMap<>();
+        for (int i = 0; i < 10; ++i) {
+            reverseAlphabet.put(i, (char) (i + '0'));
+        }
+        reverseAlphabet.put(10, 'A');
+        reverseAlphabet.put(11, 'B');
+        reverseAlphabet.put(12, 'C');
+        reverseAlphabet.put(13, 'D');
+        reverseAlphabet.put(14, 'E');
+        reverseAlphabet.put(15, 'F');
+    }
 
     public static double parseNumber(String number) throws NumberFormatException {
         double result;
-        if (number.contains("."))
+        if (number.contains(".")) {
             result = Parser.parseDouble(number);
-        else
+        } else {
             result = Parser.parseLong(number);
+        }
         return result;
     }
 
-    private static long parseLong(String number) throws UnsupportedOperationException {
-        Tuple<String, Integer> result = removePrefix(removeSuffix(number));
-        String formattedNumber = removeUnderscopes(result.first);
-        int radix = result.second;
-        return Long.valueOf(formattedNumber, radix);
+    public static Long parseLong(String number) throws UnsupportedOperationException {
+        boolean isNegative = false;
+        if (number.startsWith("-")) {
+            isNegative = true;
+            number = number.substring(1);
+        }
+        int radix = getRadix(number);
+        int maxBitCount = getMaxBitCount(number);
+        int maxLength = maxBitCount / (int) (Math.log(radix) / Math.log(2));
+        String formattedNumber = removeUnderscopes(removePrefix(removeSuffix(number)));
+        formattedNumber = formattedNumber.toUpperCase();
+        int firstDigit = alphabet.get(formattedNumber.charAt(0));
+        // catching negative numbers with sign bit == 1
+        boolean isReversed = false;
+        if (radix != 10
+                && formattedNumber.length() == maxLength
+                && firstDigit >= radix / 2) {
+            formattedNumber = Parser.reverseNegativeToPositive(formattedNumber, radix);
+            isReversed = true;
+            isNegative = !isNegative;
+        }
+        long result = Long.valueOf(formattedNumber, radix);
+        if (isReversed) {
+            result++;
+        }
+        if (isNegative) {
+            result = -result;
+        }
+        return result;
     }
 
-    private static double parseDouble(String number) {
+    public static Double parseDouble(String number) {
         return Double.valueOf(removeUnderscopes(removeSuffix(number)));
     }
 
-    public static MyOperation parseOperation(String operation) {
+    public static Operation parseOperation(String operation) {
         if (operation.length() != 1) {
-            throw new UnsupportedOperationException("MyOperation must contain only one character!");
+            throw new UnsupportedOperationException("Operation must contain only one character!");
         }
         char operationChar = operation.charAt(0);
-        switch (operationChar) {
-            case '+':
-                return new Addition();
-            case '-':
-                return new Subtraction();
-            case '*':
-                return new Multiplication();
-            case '/':
-                return new Division();
-            default:
-                throw new UnsupportedOperationException("Not supported operation");
+        Operation concreteOperation = operations.get(operationChar);
+        if (concreteOperation != null) {
+            return concreteOperation;
+        } else {
+            throw new UnsupportedOperationException("Not supported operation!");
         }
+    }
+
+    private static int getRadix(String number) {
+        int radix = 10;
+        if (number.startsWith("0")) {
+            radix = 8;
+            if (number.length() > 1) {
+                switch (number.charAt(1)) {
+                    case 'x':
+                    case 'X':
+                        radix = 16;
+                        break;
+                    case 'b':
+                    case 'B':
+                        radix = 2;
+                        break;
+                }
+            }
+        }
+        return radix;
+    }
+
+    private static int getMaxBitCount(String number) {
+        int maxBitCount = 32; // for int;
+        if (number.endsWith("L") || number.endsWith("l")) {
+            maxBitCount = 64;
+        }
+        return maxBitCount;
     }
 
     private static String removeSuffix(String number) {
@@ -54,7 +143,7 @@ public class Parser {
 
     private static void checkUnderscopes(String number) {
         if (number.startsWith("_") || number.endsWith("_")) {
-            throw new NumberFormatException("Underscopes must not be at the beginning and end numbers");
+            throw new NumberFormatException("Underscopes must not be at the beginning and end of numbers");
         }
         //for floating numbers
         //if (number.contains("_.") || number.contains("._")) {
@@ -69,40 +158,30 @@ public class Parser {
     /**
      * Removes prefixes: 0, 0x and 0b.
      *
-     * @param number
+     * @param number input number
      * @return Tuple of formatted input number and its radix
      */
-    private static Tuple<String, Integer> removePrefix(String number) {
-        int radix = 10;
-        if (number.startsWith("0")) {
+    private static String removePrefix(String number) {
+        if (number.length() > 1 && number.startsWith("0")) {
             number = number.substring(1);
-            radix = 8;
             checkUnderscopes(number);
-
-            switch (number.charAt(0)) {
-                case 'x':
-                case 'X':
-                    radix = 16;
-                    number = number.substring(1);
-                    break;
-                case 'b':
-                case 'B':
-                    radix = 2;
-                    number = number.substring(1);
-                    break;
+            char c = number.charAt(0);
+            if (c == 'x'
+                    || c == 'X'
+                    || c == 'b'
+                    || c == 'B') {
+                number = number.substring(1);
+                checkUnderscopes(number);
             }
-            checkUnderscopes(number);
         }
-        return new Tuple<>(number, radix);
+        return number;
     }
 
-    private static class Tuple<X, Y> {
-        public final X first;
-        public final Y second;
-
-        public Tuple(X first, Y second) {
-            this.first = first;
-            this.second = second;
+    private static String reverseNegativeToPositive(String number, int radix) {
+        char[] result = new char[number.length()];
+        for (int i = 0; i < number.length(); ++i) {
+            result[i] = reverseAlphabet.get(radix - (alphabet.get(number.charAt(i))) - 1);
         }
+        return new String(result);
     }
 }

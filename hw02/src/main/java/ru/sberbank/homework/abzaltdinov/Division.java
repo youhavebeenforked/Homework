@@ -1,6 +1,6 @@
 package ru.sberbank.homework.abzaltdinov;
 
-public class Division extends MyOperation {
+public class Division implements Operation {
 
     @Override
     public double calculate(double first, double second) {

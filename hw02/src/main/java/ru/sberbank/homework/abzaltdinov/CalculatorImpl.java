@@ -1,5 +1,8 @@
 package ru.sberbank.homework.abzaltdinov;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+
 public class CalculatorImpl implements ru.sberbank.homework.common.Calculator {
     private static final double EPSILON = 1e-6;
     private String currentState;
@@ -8,7 +11,7 @@ public class CalculatorImpl implements ru.sberbank.homework.common.Calculator {
     public String calculate(String userInput) {
         double firstOperand;
         double secondOperand;
-        MyOperation operation;
+        Operation operation;
 
         String[] splittedUserInput = userInput.split(" ");
         if (splittedUserInput.length == 2) { // formatting "@_b" to "a_@_b", a,b-operands, @-operator
@@ -43,10 +46,14 @@ public class CalculatorImpl implements ru.sberbank.homework.common.Calculator {
         }
 
         double result = operation.calculate(firstOperand, secondOperand);
+        DecimalFormatSymbols otherSymbols = new DecimalFormatSymbols();
+        otherSymbols.setDecimalSeparator('.');
+        DecimalFormat doubleDF = new DecimalFormat("0.00", otherSymbols);
+        DecimalFormat intDF = new DecimalFormat("0");
         if (Math.abs(result - Math.round(result)) < EPSILON) {
-            currentState = String.valueOf(Math.round(result));
+            currentState = intDF.format(result);
         } else {
-            currentState = String.valueOf(Math.round(result*100.0)/100.0);
+            currentState = doubleDF.format(result);
         }
         return currentState;
     }

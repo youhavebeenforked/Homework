@@ -1,6 +1,6 @@
 package ru.sberbank.homework.abzaltdinov;
 
-public class Subtraction extends MyOperation {
+public class Subtraction implements Operation {
 
     @Override
     public double calculate(double first, double second) {
