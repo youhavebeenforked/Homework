@@ -8,17 +8,24 @@ import java.net.URL;
  * Created by Ekaterina Kiseleva on 14.02.2018.
  */
 public class PageReader {
-    public static boolean isSuccess;
+    private boolean success;
+
+    public boolean isSuccess() {
+        return success;
+    }
+
+    public void setSuccess(boolean success) {
+        this.success = success;
+    }
 
     public void readPage(String urlAddress) throws IOException {
-        URL url = new URL(urlAddress);
-        LineNumberReader reader = new LineNumberReader(new InputStreamReader(url.openStream()));
-        String string = reader.readLine();
-        while (string != null) {
-            System.out.println(string);
-            string = reader.readLine();
+        try (LineNumberReader reader = new LineNumberReader(new InputStreamReader(new URL(urlAddress).openStream()))) {
+            String string = reader.readLine();
+            while (string != null) {
+                System.out.println(string);
+                string = reader.readLine();
+            }
+            setSuccess(true);
         }
-        reader.close();
-        isSuccess = true;
     }
 }
