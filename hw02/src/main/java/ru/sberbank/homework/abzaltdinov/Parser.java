@@ -54,7 +54,7 @@ public class Parser {
         return result;
     }
 
-    public static Long parseLong(String number) throws UnsupportedOperationException {
+    public static Long parseLong(String number) throws NumberFormatException {
         boolean isNegative = false;
         if (number.startsWith("-")) {
             isNegative = true;
@@ -65,15 +65,18 @@ public class Parser {
         int maxLength = maxBitCount / (int) (Math.log(radix) / Math.log(2));
         String formattedNumber = removeUnderscopes(removePrefix(removeSuffix(number)));
         formattedNumber = formattedNumber.toUpperCase();
-        int firstDigit = alphabet.get(formattedNumber.charAt(0));
+        if (!isCharactersInAlphabet(formattedNumber, radix)) {
+            throw new NumberFormatException("Number has invalid symbol(s)");
+        }
         // catching negative numbers with sign bit == 1
         boolean isReversed = false;
-        if (radix != 10
-                && formattedNumber.length() == maxLength
-                && firstDigit >= radix / 2) {
-            formattedNumber = Parser.reverseNegativeToPositive(formattedNumber, radix);
-            isReversed = true;
-            isNegative = !isNegative;
+        if (radix != 10 && formattedNumber.length() == maxLength) {
+            int firstDigit = alphabet.get(formattedNumber.charAt(0));
+            if (firstDigit >= radix / 2) {
+                formattedNumber = Parser.reverseNegativeToPositive(formattedNumber, radix);
+                isReversed = true;
+                isNegative = !isNegative;
+            }
         }
         long result = Long.valueOf(formattedNumber, radix);
         if (isReversed) {
@@ -85,7 +88,7 @@ public class Parser {
         return result;
     }
 
-    public static Double parseDouble(String number) {
+    public static Double parseDouble(String number) throws NumberFormatException {
         return Double.valueOf(removeUnderscopes(removeSuffix(number)));
     }
 
@@ -175,6 +178,16 @@ public class Parser {
             }
         }
         return number;
+    }
+
+    private static boolean isCharactersInAlphabet(String number, int radix) {
+        for (int i = 0; i < number.length(); ++i) {
+            Integer symbolNumber = alphabet.get(number.charAt(i));
+            if (symbolNumber == null || symbolNumber >= radix) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private static String reverseNegativeToPositive(String number, int radix) {
