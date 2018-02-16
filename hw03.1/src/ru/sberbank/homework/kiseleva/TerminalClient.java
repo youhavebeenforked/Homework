@@ -22,6 +22,7 @@ public class TerminalClient {
                     server.locker(new Date());
                 }
                 if (pinValidator.validate(pin)) {
+                    server.setWrongPins(0);
                     System.out.println("1 - check account");
                     System.out.println("2 - pull money");
                     System.out.println("3 - put money");

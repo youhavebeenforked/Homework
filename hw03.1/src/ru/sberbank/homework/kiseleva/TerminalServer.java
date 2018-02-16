@@ -13,6 +13,9 @@ public class TerminalServer {
     private long lockTime = 0;
     private int amountMoney = 1000;
     private boolean lock = false;
+    private static final int MAX_WRONG_PINS = 3;
+    private static final int MAX_LOCK_TIME = 5;
+    private static final long MS_IN_SEC = 1000L;
 
     public int getAmountMoney() {
         return amountMoney;
@@ -36,11 +39,19 @@ public class TerminalServer {
 
     public void setWrongPins(int wrongPins) throws AccountIsLockedException {
         this.wrongPins = wrongPins;
-        if (this.wrongPins == 3) {
-            lock = true;
-            lockTime = new Date().getTime();
-            System.out.println("Account is locked");
+        checkIfNeedLocking();
+    }
+
+    private void checkIfNeedLocking() {
+        if (this.wrongPins % MAX_WRONG_PINS == 0 && this.wrongPins != 0) {
+            locking();
         }
+    }
+
+    private void locking() {
+        lock = true;
+        lockTime = new Date().getTime();
+        System.out.println("Account is locked");
     }
 
     public void unlock() {
@@ -48,8 +59,9 @@ public class TerminalServer {
     }
 
     public void locker(Date currentDate) {
-        if ((currentDate.getTime() - lockTime) / 1000 < 5) {
-            throw new AccountIsLockedException(5 - ((currentDate.getTime() - lockTime) / 1000 ));
+        if ((currentDate.getTime() - lockTime) < MAX_LOCK_TIME * MS_IN_SEC) {
+            long timeToUnlock = MAX_LOCK_TIME - (currentDate.getTime() - lockTime) / MS_IN_SEC;
+            throw new AccountIsLockedException(timeToUnlock);
         } else {
             unlock();
         }
