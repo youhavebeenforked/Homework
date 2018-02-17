@@ -6,7 +6,7 @@ import ru.sberbank.homework.kashin.main.model.expressions.Division;
 import ru.sberbank.homework.kashin.main.model.expressions.Multiplication;
 import ru.sberbank.homework.kashin.main.model.expressions.Subtraction;
 
-public class Factory {
+public class FactoryExpression {
     public static Expression getExpression(Character operator) {
         switch (operator) {
             case '+':
