@@ -3,9 +3,7 @@ package ru.sberbank.homework.kashin.main.calculator;
 import ru.sberbank.homework.common.Calculator;
 
 import static java.util.Objects.nonNull;
-import static ru.sberbank.homework.kashin.main.util.CalculateHelper.checkWithRegExp;
-import static ru.sberbank.homework.kashin.main.util.CalculateHelper.getPreResult;
-import static ru.sberbank.homework.kashin.main.util.CalculateHelper.parser;
+import static ru.sberbank.homework.kashin.main.util.CalculateHelper.*;
 
 public class CalculatorImpl implements Calculator {
     private static final String regExpOneLiteral = "^(\\+|-|\\*|/) -?\\w+(.\\w+)?$";
@@ -28,6 +26,8 @@ public class CalculatorImpl implements Calculator {
                 return parser(userInput.trim()).calculate();
             } catch (Exception e) {
                 return e.getMessage();
+            } finally {
+                originalLiteralsClear();
             }
 
         } else if (checkWithRegExp(userInput.trim(), regExpOneLiteral) && nonNull(getPreResult())) {
@@ -36,6 +36,8 @@ public class CalculatorImpl implements Calculator {
                 return parser(userInput.trim()).calculate();
             } catch (Exception e) {
                 return e.getMessage();
+            } finally {
+                originalLiteralsClear();
             }
 
         } else {

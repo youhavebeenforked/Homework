@@ -24,20 +24,36 @@ public class CalculateHelper {
         CalculateHelper.preResult = preResult;
     }
 
-    public static Double checkNotation(String number, int item) {
+    private static Double checkNotation(String number, int item) {
         if (number.endsWith("l")) {
             number = number.substring(0, number.length() - 1);
         }
         if (checkWithRegExp(number, binaryNumber)) {
-            number = BinaryToDecimal(number);
+            try {
+                number = BinaryToDecimal(number);
+            } catch (Exception e) {
+                preResult = null;
+                throw new WrongExpression(String.format("error > %s", originalLiterals.get(item)));
+            }
         } else if (checkWithRegExp(number, octalNumber)) {
-            number = String.valueOf(Long.parseLong(number.substring(1, number.length()), 8));
+            try {
+                number = String.valueOf(Long.parseLong(number.substring(1, number.length()), 8));
+            } catch (Exception e) {
+                preResult = null;
+                throw new WrongExpression(String.format("error > %s", originalLiterals.get(item)));
+            }
         } else if (checkWithRegExp(number, hexNumber)) {
-            number = String.valueOf(Long.parseLong(number.substring(2, number.length()), 16));
+            try {
+                number = String.valueOf(Long.parseLong(number.substring(2, number.length()), 16));
+            } catch (Exception e) {
+                preResult = null;
+                throw new WrongExpression(String.format("error > %s", originalLiterals.get(item)));
+            }
         }
         try {
             return Double.valueOf(number);
         } catch (Exception e) {
+            preResult = null;
             throw new WrongExpression(String.format("error > %s", originalLiterals.get(item)));
         }
     }
@@ -49,17 +65,21 @@ public class CalculateHelper {
         String firstElement = elements[0].toLowerCase();
         String secondElement = elements[2].toLowerCase();
         if (checkIncorrectUnderscore(firstElement)) {
+            preResult = null;
             throw new WrongExpression(String.format("error > %s", originalLiterals.get(1)));
         }
         if (checkIncorrectUnderscore(secondElement)) {
+            preResult = null;
             throw new WrongExpression(String.format("error > %s", originalLiterals.get(2)));
         }
         firstElement = firstElement.replaceAll("_", "");
         secondElement = secondElement.replaceAll("_", "");
         if (!checkWithRegExp(firstElement, correctLiteralRegExp) || checkIncorrectOctal(firstElement)) {
+            preResult = null;
             throw new WrongExpression(String.format("error > %s", originalLiterals.get(1)));
         }
         if (!checkWithRegExp(secondElement, correctLiteralRegExp) || checkIncorrectOctal(secondElement)) {
+            preResult = null;
             throw new WrongExpression(String.format("error > %s", originalLiterals.get(2)));
         }
         Expression expression = Factory.getExpression(elements[1].charAt(0));
@@ -79,16 +99,16 @@ public class CalculateHelper {
         return (checkNumber == Math.floor(checkNumber)) && !Double.isInfinite(checkNumber);
     }
 
-    public static boolean checkIncorrectUnderscore(String element) {
+    private static boolean checkIncorrectUnderscore(String element) {
         return (element.startsWith("_") || element.endsWith("_") || element.contains("_.") ||element.contains("._") || element.startsWith("0b_") || element.startsWith("0x_") || element.contains("_l"));
     }
 
-    public static boolean checkIncorrectOctal(String element) {
+    private static boolean checkIncorrectOctal(String element) {
         return (element.startsWith("0") && !element.startsWith("0b") && !element.startsWith("0x") && !checkWithRegExp(element, octalNumber) && !element.startsWith("0."));
     }
 
 
-    public static String BinaryToDecimal(String base2) {
+    private static String BinaryToDecimal(String base2) {
         char[] chars = base2.toCharArray();
         Long result = 0L;
         int mult = 1;
@@ -99,5 +119,9 @@ public class CalculateHelper {
             mult *= 2;
         }
         return result.toString().replaceAll("L", "");
+    }
+
+    public static void originalLiteralsClear() {
+        originalLiterals.clear();
     }
 }
