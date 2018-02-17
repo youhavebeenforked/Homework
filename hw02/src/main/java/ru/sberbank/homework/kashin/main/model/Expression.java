@@ -1,7 +1,8 @@
 package ru.sberbank.homework.kashin.main.model;
 
-import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
 
 public abstract class Expression {
     protected double first;
@@ -22,12 +23,8 @@ public abstract class Expression {
             return Long.toString(Math.round(number));
         } else {
             DecimalFormat df = new DecimalFormat("#.##");
-            df.setRoundingMode(RoundingMode.HALF_UP);
-            String roundedResult = df.format(number).replaceAll(",", ".");
-            while (roundedResult.contains(".") && roundedResult.endsWith("0")) {
-                roundedResult = roundedResult.substring(0, roundedResult.length() - 1);
-            }
-            return roundedResult;
+            df.setDecimalFormatSymbols(DecimalFormatSymbols.getInstance(Locale.US));
+            return df.format(number);
         }
     }
 
