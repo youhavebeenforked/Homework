@@ -3,7 +3,7 @@ package ru.sberbank.homework.kashin.main.model.numbers;
 import ru.sberbank.homework.kashin.main.exception.WrongExpression;
 import ru.sberbank.homework.kashin.main.model.Number;
 
-import static ru.sberbank.homework.kashin.main.calculator.ExpressionCalculator.originalLiterals;
+import static ru.sberbank.homework.kashin.main.calculator.ExpressionCalculator.ORIGINAL_LITERALS;
 import static ru.sberbank.homework.kashin.main.calculator.ExpressionCalculator.setPreResult;
 
 public class OctalNumber extends Number {
@@ -17,7 +17,7 @@ public class OctalNumber extends Number {
             }
         } catch (Exception e) {
             setPreResult(null);
-            throw new WrongExpression(String.format("error > %s", originalLiterals.get(item)));
+            throw new WrongExpression(String.format("error > %s", ORIGINAL_LITERALS.get(item)));
         }
     }
 }

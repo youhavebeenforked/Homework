@@ -22,23 +22,22 @@ public class CalculatorImpl implements Calculator {
     @Override
     public String calculate(String userInput) {
         ExpressionCalculator calc = new ExpressionCalculator();
-        if (checkWithRegExp(userInput.trim(), regExpTwoLiterals)) {
-            try {
-                return calc.parser(userInput.trim()).calculate();
-            } catch (Exception e) {
-                return e.getMessage();
-            }
-
-        } else if (checkWithRegExp(userInput.trim(), regExpOneLiteral) && nonNull(ExpressionCalculator.getPreResult())) {
+        userInput = userInput.trim();
+        if (checkWithRegExp(userInput, regExpTwoLiterals)) {
+            return parse(userInput, calc);
+        } else if (checkWithRegExp(userInput, regExpOneLiteral) && nonNull(ExpressionCalculator.getPreResult())) {
             userInput = ExpressionCalculator.getPreResult() + " " + userInput;
-            try {
-                return calc.parser(userInput.trim()).calculate();
-            } catch (Exception e) {
-                return e.getMessage();
-            }
-
+            return parse(userInput, calc);
         } else {
             return "error > wrong expression";
+        }
+    }
+
+    private String parse(String userInput, ExpressionCalculator calc) {
+        try {
+            return calc.parser(userInput).calculate();
+        } catch (Exception e) {
+            return e.getMessage();
         }
     }
 }

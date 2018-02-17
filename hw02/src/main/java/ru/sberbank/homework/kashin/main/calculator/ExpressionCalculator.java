@@ -12,7 +12,7 @@ import java.util.Map;
 
 public class ExpressionCalculator {
     private static Double preResult;
-    public static Map<Integer, String> originalLiterals = new HashMap<>();
+    public static final Map<Integer, String> ORIGINAL_LITERALS = new HashMap<>();
 
     public static Double getPreResult() {
         return preResult;
@@ -31,33 +31,33 @@ public class ExpressionCalculator {
             return Double.valueOf(num.checkAndParse(number, item));
         } catch (Exception e) {
             preResult = null;
-            throw new WrongExpression(String.format("error > %s", originalLiterals.get(item)));
+            throw new WrongExpression(String.format("error > %s", ORIGINAL_LITERALS.get(item)));
         }
     }
 
     public Expression parser(String expString) {
         String[] elements = expString.split(" ");
-        originalLiterals.put(1, elements[0]);
-        originalLiterals.put(2, elements[2]);
+        ORIGINAL_LITERALS.put(1, elements[0]);
+        ORIGINAL_LITERALS.put(2, elements[2]);
         String firstElement = elements[0].toLowerCase();
         String secondElement = elements[2].toLowerCase();
         if (CalculateHelper.checkIncorrectUnderscore(firstElement)) {
             preResult = null;
-            throw new WrongExpression(String.format("error > %s", originalLiterals.get(1)));
+            throw new WrongExpression(String.format("error > %s", ORIGINAL_LITERALS.get(1)));
         }
         if (CalculateHelper.checkIncorrectUnderscore(secondElement)) {
             preResult = null;
-            throw new WrongExpression(String.format("error > %s", originalLiterals.get(2)));
+            throw new WrongExpression(String.format("error > %s", ORIGINAL_LITERALS.get(2)));
         }
         firstElement = firstElement.replaceAll("_", "");
         secondElement = secondElement.replaceAll("_", "");
         if (!CalculateHelper.checkWithRegExp(firstElement, CalculateHelper.CORRECT_LITERAL_REG_EXP) || CalculateHelper.checkIncorrectOctal(firstElement)) {
             preResult = null;
-            throw new WrongExpression(String.format("error > %s", originalLiterals.get(1)));
+            throw new WrongExpression(String.format("error > %s", ORIGINAL_LITERALS.get(1)));
         }
         if (!CalculateHelper.checkWithRegExp(secondElement, CalculateHelper.CORRECT_LITERAL_REG_EXP) || CalculateHelper.checkIncorrectOctal(secondElement)) {
             preResult = null;
-            throw new WrongExpression(String.format("error > %s", originalLiterals.get(2)));
+            throw new WrongExpression(String.format("error > %s", ORIGINAL_LITERALS.get(2)));
         }
         Expression expression = FactoryExpression.getExpression(elements[1].charAt(0));
         expression.setFirst(checkNotation(firstElement, 1));

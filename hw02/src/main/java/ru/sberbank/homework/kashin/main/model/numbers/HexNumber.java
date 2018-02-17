@@ -18,7 +18,7 @@ public class HexNumber extends Number {
             }
         } catch (Exception e) {
             setPreResult(null);
-            throw new WrongExpression(String.format("error > %s", originalLiterals.get(item)));
+            throw new WrongExpression(String.format("error > %s", ORIGINAL_LITERALS.get(item)));
         }
     }
 }
