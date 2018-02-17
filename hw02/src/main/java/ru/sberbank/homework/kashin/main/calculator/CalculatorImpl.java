@@ -27,8 +27,6 @@ public class CalculatorImpl implements Calculator {
                 return calc.parser(userInput.trim()).calculate();
             } catch (Exception e) {
                 return e.getMessage();
-            } finally {
-                originalLiteralsClear();
             }
 
         } else if (checkWithRegExp(userInput.trim(), regExpOneLiteral) && nonNull(ExpressionCalculator.getPreResult())) {
@@ -37,8 +35,6 @@ public class CalculatorImpl implements Calculator {
                 return calc.parser(userInput.trim()).calculate();
             } catch (Exception e) {
                 return e.getMessage();
-            } finally {
-                originalLiteralsClear();
             }
 
         } else {

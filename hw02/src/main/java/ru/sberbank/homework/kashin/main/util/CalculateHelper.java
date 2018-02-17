@@ -27,9 +27,4 @@ public class CalculateHelper {
     public static String checkEndWithL(String element) {
         return element.endsWith("l") ? element.substring(0, element.length() - 1) : element;
     }
-
-
-    public static void originalLiteralsClear() {
-//        ExpressionCalculator.originalLiterals.clear();
-    }
 }
