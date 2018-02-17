@@ -1,15 +1,19 @@
 package ru.sberbank.homework.kashin.main.model;
 
-import lombok.Setter;
-
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 
 public abstract class Expression {
-    @Setter
     protected double first;
-    @Setter
     protected double second;
+
+    public void setFirst(double first) {
+        this.first = first;
+    }
+
+    public void setSecond(double second) {
+        this.second = second;
+    }
 
     public abstract String calculate();
 

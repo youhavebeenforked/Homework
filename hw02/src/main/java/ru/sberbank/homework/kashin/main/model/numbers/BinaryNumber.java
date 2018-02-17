@@ -11,9 +11,9 @@ public class BinaryNumber extends Number {
     public String checkAndParse(String number, int item) {
         try {
             if (number.startsWith("-")) {
-                return  "-" + BinaryToDecimal(number);
+                return  "-" + binaryToDecimal(number);
             } else {
-                return BinaryToDecimal(number);
+                return binaryToDecimal(number);
             }
         } catch (Exception e) {
             setPreResult(null);
@@ -21,7 +21,7 @@ public class BinaryNumber extends Number {
         }
     }
 
-    private static String BinaryToDecimal(String base2) {
+    private String binaryToDecimal(String base2) {
         char[] chars = base2.toCharArray();
         Long result = 0L;
         int mult = 1;

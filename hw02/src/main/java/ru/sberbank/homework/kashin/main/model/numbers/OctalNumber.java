@@ -11,9 +11,9 @@ public class OctalNumber extends Number {
     public String checkAndParse(String number, int item) {
         try {
             if (number.startsWith("-")) {
-                return  "-" + String.valueOf(Long.parseLong(number.substring(1, number.length()), 8));
+                return  "-" + parse(number,1, 8);
             } else {
-                return String.valueOf(Long.parseLong(number.substring(1, number.length()), 8));
+                return parse(number,1, 8);
             }
         } catch (Exception e) {
             setPreResult(null);

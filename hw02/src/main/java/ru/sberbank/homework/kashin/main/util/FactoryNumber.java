@@ -11,11 +11,11 @@ import static ru.sberbank.homework.kashin.main.util.CalculateHelper.*;
 public class FactoryNumber {
 
     public static Number getNumber(String number) {
-        if (checkWithRegExp(number, getBinaryNumber())) {
+        if (checkWithRegExp(number, BINARY_NUMBER)) {
             return new BinaryNumber();
-        } else if (checkWithRegExp(number, getOctalNumber())) {
+        } else if (checkWithRegExp(number, OCTAL_NUMBER)) {
             return new OctalNumber();
-        } else if (checkWithRegExp(number, getHexNumber())) {
+        } else if (checkWithRegExp(number, HEX_NUMBER)) {
             return new HexNumber();
         } else {
             return new DecNumber();
