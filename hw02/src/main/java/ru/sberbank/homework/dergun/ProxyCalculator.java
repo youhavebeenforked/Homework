@@ -98,7 +98,8 @@ public class ProxyCalculator implements Calculator {
                 if (i == 0
                         || i + 1 == expression.length()
                         || expression.charAt(i - 1) == '_'
-                        || expression.charAt(i + 1) == '_') {
+                        || expression.charAt(i + 1) == '_'
+                        || expression.charAt(i - 1) == 'x') {
                     return false;
                 }
             }
