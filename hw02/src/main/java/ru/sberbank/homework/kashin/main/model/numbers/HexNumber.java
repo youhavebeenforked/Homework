@@ -3,8 +3,7 @@ package ru.sberbank.homework.kashin.main.model.numbers;
 import ru.sberbank.homework.kashin.main.exception.WrongExpression;
 import ru.sberbank.homework.kashin.main.model.Number;
 
-import static ru.sberbank.homework.kashin.main.util.CalculateHelper.getOriginalLiterals;
-import static ru.sberbank.homework.kashin.main.util.CalculateHelper.setPreResult;
+import static ru.sberbank.homework.kashin.main.calculator.ExpressionCalculator.*;
 
 public class HexNumber extends Number {
     @Override
@@ -19,7 +18,7 @@ public class HexNumber extends Number {
             }
         } catch (Exception e) {
             setPreResult(null);
-            throw new WrongExpression(String.format("error > %s", getOriginalLiterals().get(item)));
+            throw new WrongExpression(String.format("error > %s", originalLiterals.get(item)));
         }
     }
 }

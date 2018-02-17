@@ -21,19 +21,20 @@ public class CalculatorImpl implements Calculator {
      */
     @Override
     public String calculate(String userInput) {
+        ExpressionCalculator calc = new ExpressionCalculator();
         if (checkWithRegExp(userInput.trim(), regExpTwoLiterals)) {
             try {
-                return parser(userInput.trim()).calculate();
+                return calc.parser(userInput.trim()).calculate();
             } catch (Exception e) {
                 return e.getMessage();
             } finally {
                 originalLiteralsClear();
             }
 
-        } else if (checkWithRegExp(userInput.trim(), regExpOneLiteral) && nonNull(getPreResult())) {
-            userInput = getPreResult() + " " + userInput;
+        } else if (checkWithRegExp(userInput.trim(), regExpOneLiteral) && nonNull(ExpressionCalculator.getPreResult())) {
+            userInput = ExpressionCalculator.getPreResult() + " " + userInput;
             try {
-                return parser(userInput.trim()).calculate();
+                return calc.parser(userInput.trim()).calculate();
             } catch (Exception e) {
                 return e.getMessage();
             } finally {

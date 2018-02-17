@@ -2,7 +2,7 @@ package ru.sberbank.homework.kashin.main.model.expressions;
 
 import ru.sberbank.homework.kashin.main.model.Expression;
 
-import static ru.sberbank.homework.kashin.main.util.CalculateHelper.setPreResult;
+import static ru.sberbank.homework.kashin.main.calculator.ExpressionCalculator.setPreResult;
 
 public class Division extends Expression {
     @Override
