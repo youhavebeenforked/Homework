@@ -10,7 +10,6 @@ import java.util.regex.Pattern;
 public class ProxyCalculator implements Calculator {
     private static final double DBL_EPSILON = 1e-10;
     private static final String QUIT = "quit";
-    private static final String RESTART = "restart";
     private final EngineCalculator calculator = new EngineCalculatorImpl();
     private boolean firstScan = true;
 
@@ -20,11 +19,14 @@ public class ProxyCalculator implements Calculator {
         if (split.length == 1 && split[0].equals(QUIT)) {
             System.exit(0);
         }
-
+        if (firstScan && split.length != 3) {
+            return "error > wrong expression";
+        }
         if (split.length == 2) {
             return oneArgument(split[0], split[1]);
         }
         if (split.length == 3) {
+            firstScan = false;
             return twoArgument(split[0], split[1], split[2]);
         }
         return "error > wrong expression";
@@ -34,7 +36,7 @@ public class ProxyCalculator implements Calculator {
         double doubleA;
         try {
             doubleA = parseDouble(A);
-        } catch (NumberFormatException e) {
+        } catch (IllegalArgumentException e) {
             return "error > " + A;
         }
 
@@ -93,7 +95,10 @@ public class ProxyCalculator implements Calculator {
     private boolean isValidUnderscore(final String expression) {
         for (int i = 0; i < expression.length(); i++) {
             if (expression.charAt(i) == '_') {
-                if (i == 0 || i + 1 == expression.length() || !Character.isDigit(expression.charAt(i - 1)) || !Character.isDigit(expression.charAt(i + 1))) {
+                if (i == 0
+                        || i + 1 == expression.length()
+                        || expression.charAt(i - 1) == '_'
+                        || expression.charAt(i + 1) == '_') {
                     return false;
                 }
             }
@@ -101,16 +106,22 @@ public class ProxyCalculator implements Calculator {
         return true;
     }
 
-    private double parseDouble(String s) {
+    private double parseDouble(String p) {
+        String s = p;
         try {
+            boolean isLong = parseLong(s);
+            if (isLong) {
+                s = s.replaceAll("[l|L]$", "");
+            }
             if (isValidUnderscore(s)) //matcher.matches())
                 s = s.replaceAll("[_]", "");
-            Pattern pattern = Pattern.compile("[+-]?(0x|0b|0|#)?[0-9]*[lL]$");
-            Matcher matcher = pattern.matcher(s);
-            if (matcher.matches()) {
-                s = s.replaceAll("l|L", "");
-                if (s.length() > 2 && s.charAt(0) == '0' && s.charAt(1) == 'b') {
-                    return new BigInteger(s.substring(2), 2).longValue();
+
+            if (isLong) {
+                if (parseBinary(s)) {
+                    if (s.charAt(0) == '-') {
+                        return - new BigInteger(s.substring(catBinary(s)), 2).longValue();
+                    }
+                    return new BigInteger(s.substring(catBinary(s)), 2).longValue();
                 } else {
                     if (s.length() > 1 && s.charAt(0) == '0' && Character.isDigit(s.charAt(1))) {
                         String res = s.replaceAll("^0+", "");
@@ -124,8 +135,11 @@ public class ProxyCalculator implements Calculator {
                     return Long.decode(s);
                 }
             }
-            if (s.length() > 2 && s.charAt(0) == '0' && s.charAt(1) == 'b') {
-                return new BigInteger(s.substring(2), 2).intValue();
+            if (parseBinary(s)) {
+                if (s.charAt(0) == '-') {
+                    return - new BigInteger(s.substring(catBinary(s)), 2).intValue();
+                }
+                return new BigInteger(s.substring(catBinary(s)), 2).intValue();
             } else {
                 if (s.length() > 1 && s.charAt(0) == '0' && Character.isDigit(s.charAt(1))) {
                     String res = s.replaceAll("^0+", "");
@@ -139,8 +153,35 @@ public class ProxyCalculator implements Calculator {
                 return Integer.decode(s);
             }
         } catch (NumberFormatException e) {
-            return Double.parseDouble(s);
+            return Double.parseDouble(p);
         }
+    }
+
+    private int catBinary(String s) {
+        if (parseBinary(s) && parseBinary("+" + s)) {
+            return 2;
+        }
+        if (parseBinary(s)) {
+            return 3;
+        }
+        return 0;
+    }
+
+    private boolean parseLong(String s) {
+        Pattern pattern = Pattern.compile(".*[lL]$");
+        Matcher matcher = pattern.matcher(s);
+        return matcher.matches();
+    }
+
+    private boolean parseBinary(String s) {
+        if (s.length() > 2) {
+            char one = s.charAt(0);
+            char two = s.charAt(1);
+            char three = s.charAt(2);
+            return one == '0' && (two == 'b' || two == 'B') ||
+                    (one == '+' || one == '-') && two == '0' && (three == 'b' || three == 'B');
+        }
+        return false;
     }
 }
 

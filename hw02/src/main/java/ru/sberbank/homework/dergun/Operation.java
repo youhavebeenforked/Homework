@@ -26,7 +26,7 @@ public enum Operation {
                 return operation;
             }
         }
-        System.out.println(s);
+
         throw new IllegalArgumentException("Invalid operator");
     }
 }
