@@ -120,9 +120,9 @@ public class ProxyCalculator implements Calculator {
             if (isLong) {
                 if (parseBinary(s)) {
                     if (s.charAt(0) == '-') {
-                        return - new BigInteger(s.substring(catBinary(s)), 2).longValue();
+                        return - new BigInteger(s.substring(cutBinary(s)), 2).longValue();
                     }
-                    return new BigInteger(s.substring(catBinary(s)), 2).longValue();
+                    return new BigInteger(s.substring(cutBinary(s)), 2).longValue();
                 } else {
                     if (s.length() > 1 && s.charAt(0) == '0' && Character.isDigit(s.charAt(1))) {
                         String res = s.replaceAll("^0+", "");
@@ -138,9 +138,9 @@ public class ProxyCalculator implements Calculator {
             }
             if (parseBinary(s)) {
                 if (s.charAt(0) == '-') {
-                    return - new BigInteger(s.substring(catBinary(s)), 2).intValue();
+                    return - new BigInteger(s.substring(cutBinary(s)), 2).intValue();
                 }
-                return new BigInteger(s.substring(catBinary(s)), 2).intValue();
+                return new BigInteger(s.substring(cutBinary(s)), 2).intValue();
             } else {
                 if (s.length() > 1 && s.charAt(0) == '0' && Character.isDigit(s.charAt(1))) {
                     String res = s.replaceAll("^0+", "");
@@ -158,7 +158,7 @@ public class ProxyCalculator implements Calculator {
         }
     }
 
-    private int catBinary(String s) {
+    private int cutBinary(String s) {
         if (parseBinary(s) && parseBinary("+" + s)) {
             return 2;
         }
