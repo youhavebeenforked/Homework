@@ -110,11 +110,11 @@ public class SimpleCalculator implements Calculator {
             return NumberNotation.BINARY.getDecimal(numberString);
 
         }
-        if (numberString.matches("^[+-]?0[0-7]+(_+[0-7]+)*$")) {
+        if (numberString.matches("^[+-]?0(_*[0-7]+)+$")) {
             return NumberNotation.OCTAL.getDecimal(numberString);
         }
 
-        if (numberString.matches("^[+-]?\\d+(_+\\d+)*$")) {
+        if (numberString.matches("^[+-]?([1-9]\\d*(_+\\d+)*|0)$")) {
             return NumberNotation.DECIMAL.getDecimal(numberString);
         }
 

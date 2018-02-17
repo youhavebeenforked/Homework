@@ -21,12 +21,13 @@ public enum NumberNotation {
         if (base != 10) {
             if (number.charAt(0) == '+' | number.charAt(0) == '-') {
                 number = number.charAt(0) + number.substring(prefixLength + 1);
+            } else {
+                number = number.substring(prefixLength);
             }
             return new BigDecimal(Long.parseLong(number, base));
         } else {
             return new BigDecimal(number);
         }
-
     }
 
 }
