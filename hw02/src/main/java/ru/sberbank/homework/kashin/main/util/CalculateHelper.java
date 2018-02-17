@@ -30,21 +30,33 @@ public class CalculateHelper {
         }
         if (checkWithRegExp(number, binaryNumber)) {
             try {
-                number = BinaryToDecimal(number);
+                if (number.startsWith("-")) {
+                    number = "-" + BinaryToDecimal(number);
+                } else {
+                    number = BinaryToDecimal(number);
+                }
             } catch (Exception e) {
                 preResult = null;
                 throw new WrongExpression(String.format("error > %s", originalLiterals.get(item)));
             }
         } else if (checkWithRegExp(number, octalNumber)) {
             try {
-                number = String.valueOf(Long.parseLong(number.substring(1, number.length()), 8));
+                if (number.startsWith("-")) {
+                    number = "-" + String.valueOf(Long.parseLong(number.substring(1, number.length()), 8));
+                } else {
+                    number = String.valueOf(Long.parseLong(number.substring(1, number.length()), 8));
+                }
             } catch (Exception e) {
                 preResult = null;
                 throw new WrongExpression(String.format("error > %s", originalLiterals.get(item)));
             }
         } else if (checkWithRegExp(number, hexNumber)) {
             try {
-                number = String.valueOf(Long.parseLong(number.substring(2, number.length()), 16));
+                if (number.startsWith("-")) {
+                    number = "-" + String.valueOf(Long.parseLong(number.substring(2, number.length()), 16));
+                } else {
+                    number = String.valueOf(Long.parseLong(number.substring(2, number.length()), 16));
+                }
             } catch (Exception e) {
                 preResult = null;
                 throw new WrongExpression(String.format("error > %s", originalLiterals.get(item)));
