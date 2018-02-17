@@ -1,18 +1,22 @@
 package ru.sberbank.homework.kashin.main.model.expressions;
 
+import ru.sberbank.homework.kashin.main.calculator.ExpressionCalculator;
+import ru.sberbank.homework.kashin.main.exception.WrongExpression;
 import ru.sberbank.homework.kashin.main.model.Expression;
 
-import static ru.sberbank.homework.kashin.main.calculator.ExpressionCalculator.setPreResult;
+import static ru.sberbank.homework.kashin.main.util.FactoryExpCalc.expressionCalculatorClear;
+import static ru.sberbank.homework.kashin.main.util.FactoryExpCalc.getExpressionCalculator;
 
 public class Division extends Expression {
     @Override
     public String calculate() {
         if (Math.floor(second) == 0) {
-            throw new RuntimeException(String.format("error > %s", second));
+            expressionCalculatorClear();
+            throw new WrongExpression(String.format("error > %s", second));
         }
-
+        ExpressionCalculator calculator = getExpressionCalculator();
         Double result = first / second;
-        setPreResult(result);
+        calculator.setPreResult(result);
         return roundNumber(result);
     }
 }

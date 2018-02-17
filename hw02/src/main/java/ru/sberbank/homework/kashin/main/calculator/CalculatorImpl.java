@@ -4,6 +4,7 @@ import ru.sberbank.homework.common.Calculator;
 
 import static java.util.Objects.nonNull;
 import static ru.sberbank.homework.kashin.main.util.CalculateHelper.*;
+import static ru.sberbank.homework.kashin.main.util.FactoryExpCalc.getExpressionCalculator;
 
 public class CalculatorImpl implements Calculator {
     private static final String regExpOneLiteral = "^(\\+|-|\\*|/) (\\+|-)?\\w+(.\\w+)?$";
@@ -21,12 +22,12 @@ public class CalculatorImpl implements Calculator {
      */
     @Override
     public String calculate(String userInput) {
-        ExpressionCalculator calc = new ExpressionCalculator();
+        ExpressionCalculator calc = getExpressionCalculator();
         userInput = userInput.trim();
         if (checkWithRegExp(userInput, regExpTwoLiterals)) {
             return parse(userInput, calc);
-        } else if (checkWithRegExp(userInput, regExpOneLiteral) && nonNull(ExpressionCalculator.getPreResult())) {
-            userInput = ExpressionCalculator.getPreResult() + " " + userInput;
+        } else if (checkWithRegExp(userInput, regExpOneLiteral) && nonNull(calc.getPreResult())) {
+            userInput = calc.getPreResult() + " " + userInput;
             return parse(userInput, calc);
         } else {
             return "error > wrong expression";

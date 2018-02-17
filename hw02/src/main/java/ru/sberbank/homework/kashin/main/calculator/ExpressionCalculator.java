@@ -10,16 +10,18 @@ import ru.sberbank.homework.kashin.main.util.FactoryNumber;
 import java.util.HashMap;
 import java.util.Map;
 
+import static ru.sberbank.homework.kashin.main.util.FactoryExpCalc.expressionCalculatorClear;
+
 public class ExpressionCalculator {
-    private static Double preResult;
+    private Double preResult;
     public static final Map<Integer, String> ORIGINAL_LITERALS = new HashMap<>();
 
-    public static Double getPreResult() {
+    public Double getPreResult() {
         return preResult;
     }
 
-    public static void setPreResult(Double preResult) {
-        ExpressionCalculator.preResult = preResult;
+    public void setPreResult(Double preResult) {
+        this.preResult = preResult;
     }
 
     public Double checkNotation(String number, int item) {
@@ -30,7 +32,7 @@ public class ExpressionCalculator {
         try {
             return Double.valueOf(num.checkAndParse(number, item));
         } catch (Exception e) {
-            preResult = null;
+            expressionCalculatorClear();
             throw new WrongExpression(String.format("error > %s", ORIGINAL_LITERALS.get(item)));
         }
     }
@@ -42,21 +44,21 @@ public class ExpressionCalculator {
         String firstElement = elements[0].toLowerCase();
         String secondElement = elements[2].toLowerCase();
         if (CalculateHelper.checkIncorrectUnderscore(firstElement)) {
-            preResult = null;
+            expressionCalculatorClear();
             throw new WrongExpression(String.format("error > %s", ORIGINAL_LITERALS.get(1)));
         }
         if (CalculateHelper.checkIncorrectUnderscore(secondElement)) {
-            preResult = null;
+            expressionCalculatorClear();
             throw new WrongExpression(String.format("error > %s", ORIGINAL_LITERALS.get(2)));
         }
         firstElement = firstElement.replaceAll("_", "");
         secondElement = secondElement.replaceAll("_", "");
         if (!CalculateHelper.checkWithRegExp(firstElement, CalculateHelper.CORRECT_LITERAL_REG_EXP) || CalculateHelper.checkIncorrectOctal(firstElement)) {
-            preResult = null;
+            expressionCalculatorClear();
             throw new WrongExpression(String.format("error > %s", ORIGINAL_LITERALS.get(1)));
         }
         if (!CalculateHelper.checkWithRegExp(secondElement, CalculateHelper.CORRECT_LITERAL_REG_EXP) || CalculateHelper.checkIncorrectOctal(secondElement)) {
-            preResult = null;
+            expressionCalculatorClear();
             throw new WrongExpression(String.format("error > %s", ORIGINAL_LITERALS.get(2)));
         }
         Expression expression = FactoryExpression.getExpression(elements[1].charAt(0));
