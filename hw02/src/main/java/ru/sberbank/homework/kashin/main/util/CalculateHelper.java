@@ -53,7 +53,9 @@ public class CalculateHelper {
         } else if (checkWithRegExp(number, hexNumber)) {
             try {
                 if (number.startsWith("-")) {
-                    number = "-" + String.valueOf(Long.parseLong(number.substring(2, number.length()), 16));
+                    number = "-" + String.valueOf(Long.parseLong(number.substring(3, number.length()), 16));
+                } else if (number.startsWith("+")) {
+                    number = String.valueOf(Long.parseLong(number.substring(3, number.length()), 16));
                 } else {
                     number = String.valueOf(Long.parseLong(number.substring(2, number.length()), 16));
                 }
