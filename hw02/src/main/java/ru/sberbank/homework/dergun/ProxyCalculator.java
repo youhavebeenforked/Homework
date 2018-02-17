@@ -2,6 +2,7 @@ package ru.sberbank.homework.dergun;
 
 import ru.sberbank.homework.common.Calculator;
 
+import java.math.BigInteger;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -16,49 +17,59 @@ public class ProxyCalculator implements Calculator {
     @Override
     public String calculate(String line) {
         final String[] split = line.split(" ");
-        if (split.length == 1) {
-            if (split[0].equals(QUIT)) {
-                System.exit(0);
-            } else if (split[0].equals(RESTART)) {
-                firstScan = true;
-                return "";
-            }
+        if (split.length == 1 && split[0].equals(QUIT)) {
+            System.exit(0);
         }
+
+        if (split.length == 2) {
+            return oneArgument(split[0], split[1]);
+        }
+        if (split.length == 3) {
+            return twoArgument(split[0], split[1], split[2]);
+        }
+        return "error > wrong expression";
+    }
+
+    private String twoArgument(String A, String operator, String B) {
         double doubleA;
-        int i = 0;
-        if (firstScan) {
-            if (split.length != 3) {
-                return "error > wrong expression";
-            }
-            try {
-                doubleA = parseDouble(split[i]);
-            } catch (NumberFormatException e) {
-                return "error > " + split[i];
-            }
-            i++;
-            firstScan = false;
-        } else {
-            if (split.length != 2) {
-                return "error > wrong expression";
-            }
-            doubleA = calculator.getValue();
+        try {
+            doubleA = parseDouble(A);
+        } catch (NumberFormatException e) {
+            return "error > " + A;
         }
+
         Operation operation;
         try {
-
-            if(split[i].length() != 1) {
-                return "error > " + split[i];
-            }
-            operation = Operation.parse(split[i].charAt(0));
+            operation = Operation.parse(operator.charAt(0));
         } catch (IllegalArgumentException e) {
-            return "error > " + split[i];
+            return "error > " + operator;
         }
-        i++;
+
         double doubleB;
         try {
-            doubleB = parseDouble(split[i]);
-        } catch (NumberFormatException e) {
-            return "error > " + split[i];
+            doubleB = parseDouble(B);
+        } catch (IllegalArgumentException e) {
+            return "error > " + B;
+        }
+        calculator.calculate(doubleA, operation, doubleB);
+        return getValue();
+    }
+
+    private String oneArgument(String operator, String B) {
+        double doubleA = calculator.getValue();
+
+        Operation operation;
+        try {
+            operation = Operation.parse(operator.charAt(0));
+        } catch (IllegalArgumentException e) {
+            return "error > " + operator;
+        }
+
+        double doubleB;
+        try {
+            doubleB = parseDouble(B);
+        } catch (IllegalArgumentException e) {
+            return "error > " + B;
         }
         calculator.calculate(doubleA, operation, doubleB);
         return getValue();
@@ -70,28 +81,61 @@ public class ProxyCalculator implements Calculator {
             return Long.toString((long) result);
         }
         String res = String.format(Locale.ROOT, "%.2f", result);
-        if(res.charAt(res.length() - 1) == '0') {
+        if (res.charAt(res.length() - 1) == '0') {
             res = res.substring(0, res.length() - 1);
-            if(res.charAt(res.length() - 1) == '0') {
+            if (res.charAt(res.length() - 1) == '0') {
                 res = res.substring(0, res.length() - 2);
             }
         }
         return res;
     }
 
+    private boolean isValidUnderscore(final String expression) {
+        for (int i = 0; i < expression.length(); i++) {
+            if (expression.charAt(i) == '_') {
+                if (i == 0 || i + 1 == expression.length() || !Character.isDigit(expression.charAt(i - 1)) || !Character.isDigit(expression.charAt(i + 1))) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     private double parseDouble(String s) {
         try {
-            Pattern pattern = Pattern.compile("^([+]|-)?(0x|0b|0|#)?([0-9]+[_]?[0-9]+)*[0-9]*");
-            Matcher matcher = pattern.matcher(s);
-            if(matcher.matches())
+            if (isValidUnderscore(s)) //matcher.matches())
                 s = s.replaceAll("[_]", "");
-            pattern = Pattern.compile("([+]|-)?(0x|0b|0|#)?[0-9]*((l|L)?)$");
-            matcher = pattern.matcher(s);
-            if(matcher.matches())
+            Pattern pattern = Pattern.compile("[+-]?(0x|0b|0|#)?[0-9]*[lL]$");
+            Matcher matcher = pattern.matcher(s);
+            if (matcher.matches()) {
                 s = s.replaceAll("l|L", "");
+                if (s.length() > 2 && s.charAt(0) == '0' && s.charAt(1) == 'b') {
+                    return new BigInteger(s.substring(2), 2).longValue();
+                } else {
+                    if (s.length() > 1 && s.charAt(0) == '0' && Character.isDigit(s.charAt(1))) {
+                        String res = s.replaceAll("^0+", "");
+                        Long.decode(res);
+                        try {
+                            return Long.decode(s);
+                        } catch (NumberFormatException e) {
+                            throw new IllegalArgumentException();
+                        }
+                    }
+                    return Long.decode(s);
+                }
+            }
             if (s.length() > 2 && s.charAt(0) == '0' && s.charAt(1) == 'b') {
-                return Integer.parseInt(s.substring(2), 2);
+                return new BigInteger(s.substring(2), 2).intValue();
             } else {
+                if (s.length() > 1 && s.charAt(0) == '0' && Character.isDigit(s.charAt(1))) {
+                    String res = s.replaceAll("^0+", "");
+                    Integer.decode(res);
+                    try {
+                        return Integer.decode(s);
+                    } catch (NumberFormatException e) {
+                        throw new IllegalArgumentException();
+                    }
+                }
                 return Integer.decode(s);
             }
         } catch (NumberFormatException e) {
@@ -99,3 +143,4 @@ public class ProxyCalculator implements Calculator {
         }
     }
 }
+
