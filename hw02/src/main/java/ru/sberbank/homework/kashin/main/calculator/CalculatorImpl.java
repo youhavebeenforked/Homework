@@ -6,8 +6,8 @@ import static java.util.Objects.nonNull;
 import static ru.sberbank.homework.kashin.main.util.CalculateHelper.*;
 
 public class CalculatorImpl implements Calculator {
-    private static final String regExpOneLiteral = "^(\\+|-|\\*|/) -?\\w+(.\\w+)?$";
-    private static final String regExpTwoLiterals = "^-?\\w+(.\\w+)? (\\+|-|\\*|/) -?\\w+(.\\w+)?$";
+    private static final String regExpOneLiteral = "^(\\+|-|\\*|/) (\\+|-)?\\w+(.\\w+)?$";
+    private static final String regExpTwoLiterals = "^(\\+|-)?\\w+(.\\w+)? (\\+|-|\\*|/) (\\+|-)?\\w+(.\\w+)?$";
 
     /**
      * Обрабатывает пользовательский ввод.

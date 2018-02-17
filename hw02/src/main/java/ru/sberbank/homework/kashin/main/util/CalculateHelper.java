@@ -9,10 +9,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class CalculateHelper {
-    private static final String binaryNumber = "^-?(0b)(0|1)+(l)?$";
-    private static final String octalNumber = "^-?(0)([0-7])+(l)?$";
-    private static final String hexNumber = "^-?(0x)([0-9]|[a-f])+(l)?$";
-    private static final String correctLiteralRegExp = "^(-)?(0b|0x)?(\\d|[a-f])+(.(\\d|[a-f])+)?(l)?$";
+    private static final String binaryNumber = "^(\\+|-)?(0b)(0|1)+(l)?$";
+    private static final String octalNumber = "^(\\+|-)?(0)([0-7])+(l)?$";
+    private static final String hexNumber = "^(\\+|-)?(0x)([0-9]|[a-f])+(l)?$";
+    private static final String correctLiteralRegExp = "^(\\+|-)?(0b|0x)?(\\d|[a-f])+(.(\\d|[a-f])+)?(l)?$";
     private static Double preResult;
     private static Map<Integer, String> originalLiterals = new HashMap<>();
 
