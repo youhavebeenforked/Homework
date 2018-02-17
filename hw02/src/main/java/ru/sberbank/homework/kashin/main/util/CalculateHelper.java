@@ -109,12 +109,8 @@ public class CalculateHelper {
         return m.matches();
     }
 
-    public static boolean checkInteger(double checkNumber) {
-        return (checkNumber == Math.floor(checkNumber)) && !Double.isInfinite(checkNumber);
-    }
-
     private static boolean checkIncorrectUnderscore(String element) {
-        return (element.startsWith("_") || element.endsWith("_") || element.contains("_.") ||element.contains("._") || element.startsWith("0b_") || element.startsWith("0x_") || element.contains("_l"));
+        return (element.startsWith("_") || element.endsWith("_") || element.contains("_.") || element.contains("._") || element.startsWith("0b_") || element.startsWith("0x_") || element.contains("_l"));
     }
 
     private static boolean checkIncorrectOctal(String element) {

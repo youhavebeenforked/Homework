@@ -21,7 +21,7 @@ public class CalculatorImpl implements Calculator {
      */
     @Override
     public String calculate(String userInput) {
-        if (checkWithRegExp(userInput.trim(),regExpTwoLiterals)) {
+        if (checkWithRegExp(userInput.trim(), regExpTwoLiterals)) {
             try {
                 return parser(userInput.trim()).calculate();
             } catch (Exception e) {

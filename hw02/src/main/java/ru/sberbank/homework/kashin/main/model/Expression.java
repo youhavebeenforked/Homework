@@ -3,22 +3,12 @@ package ru.sberbank.homework.kashin.main.model;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 
-import static ru.sberbank.homework.kashin.main.util.CalculateHelper.checkInteger;
-
 public abstract class Expression {
     protected double first;
     protected double second;
 
-    public double getFirst() {
-        return first;
-    }
-
     public void setFirst(double first) {
         this.first = first;
-    }
-
-    public double getSecond() {
-        return second;
     }
 
     public void setSecond(double second) {
@@ -27,7 +17,7 @@ public abstract class Expression {
 
     public abstract String calculate();
 
-    public String roundNumber(double number) {
+    protected String roundNumber(double number) {
         if (checkInteger(number)) {
             return Long.toString(Math.round(number));
         } else {
@@ -39,5 +29,9 @@ public abstract class Expression {
             }
             return roundedResult;
         }
+    }
+
+    private static boolean checkInteger(double checkNumber) {
+        return (checkNumber == Math.floor(checkNumber)) && !Double.isInfinite(checkNumber);
     }
 }
