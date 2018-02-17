@@ -44,7 +44,7 @@ public class ProxyCalculator implements Calculator {
         try {
             operation = Operation.parse(operator.charAt(0));
         } catch (IllegalArgumentException e) {
-            return "error > " + operator;
+            return "error > wrong expression";
         }
 
         double doubleB;
@@ -64,7 +64,7 @@ public class ProxyCalculator implements Calculator {
         try {
             operation = Operation.parse(operator.charAt(0));
         } catch (IllegalArgumentException e) {
-            return "error > " + operator;
+            return "error > wrong expression";
         }
 
         double doubleB;
