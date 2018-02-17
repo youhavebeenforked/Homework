@@ -28,7 +28,7 @@ public abstract class Expression {
         }
     }
 
-    private static boolean checkInteger(double checkNumber) {
+    private boolean checkInteger(double checkNumber) {
         return (checkNumber == Math.floor(checkNumber)) && !Double.isInfinite(checkNumber);
     }
 }
