@@ -109,18 +109,18 @@ public class ProxyCalculator implements Calculator {
 
     private double parseDouble(String p) {
         String s = p;
+        boolean isLong = parseLong(s);
+        if (isLong) {
+            s = s.replaceAll("[l|L]$", "");
+        }
+        if (isValidUnderscore(s)) //matcher.matches())
+            s = s.replaceAll("[_]", "");
         try {
-            boolean isLong = parseLong(s);
-            if (isLong) {
-                s = s.replaceAll("[l|L]$", "");
-            }
-            if (isValidUnderscore(s)) //matcher.matches())
-                s = s.replaceAll("[_]", "");
 
             if (isLong) {
                 if (parseBinary(s)) {
                     if (s.charAt(0) == '-') {
-                        return - new BigInteger(s.substring(cutBinary(s)), 2).longValue();
+                        return -new BigInteger(s.substring(cutBinary(s)), 2).longValue();
                     }
                     return new BigInteger(s.substring(cutBinary(s)), 2).longValue();
                 } else {
@@ -138,7 +138,7 @@ public class ProxyCalculator implements Calculator {
             }
             if (parseBinary(s)) {
                 if (s.charAt(0) == '-') {
-                    return - new BigInteger(s.substring(cutBinary(s)), 2).intValue();
+                    return -new BigInteger(s.substring(cutBinary(s)), 2).intValue();
                 }
                 return new BigInteger(s.substring(cutBinary(s)), 2).intValue();
             } else {
