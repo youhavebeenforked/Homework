@@ -5,56 +5,50 @@ import ru.sberbank.homework.common.Calculator;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Scanner;
 
 public class SimpleCalculator implements Calculator {
 
     private BigDecimal lastResult;
-    private boolean isNextStep;
-
-    public SimpleCalculator() {
-        isNextStep = false;
-        lastResult = new BigDecimal(0);
-    }
+    private boolean hasFirstExpression = false;
 
     @Override
     public String calculate(String userInput) {
 
         try {
             Scanner scanner = new Scanner(userInput);
-            int tokenCount = 0;
+            List<String> tokens = new ArrayList<>(3);
             while (scanner.hasNext()) {
-                scanner.next();
-                tokenCount++;
+                tokens.add(scanner.next());
             }
-            if (tokenCount != 3 & tokenCount != 2) {
+            if (tokens.size() != 3 & tokens.size() != 2) {
                 throw new IllegalArgumentException("wrong expression");
             }
-            scanner = new Scanner(userInput);
 
-            BigDecimal firstNumber = lastResult;
-            String inputToken = "";
-            try {
-                inputToken = scanner.next();
-                firstNumber = getNumber(inputToken);
-                isNextStep = false;
-            } catch (NumberFormatException exception) {
-                isNextStep = true;
+            BigDecimal firstNumber;
+            Operation operation;
+            BigDecimal secondNumber;
+            if (tokens.size() == 3) {
+                firstNumber = getNumber(tokens.get(0));
+                operation = getOperation(tokens.get(1));
+                secondNumber = getNumber(tokens.get(2));
+                hasFirstExpression = true;
+            } else if (hasFirstExpression) {
+                firstNumber = lastResult;
+                operation = getOperation(tokens.get(0));
+                secondNumber = getNumber(tokens.get(1));
+            } else {
+                throw new IllegalArgumentException("wrong expression");
             }
-
-            if (!isNextStep) {
-                inputToken = scanner.next();
-            }
-            Operation operation = getOperation(inputToken);
-
-            inputToken = scanner.next();
-            BigDecimal secondNumber = getNumber(inputToken);
 
             lastResult = operation.executeOperation(firstNumber, secondNumber);
             return formatOutput(lastResult);
         } catch (IllegalArgumentException | ArithmeticException exception) {
-            lastResult = new BigDecimal(0);
+            lastResult = null;
+            hasFirstExpression = false;
             return "error > " + exception.getMessage();
         }
     }
@@ -66,11 +60,11 @@ public class SimpleCalculator implements Calculator {
 
     private Operation getOperation(String signString) {
         if (signString.length() > 1) {
-            throw new IllegalArgumentException(signString);
+            throw new IllegalArgumentException("wrong expression");
         }
         Operation operation = Operation.getBySign(signString.charAt(0));
         if (operation == null) {
-            throw new IllegalArgumentException(signString);
+            throw new IllegalArgumentException("wrong expression");
         }
         return operation;
     }
