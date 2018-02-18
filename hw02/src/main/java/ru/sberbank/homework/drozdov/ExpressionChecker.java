@@ -1,9 +1,6 @@
 package ru.sberbank.homework.drozdov;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-
 
 public class ExpressionChecker {
     private String expression;
@@ -30,6 +27,12 @@ public class ExpressionChecker {
                 if (currentString.equals("")) {
                     continue;
                 }
+                for (int j = 0; j < currentString.length(); j++) {
+                    if (!validLiterals.containsValue(currentString.charAt(j))) {
+                        refactorString = new StringBuilder("error > " + currentString);
+                        return false;
+                    }
+                }
                 if (currentString.length() == 1 && operations.containsValue(currentString.charAt(0))) {
                     refactorString.append(currentString.charAt(0)).append(" ");
                     continue;
@@ -44,13 +47,13 @@ public class ExpressionChecker {
                         num = Integer.parseInt(currentString.substring(1), 8);
                     } else if (currentString.contains(".")) {
                         num = Double.parseDouble(currentString);
-                    } else if (currentString.endsWith("L")) {
+                    } else if (currentString.endsWith("L") || currentString.endsWith("l")) {
                         num = Long.parseLong(currentString.substring(0, currentString.length() - 1));
                     } else {
                         num = Integer.parseInt(currentString);
                     }
                 } catch (RuntimeException e) {
-                    System.err.println("error > wrong expression");
+                    refactorString = new StringBuilder("error > wrong expression");
                     return false;
                 }
                 refactorString.append(String.valueOf(num)).append(" ");
@@ -82,39 +85,36 @@ public class ExpressionChecker {
                     break;
             }
             if (bracketsBalance < 0) {
-                System.err.println("error > wrong expression");
-                return false;
-            }
-            if (!validLiterals.containsValue(expression.charAt(i))) {
-                System.err.println(String.format("%s %s%n","error > ",expression.charAt(i)));
+                refactorString = new StringBuilder("error > wrong expression");
                 return false;
             }
             if (k == 2) {
-                System.err.println("error > wrong expression");
+                refactorString = new StringBuilder("error > wrong expression");
                 return false;
             }
         }
         if (bracketsBalance > 0) {
-            System.err.println("error > wrong expression");
+            refactorString = new StringBuilder("error > wrong expression");
             return false;
         }
         return true;
     }
 
-    public StringBuilder getRefactorString() {
-        return refactorString;
+    public String getRefactorString() {
+        return refactorString.toString();
     }
 
     private void fillValidLiterals() {
         for (int i = 0; i < 10; i++) {
             validLiterals.put(i, (char) (i + '0'));
         }
-        ArrayList<Character> validLiteralsArray = new ArrayList<>(Arrays.asList('x', 'b', '_', 'L', ' ', '.', '(', ')', '+', '-', '/', '*'));
-        for (int i = 0; i < validLiteralsArray.size(); i++) {
-            validLiterals.put(i + 10, validLiteralsArray.get(i));
+        String validLiteralsString = "xb_Ll .()+-/*abcdfABCDF";
+        String[] validLiteralsArray = validLiteralsString.split("");
+        for (int i = 0; i < validLiteralsArray.length; i++) {
+            validLiterals.put(i + 10, validLiteralsArray[i].charAt(0));
         }
         for (int i = 0; i < 6; i++) {
-            operations.put(i, validLiteralsArray.get(i + 6));
+            operations.put(i, validLiteralsArray[i + 7].charAt(0));
         }
     }
 }
