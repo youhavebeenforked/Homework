@@ -98,53 +98,34 @@ public class ProxyCalculator implements Calculator {
     }
 
     private boolean isValidNumber(String s) {
-        for (char ch : s.toCharArray())
-            for (int i = 0; i < s.length(); i++) {
-                if (i == 0 && (s.charAt(0) == '-' || s.charAt(0) == '+')) {
-                    continue;
-                }
-                if (i > 0 && isExponent(s.charAt(i - 1), s.charAt(i))) {
-                    ++i;
-                    continue;
-                }
-                if (!isValidSymbol(s.charAt(i))) {
-                    return false;
-                }
+        for (int i = 0; i < s.length(); i++) {
+            if (i == 0 && (s.charAt(0) == '-' || s.charAt(0) == '+')) {
+                continue;
             }
+            if (i > 0 && isExponent(s.charAt(i - 1), s.charAt(i))) {
+                ++i;
+                continue;
+            }
+            if (!isValidSymbol(s.charAt(i))) {
+                return false;
+            }
+        }
         return true;
     }
 
     private boolean isExponent(char one, char two) {
-        if ((one == 'e' || one == 'E') && (two == '+' || two == '-')) {
-            return true;
-        }
-        return false;
+        return (one == 'e' || one == 'E') && (two == '+' || two == '-');
     }
 
     private boolean isValidSymbol(char symbol) {
         char[] alphabet = new char[]{'a', 'b', 'c', 'd', 'e', 'f', 'A', 'B', 'C', 'D',
                 'E', 'F', 'l', 'L', 'x', 'X', '_', '#', ' ', '.'};
         for (char ch : alphabet) {
-
             if (symbol == ch || Character.isDigit(symbol)) {
                 return true;
             }
         }
         return false;
-    }
-
-    private boolean isValidUnderscore(final String expression) {
-        for (int i = 0; i < expression.length(); i++) {
-            if (expression.charAt(i) == '_') {
-                if (i == 0
-                        || i + 1 == expression.length()
-                        || expression.charAt(i - 1) == '_'
-                        || expression.charAt(i + 1) == '_') {
-                    return false;
-                }
-            }
-        }
-        return true;
     }
 
 }
