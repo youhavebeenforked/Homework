@@ -17,7 +17,7 @@ public class CalculatorImpl implements ru.sberbank.homework.common.Calculator {
         if (splittedUserInput.length == 2) { // formatting "@_b" to "a_@_b", a,b-operands, @-operator
             String[] largerSplittedInput = new String[3];
             largerSplittedInput[0] = currentState;
-            for (int i = 0; i < 2; ++i) {
+            for (int i = 0; i < OPERANDS_AMOUNT; ++i) {
                 largerSplittedInput[i + 1] = splittedUserInput[i];
             }
             splittedUserInput = largerSplittedInput;
@@ -42,7 +42,7 @@ public class CalculatorImpl implements ru.sberbank.homework.common.Calculator {
         double result = operation.calculate(operands[0], operands[1]);
         DecimalFormatSymbols otherSymbols = new DecimalFormatSymbols();
         otherSymbols.setDecimalSeparator('.');
-        DecimalFormat doubleDF = new DecimalFormat("0.00", otherSymbols);
+        DecimalFormat doubleDF = new DecimalFormat("0.##", otherSymbols);
         DecimalFormat intDF = new DecimalFormat("0");
         if (Math.abs(result - Math.round(result)) < EPSILON) {
             currentState = intDF.format(result);

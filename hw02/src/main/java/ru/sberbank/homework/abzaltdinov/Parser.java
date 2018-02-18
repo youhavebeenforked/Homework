@@ -66,6 +66,7 @@ public class Parser {
         int radix = getRadix(number);
         int maxBitCount = getMaxBitCount(number);
         int maxLength = maxBitCount / (int) (Math.log(radix) / Math.log(2));
+        checkUnderscopes(number);
         String formattedNumber = removeUnderscopes(removePrefix(removeSuffix(number)));
         formattedNumber = formattedNumber.toUpperCase();
         if (!isCharactersInAlphabet(formattedNumber, radix)) {
@@ -143,13 +144,15 @@ public class Parser {
         } else {
             formattedNumber = number;
         }
-        checkUnderscopes(formattedNumber);
         return formattedNumber;
     }
 
     private static void checkUnderscopes(String number) {
-        if (number.startsWith("_") || number.endsWith("_")) {
-            throw new NumberFormatException("Underscopes must not be at the beginning and end of numbers");
+        if (number.startsWith("_")
+                || number.matches("^0(_[bBxX]|[bBxX]_).+$")
+                || number.matches("^.+_[lL]$")
+                || number.endsWith("_")) {
+            throw new NumberFormatException("Wrong position of underscopes");
         }
         //for floating numbers
         //if (number.contains("_.") || number.contains("._")) {
@@ -170,14 +173,12 @@ public class Parser {
     private static String removePrefix(String number) {
         if (number.length() > 1 && number.startsWith("0")) {
             number = number.substring(1);
-            checkUnderscopes(number);
             char c = number.charAt(0);
             if (c == 'x'
                     || c == 'X'
                     || c == 'b'
                     || c == 'B') {
                 number = number.substring(1);
-                checkUnderscopes(number);
             }
         }
         return number;
