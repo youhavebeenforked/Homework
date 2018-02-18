@@ -21,7 +21,7 @@ public class ProxyCalculator implements Calculator {
             return "error > wrong expression";
         }
         if (split.length == 2) {
-            return oneArgument(split[0], split[1]);
+            return oneArgument(calculator.getValue(), split[0], split[1]);
         }
         if (split.length == 3) {
             firstScan = false;
@@ -37,27 +37,10 @@ public class ProxyCalculator implements Calculator {
         } catch (Exception e) {
             return "error > " + A;
         }
-
-        Operation operation;
-        try {
-            operation = Operation.parse(operator.charAt(0));
-        } catch (IllegalArgumentException e) {
-            return "error > wrong expression";
-        }
-
-        double doubleB;
-        try {
-            doubleB = parseDouble(B);
-        } catch (Exception e) {
-            return "error > " + B;
-        }
-        calculator.calculate(doubleA, operation, doubleB);
-        return getValue();
+        return oneArgument(doubleA, operator, B);
     }
 
-    private String oneArgument(String operator, String B) {
-        double doubleA = calculator.getValue();
-
+    private String oneArgument(double doubleA, String operator, String B) {
         Operation operation;
         try {
             operation = Operation.parse(operator.charAt(0));
@@ -127,6 +110,4 @@ public class ProxyCalculator implements Calculator {
         }
         return false;
     }
-
 }
-

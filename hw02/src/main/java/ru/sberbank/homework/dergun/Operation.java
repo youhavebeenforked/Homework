@@ -4,20 +4,16 @@ import java.util.function.BiFunction;
 
 public enum Operation {
     PLUS('+', (l, r) -> l + r),
-    MINUS('-',(l, r) -> l - r),
+    MINUS('-', (l, r) -> l - r),
     MULTIPLY('*', (l, r) -> l * r),
     DIVIDE('/', (l, r) -> l / r);
 
-    char symbol;
+    private char symbol;
     private BiFunction<Double, Double, Double> operator;
 
     Operation(char symbol, BiFunction<Double, Double, Double> operator) {
         this.symbol = symbol;
         this.operator = operator;
-    }
-
-    public double apply(double a, double b) {
-        return operator.apply(a, b);
     }
 
     public static Operation parse(char s) {
@@ -28,5 +24,9 @@ public enum Operation {
         }
 
         throw new IllegalArgumentException("Invalid operator");
+    }
+
+    public double apply(double a, double b) {
+        return operator.apply(a, b);
     }
 }
