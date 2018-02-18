@@ -2,10 +2,8 @@ package ru.sberbank.homework.dergun;
 
 import ru.sberbank.homework.common.Calculator;
 
-import java.math.BigInteger;
+import java.io.IOException;
 import java.util.Locale;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class ProxyCalculator implements Calculator {
     private static final double DBL_EPSILON = 1e-10;
@@ -36,7 +34,7 @@ public class ProxyCalculator implements Calculator {
         double doubleA;
         try {
             doubleA = parseDouble(A);
-        } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
             return "error > " + A;
         }
 
@@ -50,7 +48,7 @@ public class ProxyCalculator implements Calculator {
         double doubleB;
         try {
             doubleB = parseDouble(B);
-        } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
             return "error > " + B;
         }
         calculator.calculate(doubleA, operation, doubleB);
@@ -70,7 +68,7 @@ public class ProxyCalculator implements Calculator {
         double doubleB;
         try {
             doubleB = parseDouble(B);
-        } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
             return "error > " + B;
         }
         calculator.calculate(doubleA, operation, doubleB);
@@ -92,14 +90,56 @@ public class ProxyCalculator implements Calculator {
         return res;
     }
 
+    private double parseDouble(String s) throws IOException, IllegalAccessException, NoSuchFieldException, ClassNotFoundException {
+        if (isValidNumber(s)) {
+            return Parser.parseValue(s);
+        }
+        throw new IllegalAccessException();
+    }
+
+    private boolean isValidNumber(String s) {
+        for (char ch : s.toCharArray())
+            for (int i = 0; i < s.length(); i++) {
+                if (i == 0 && (s.charAt(0) == '-' || s.charAt(0) == '+')) {
+                    continue;
+                }
+                if (i > 0 && isExponent(s.charAt(i - 1), s.charAt(i))) {
+                    ++i;
+                    continue;
+                }
+                if (!isValidSymbol(s.charAt(i))) {
+                    return false;
+                }
+            }
+        return true;
+    }
+
+    private boolean isExponent(char one, char two) {
+        if ((one == 'e' || one == 'E') && (two == '+' || two == '-')) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isValidSymbol(char symbol) {
+        char[] alphabet = new char[]{'a', 'b', 'c', 'd', 'e', 'f', 'A', 'B', 'C', 'D',
+                'E', 'F', 'l', 'L', 'x', 'X', '_', '#', ' ', '.'};
+        for (char ch : alphabet) {
+
+            if (symbol == ch || Character.isDigit(symbol)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private boolean isValidUnderscore(final String expression) {
         for (int i = 0; i < expression.length(); i++) {
             if (expression.charAt(i) == '_') {
                 if (i == 0
                         || i + 1 == expression.length()
                         || expression.charAt(i - 1) == '_'
-                        || expression.charAt(i + 1) == '_'
-                        || expression.charAt(i - 1) == 'x') {
+                        || expression.charAt(i + 1) == '_') {
                     return false;
                 }
             }
@@ -107,82 +147,5 @@ public class ProxyCalculator implements Calculator {
         return true;
     }
 
-    private double parseDouble(String p) {
-        String s = p;
-        boolean isLong = parseLong(s);
-        if (isLong) {
-            s = s.replaceAll("[l|L]$", "");
-        }
-        if (isValidUnderscore(s)) //matcher.matches())
-            s = s.replaceAll("[_]", "");
-        try {
-
-            if (isLong) {
-                if (parseBinary(s)) {
-                    if (s.charAt(0) == '-') {
-                        return -new BigInteger(s.substring(cutBinary(s)), 2).longValue();
-                    }
-                    return new BigInteger(s.substring(cutBinary(s)), 2).longValue();
-                } else {
-                    if (s.length() > 1 && s.charAt(0) == '0' && Character.isDigit(s.charAt(1))) {
-                        String res = s.replaceAll("^0+", "");
-                        Long.decode(res);
-                        try {
-                            return Long.decode(s);
-                        } catch (NumberFormatException e) {
-                            throw new IllegalArgumentException();
-                        }
-                    }
-                    return Long.decode(s);
-                }
-            }
-            if (parseBinary(s)) {
-                if (s.charAt(0) == '-') {
-                    return -new BigInteger(s.substring(cutBinary(s)), 2).intValue();
-                }
-                return new BigInteger(s.substring(cutBinary(s)), 2).intValue();
-            } else {
-                if (s.length() > 1 && s.charAt(0) == '0' && Character.isDigit(s.charAt(1))) {
-                    String res = s.replaceAll("^0+", "");
-                    Integer.decode(res);
-                    try {
-                        return Integer.decode(s);
-                    } catch (NumberFormatException e) {
-                        throw new IllegalArgumentException();
-                    }
-                }
-                return Integer.decode(s);
-            }
-        } catch (NumberFormatException e) {
-            return Double.parseDouble(p);
-        }
-    }
-
-    private int cutBinary(String s) {
-        if (parseBinary(s) && parseBinary("+" + s)) {
-            return 2;
-        }
-        if (parseBinary(s)) {
-            return 3;
-        }
-        return 0;
-    }
-
-    private boolean parseLong(String s) {
-        Pattern pattern = Pattern.compile(".*[lL]$");
-        Matcher matcher = pattern.matcher(s);
-        return matcher.matches();
-    }
-
-    private boolean parseBinary(String s) {
-        if (s.length() > 2) {
-            char one = s.charAt(0);
-            char two = s.charAt(1);
-            char three = s.charAt(2);
-            return one == '0' && (two == 'b' || two == 'B') ||
-                    (one == '+' || one == '-') && two == '0' && (three == 'b' || three == 'B');
-        }
-        return false;
-    }
 }
 
