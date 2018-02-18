@@ -5,12 +5,12 @@ import java.text.DecimalFormatSymbols;
 
 public class CalculatorImpl implements ru.sberbank.homework.common.Calculator {
     private static final double EPSILON = 1e-6;
+    public static final int OPERANDS_AMOUNT = 2;
     private String currentState;
 
     @Override
     public String calculate(String userInput) {
-        double firstOperand;
-        double secondOperand;
+        double[] operands = new double[OPERANDS_AMOUNT];
         Operation operation;
 
         String[] splittedUserInput = userInput.split(" ");
@@ -22,30 +22,24 @@ public class CalculatorImpl implements ru.sberbank.homework.common.Calculator {
             }
             splittedUserInput = largerSplittedInput;
         }
-
         if (splittedUserInput.length != 3 || splittedUserInput[0] == null) {
             return getFormattedError("wrong expression");
         }
-
-        try {
-            firstOperand = Parser.parseNumber(splittedUserInput[0]);
-        } catch (NumberFormatException nfex) {
-            return getFormattedError(splittedUserInput[0]);
+        String[] inputOperands = {splittedUserInput[0], splittedUserInput[2]};
+        String inputOperation = splittedUserInput[1];
+        for (int i = 0; i < OPERANDS_AMOUNT; ++i) {
+            try {
+                operands[i] = Parser.parseNumber(inputOperands[i]);
+            } catch (NumberFormatException nfex) {
+                return getFormattedError(inputOperands[i]);
+            }
         }
-
         try {
-            operation = Parser.parseOperation(splittedUserInput[1]);
+            operation = Parser.parseOperation(inputOperation);
         } catch (UnsupportedOperationException uoex) {
-            return getFormattedError(splittedUserInput[1]);
+            return getFormattedError(inputOperation);
         }
-
-        try {
-            secondOperand = Parser.parseNumber(splittedUserInput[2]);
-        } catch (NumberFormatException nfex) {
-            return getFormattedError(splittedUserInput[2]);
-        }
-
-        double result = operation.calculate(firstOperand, secondOperand);
+        double result = operation.calculate(operands[0], operands[1]);
         DecimalFormatSymbols otherSymbols = new DecimalFormatSymbols();
         otherSymbols.setDecimalSeparator('.');
         DecimalFormat doubleDF = new DecimalFormat("0.00", otherSymbols);
