@@ -5,13 +5,13 @@ package ru.sberbank.homework.kiseleva.interfaces;
  */
 public interface CommonCalculator {
 
-    public Number addition(Number one, Number two);
+    public Number sum(Number one, Number two);
 
-    public Number subtraction(Number one, Number two);
+    public Number subtract(Number one, Number two);
 
-    public Number multiplication(Number one, Number two);
+    public Number multiply(Number one, Number two);
 
-    public Number division(Number one, Number two);
+    public Number divide(Number one, Number two);
 
     public Number cast(String num);
 }
