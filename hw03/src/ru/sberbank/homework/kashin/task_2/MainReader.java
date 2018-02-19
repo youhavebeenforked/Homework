@@ -9,15 +9,13 @@ public class MainReader {
 
     public static void main(String[] args) {
         UrlReader reader = new UrlReader();
-        String userInput;
 
         while (true) {
             print("Enter URL address: ");
-            userInput = readConsole();
-            if (reader.readPage(userInput) == 0) {
-                continue;
+            String userInput = readConsole();
+            if (reader.readPage(userInput)) {
+                break;
             }
-            return;
         }
     }
 }

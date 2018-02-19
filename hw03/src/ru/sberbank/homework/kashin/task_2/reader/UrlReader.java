@@ -7,11 +7,12 @@ import java.net.URL;
 import java.net.URLConnection;
 
 import static java.util.Objects.nonNull;
+import static java.util.Objects.requireNonNull;
 import static ru.sberbank.homework.kashin.task_2.reader.ConsoleHelper.print;
 
 public class UrlReader {
 
-    public int readPage(String url) {
+    public boolean readPage(String url) {
         URL address;
         URLConnection connection;
         try {
@@ -19,22 +20,19 @@ public class UrlReader {
             connection = address.openConnection();
         } catch (IOException e) {
             print("url not available..");
-            return 0;
+            return false;
         }
-        if (nonNull(connection)) {
-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
-                String line;
-                while (nonNull(line = reader.readLine())) {
-                    System.out.println(line);
-                }
-                return 1;
-            } catch (IOException e) {
-                print("url not available..");
-                return 0;
+
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(requireNonNull(connection).getInputStream()))) {
+            String line;
+            while (nonNull(line = reader.readLine())) {
+                System.out.println(line);
             }
-        } else {
+            return true;
+        } catch (IOException e) {
             print("url not available..");
-            return 0;
+            return false;
         }
+
     }
 }
