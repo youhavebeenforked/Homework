@@ -8,7 +8,7 @@ import java.util.Scanner;
  */
 public class TerminalClient {
 
-    private static TerminalImpl terminal = new TerminalImpl();
+    private TerminalImpl terminal = new TerminalImpl();
     private static TerminalServer server = new TerminalServer();
     private static PinValidator pinValidator = new PinValidator();
 

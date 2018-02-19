@@ -15,20 +15,20 @@ public class TerminalImpl implements Terminal {
     }
 
     @Override
-    public void pullMoney(TerminalServer server, int i) throws NotEnoughMoneyException {
-        if (i % MINIMAL_VALUE_OF_BILL != 0) {
+    public void pullMoney(TerminalServer server, int amountMoney) throws NotEnoughMoneyException {
+        if (amountMoney % MINIMAL_VALUE_OF_BILL != 0) {
             throw new IllegalArgumentException("The amount must be a multiple of 100");
         }
-        server.setAmountMoney(server.getAmountMoney() - i);
+        server.setAmountMoney(server.getAmountMoney() - amountMoney);
         System.out.println("now you have " + server.getAmountMoney());
     }
 
     @Override
-    public void putMoney(TerminalServer server, int i) {
-        if (i % MINIMAL_VALUE_OF_BILL != 0) {
+    public void putMoney(TerminalServer server, int amountMoney) {
+        if (amountMoney % MINIMAL_VALUE_OF_BILL != 0) {
             throw new IllegalArgumentException("The amount must be a multiple of 100");
         }
-        server.setAmountMoney(server.getAmountMoney() + i);
+        server.setAmountMoney(server.getAmountMoney() + amountMoney);
         System.out.println("now you have " + server.getAmountMoney());
     }
 }
