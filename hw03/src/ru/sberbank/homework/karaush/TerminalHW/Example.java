@@ -1,4 +1,4 @@
-package ru.sberbank.homework.lastname;
+package ru.sberbank.homework.karaush.TerminalHW;
 
 import java.util.Scanner;
 
