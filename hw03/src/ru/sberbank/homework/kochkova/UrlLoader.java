@@ -13,27 +13,27 @@ public class UrlLoader {
     private void readPage(String url) throws IOException {
         URL page = new URL(url);
         URLConnection connection = page.openConnection();
-        BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-        String inputLine = in.readLine();
-        while (inputLine != null) {
-            System.out.println(inputLine);
-            inputLine = in.readLine();
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
+            String inputLine = in.readLine();
+            while (inputLine != null) {
+                System.out.println(inputLine);
+                inputLine = in.readLine();
+            }
         }
-        in.close();
     }
 
     public void loadPage() {
-        Scanner scanner = new Scanner(System.in);
-        String input = scanner.nextLine();
-        while (true) {
-            try {
-                readPage(input);
-                break;
-            } catch (IOException e) {
-                System.out.println("Something went wrong, try to repeat your input: ");
-                input = scanner.nextLine();
+        try (Scanner scanner = new Scanner(System.in)) {
+            String input = scanner.nextLine();
+            while (true) {
+                try {
+                    readPage(input);
+                    break;
+                } catch (IOException e) {
+                    System.out.println("Something went wrong, try to repeat your input: ");
+                    input = scanner.nextLine();
+                }
             }
         }
-        scanner.close();
     }
 }
