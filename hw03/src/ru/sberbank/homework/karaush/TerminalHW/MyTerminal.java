@@ -1,4 +1,4 @@
-package ru.sberbank.homework.lastname;
+package ru.sberbank.homework.karaush.TerminalHW;
 
 public class MyTerminal implements Terminal {
     private final TerminalServer terminalServer;
