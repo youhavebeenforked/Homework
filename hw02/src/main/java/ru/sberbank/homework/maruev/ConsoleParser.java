@@ -25,7 +25,7 @@ public class ConsoleParser {
                 if (i % 2 == 0) {
                     if (isOperand(list[i])) {
                         dequeSymbols.addLast(operandValue);
-                    } else if(i == 0){
+                    } else if (i == 0) {
                         otherParsing(input);
                         break;
                     } else {
@@ -68,19 +68,21 @@ public class ConsoleParser {
     }
 
     public static boolean isOperand(String operand) {
-        if (operand.startsWith("_") || operand.endsWith("_")) {
+        operand = operand.toLowerCase();
+        if (operand.startsWith("_") || operand.endsWith("_")
+                || operand.contains("._") || operand.contains("_.") || operand.contains("_l")) {
             return false;
         }
 
-        operand = operand.toLowerCase();
-
         if (operand.endsWith("l")) {
-            return changeOperand(operand, "l", "_", 10);
-        } else if (operand.startsWith("0x")) {
+            operand = operand.replaceAll("l", "");
+        }
+
+        if (operand.startsWith("0x") || operand.startsWith("-0x") || operand.startsWith("+0x")) {
             return changeOperand(operand, "0x", "_", 16);
-        } else if (operand.startsWith("0b")) {
+        } else if (operand.startsWith("0b") || operand.startsWith("-0b") || operand.startsWith("+0b")) {
             return changeOperand(operand, "0b", "_", 2);
-        } else if (operand.startsWith("0") && !operand.contains(".")) {
+        } else if ((operand.startsWith("0") || operand.startsWith("-0") || operand.startsWith("+0")) && !operand.contains(".")) {
             return changeOperand(operand, "", "_", 8);
         } else {
             try {

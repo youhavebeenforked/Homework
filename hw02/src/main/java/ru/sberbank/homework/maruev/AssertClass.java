@@ -13,11 +13,20 @@ public class AssertClass {
     private static String[] expectedFalse = {"error > _1", "error > ^", "error > dd", "error > Division by zero", "error > wrong expression"};
 
     public static void main(String[] args) {
-        AssertClass.assertEquals("1 + 1", "2");
-        AssertClass.assertEquals("1 / 2", "0,5");
-        AssertClass.assertEquals("1.0 + 1", "2");
+        AssertClass.assertEquals("1L + 1L", "2");
+        AssertClass.assertEquals("1 / 2", "0.5");
+        AssertClass.assertEquals("1.0 - 1", "0");
         AssertClass.assertEquals("5.0 * 2", "10");
         AssertClass.assertEquals("-1 - -1", "0");
+        AssertClass.assertEquals("1 * 0.5", "0.5");
+
+        AssertClass.assertEquals("4 - 1", "3");
+        AssertClass.assertEquals("100_200 + 100", "100300");
+        AssertClass.assertEquals("100_100._22 + 100", "error > 100_100._22");
+        AssertClass.assertEquals("-0xA + +0xA", "0");
+        AssertClass.assertEquals("0_11 - 0_11", "0");
+        AssertClass.assertEquals("-0_11 + +0_11", "0");
+        AssertClass.assertEquals("11_L + +0_11", "error > 11_L");
 
         AssertClass.assertSequence(actualsTrue, expectedTrue);
         AssertClass.assertSequence(actualsFalse, expectedFalse);

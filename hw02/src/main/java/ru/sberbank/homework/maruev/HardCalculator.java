@@ -15,7 +15,6 @@ public class HardCalculator implements Calculator {
     private final static String MESSAGE_ERROR = "error > ";
     private final static String DIVISION_ERROR = "Division by zero";
     private final static String WR_EXPRESSION = "wrong expression";
-    private DecimalFormat decimalFormat = new DecimalFormat("#.##");
     private static Operator operator;
 
     @Override
@@ -34,7 +33,8 @@ public class HardCalculator implements Calculator {
             } else {
                 throw new NumberFormatException();
             }
-            return String.valueOf(decimalFormat.format(operator.getResult()));
+            return operator.getResult();
+
         } catch (NumberFormatException e) {
             return MESSAGE_ERROR + ConsoleParser.currentSymbol;
         } catch (NullPointerException e) {

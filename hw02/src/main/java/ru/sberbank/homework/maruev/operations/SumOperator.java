@@ -6,14 +6,22 @@ package ru.sberbank.homework.maruev.operations;
 
 import ru.sberbank.homework.maruev.ConsoleParser;
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+
 import static ru.sberbank.homework.maruev.HardCalculator.result;
 
 public class SumOperator implements Operator {
-    @Override
-    public double getResult() {
+
+    public String getResult() {
         ConsoleParser.stackOperator.pop();
+
         result = ConsoleParser.dequeSymbols.pop() + ConsoleParser.dequeSymbols.pop();
         ConsoleParser.dequeSymbols.addFirst(result);
-        return result;
+
+        DecimalFormat decimalFormat = new DecimalFormat("#.##");
+        String validResult = decimalFormat.format(result);
+        validResult = validResult.replace(',', '.'); // Исправлено
+        return validResult;
     }
 }
