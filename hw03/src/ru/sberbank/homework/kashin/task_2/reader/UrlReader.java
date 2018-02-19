@@ -17,13 +17,13 @@ public class UrlReader {
         URLConnection connection;
         try {
             address = new URL(url);
-            connection = address.openConnection();
-        } catch (IOException e) {
+            connection = requireNonNull(address.openConnection());
+        } catch (Exception e) {
             print("url not available..");
             return false;
         }
 
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(requireNonNull(connection).getInputStream()))) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
             String line;
             while (nonNull(line = reader.readLine())) {
                 System.out.println(line);
