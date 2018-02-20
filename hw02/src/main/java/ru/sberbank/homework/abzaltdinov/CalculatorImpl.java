@@ -6,6 +6,7 @@ import java.text.DecimalFormatSymbols;
 public class CalculatorImpl implements ru.sberbank.homework.common.Calculator {
     private static final double EPSILON = 1e-6;
     public static final int OPERANDS_AMOUNT = 2;
+    private static final String WRONG_EXPRESSION = "wrong expression";
     private String currentState;
 
     @Override
@@ -23,7 +24,7 @@ public class CalculatorImpl implements ru.sberbank.homework.common.Calculator {
             splittedUserInput = largerSplittedInput;
         }
         if (splittedUserInput.length != 3 || splittedUserInput[0] == null) {
-            return getFormattedError("wrong expression");
+            return getFormattedError(WRONG_EXPRESSION);
         }
         String[] inputOperands = {splittedUserInput[0], splittedUserInput[2]};
         String inputOperation = splittedUserInput[1];
@@ -37,18 +38,13 @@ public class CalculatorImpl implements ru.sberbank.homework.common.Calculator {
         try {
             operation = Parser.parseOperation(inputOperation);
         } catch (UnsupportedOperationException uoex) {
-            return getFormattedError(inputOperation);
+            return getFormattedError(WRONG_EXPRESSION);
         }
         double result = operation.calculate(operands[0], operands[1]);
         DecimalFormatSymbols otherSymbols = new DecimalFormatSymbols();
         otherSymbols.setDecimalSeparator('.');
-        DecimalFormat doubleDF = new DecimalFormat("0.##", otherSymbols);
-        DecimalFormat intDF = new DecimalFormat("0");
-        if (Math.abs(result - Math.round(result)) < EPSILON) {
-            currentState = intDF.format(result);
-        } else {
-            currentState = doubleDF.format(result);
-        }
+        DecimalFormat df = new DecimalFormat("0.##", otherSymbols);
+        currentState = df.format(result);
         return currentState;
     }
 

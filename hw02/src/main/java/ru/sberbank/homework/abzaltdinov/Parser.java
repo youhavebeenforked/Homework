@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 public class Parser {
 
+    private static final String REGEX_CHECK_UNDERSCOPES = "^((_|0(_[bBxX]|[bBxX]_)).*|.*_[lL]?)$";
     private static HashMap<Character, Operation> operations;
 
     static {
@@ -148,16 +149,9 @@ public class Parser {
     }
 
     private static void checkUnderscopes(String number) {
-        if (number.startsWith("_")
-                || number.matches("^0(_[bBxX]|[bBxX]_).+$")
-                || number.matches("^.+_[lL]$")
-                || number.endsWith("_")) {
+        if (number.matches(REGEX_CHECK_UNDERSCOPES)) {
             throw new NumberFormatException("Wrong position of underscopes");
         }
-        //for floating numbers
-        //if (number.contains("_.") || number.contains("._")) {
-        //    throw new RuntimeException("!!!");
-        //}
     }
 
     private static String removeUnderscopes(String number) {
