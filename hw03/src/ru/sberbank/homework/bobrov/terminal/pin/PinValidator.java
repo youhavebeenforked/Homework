@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * TODO: comment
+ * Task terminal.
  *
  * @author Dmitriy Bobrov (bobrov.dmitriy@gmail.com)
  * @since 16.02.2018
@@ -45,7 +45,6 @@ public class PinValidator {
      * Simply simulate a database of card and pin.
      */
     private void fillAccounts() {
-
         accounts.put(1234_1234_1234_1234L, 1234);
     }
 }

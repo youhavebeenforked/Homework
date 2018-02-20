@@ -13,7 +13,7 @@ import ru.sberbank.homework.bobrov.terminal.exception.CheckPinException;
 import java.util.Scanner;
 
 /**
- * TODO: comment
+ * Task terminal.
  *
  * @author Dmitriy Bobrov (bobrov.dmitriy@gmail.com)
  * @since 16.02.2018
@@ -134,8 +134,8 @@ public class TerminalImpl implements Terminal {
         return result;
     }
 
-    public int getBalance() {
-        return server.getBalance();
+    public void getBalance() {
+        System.out.println(server.getBalance());
     }
 
 

@@ -1,11 +1,8 @@
 package ru.sberbank.homework.bobrov.terminal.term;
 
-import ru.sberbank.homework.bobrov.terminal.exception.CheckPinException;
-import ru.sberbank.homework.bobrov.terminal.exception.NotEnoughMoney;
-import ru.sberbank.homework.bobrov.terminal.exception.WrongSumException;
 
 /**
- * TODO: comment
+ * Task terminal.
  *
  * @author Dmitriy Bobrov (bobrov.dmitriy@gmail.com)
  * @since 16.02.2018
@@ -17,4 +14,6 @@ public interface Terminal {
     void getMoney();
 
     void depositMoney();
+
+    void getBalance();
 }

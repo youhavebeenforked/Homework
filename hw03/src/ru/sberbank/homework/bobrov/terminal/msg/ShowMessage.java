@@ -2,7 +2,7 @@ package ru.sberbank.homework.bobrov.terminal.msg;
 
 
 /**
- * TODO: comment
+ * Task terminal.
  *
  * @author Dmitriy Bobrov (bobrov.dmitriy@gmail.com)
  * @since 20.02.2018
@@ -17,4 +17,6 @@ public interface ShowMessage {
     void showWrongSumException();
 
     void showIdentError();
+
+    void showNetworkProblem();
 }

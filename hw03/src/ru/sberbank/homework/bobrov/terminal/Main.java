@@ -1,14 +1,12 @@
 package ru.sberbank.homework.bobrov.terminal;
 
 
-
 import ru.sberbank.homework.bobrov.terminal.term.Terminal;
 import ru.sberbank.homework.bobrov.terminal.term.TerminalImpl;
 
-import java.util.Scanner;
 
 /**
- * TODO: comment
+ * Task terminal.
  *
  * @author Dmitriy Bobrov (bobrov.dmitriy@gmail.com)
  * @since 16.02.2018
@@ -16,8 +14,6 @@ import java.util.Scanner;
 
 
 public class Main {
-
-
 
     public static void main(String[] args) {
         long cardNumber = 1234_1234_1234_1234L;

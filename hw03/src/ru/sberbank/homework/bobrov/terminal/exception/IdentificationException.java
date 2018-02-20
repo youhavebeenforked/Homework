@@ -2,7 +2,7 @@ package ru.sberbank.homework.bobrov.terminal.exception;
 
 
 /**
- * TODO: comment
+ * Task terminal.
  *
  * @author Dmitriy Bobrov (bobrov.dmitriy@gmail.com)
  * @since 20.02.2018
