@@ -9,7 +9,7 @@ package ru.sberbank.homework.bobrov.terminal.exception;
  */
 
 
-public class CheckPinException extends Exception {
+public class CheckPinException extends RuntimeException {
     public CheckPinException(String message) {
         super(message);
     }

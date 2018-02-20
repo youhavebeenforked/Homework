@@ -9,7 +9,7 @@ package ru.sberbank.homework.bobrov.terminal.exception;
  */
 
 
-public class WrongSumException extends Exception {
+public class WrongSumException extends RuntimeException {
     public WrongSumException(String message) {
         super(message);
     }

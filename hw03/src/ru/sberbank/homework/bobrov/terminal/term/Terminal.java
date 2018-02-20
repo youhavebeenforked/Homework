@@ -12,5 +12,9 @@ import ru.sberbank.homework.bobrov.terminal.exception.WrongSumException;
  */
 
 public interface Terminal {
-    void startTerminal(long cardNumber) throws CheckPinException, WrongSumException, NotEnoughMoney;
+    void startTerminal(long cardNumber);
+
+    void getMoney();
+
+    void depositMoney();
 }

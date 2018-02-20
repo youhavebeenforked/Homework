@@ -18,11 +18,16 @@ public class PinValidator {
     private Map<Long, Integer> accounts = new HashMap<>();
 
     public boolean checkCredentials(long cardNumber, int pinCOde) throws CheckPinException {
-        boolean result = false;
+        boolean result;
         if (accounts.isEmpty()) {
             fillAccounts();
         }
-        return (accounts.containsKey(cardNumber) && checkPinCode(cardNumber, pinCOde));
+        if (accounts.containsKey(cardNumber) && checkPinCode(cardNumber, pinCOde)) {
+            result = true;
+        } else {
+            throw new CheckPinException("Wrong pin");
+        }
+        return result;
     }
 
     private boolean checkPinCode(long cardNumber, int pinCOde) {
@@ -30,6 +35,7 @@ public class PinValidator {
         for (Map.Entry<Long, Integer> longIntegerEntry : accounts.entrySet()) {
             if (longIntegerEntry.getKey() == cardNumber && longIntegerEntry.getValue() == pinCOde) {
                 result = true;
+                break;
             }
         }
         return result;

@@ -2,7 +2,8 @@ package ru.sberbank.homework.bobrov.terminal.srv;
 
 
 import ru.sberbank.homework.bobrov.terminal.exception.NotEnoughMoney;
-import ru.sberbank.homework.bobrov.terminal.exception.WrongSumException;
+import ru.sberbank.homework.bobrov.terminal.msg.ShowMessage;
+import ru.sberbank.homework.bobrov.terminal.msg.ShowMessageImpl;
 
 /**
  * TODO: comment
@@ -13,23 +14,27 @@ import ru.sberbank.homework.bobrov.terminal.exception.WrongSumException;
 
 
 public class TerminalServerImpl implements TerminalServer {
-    int balance = 1000;
+    private final ShowMessage showMsg = new ShowMessageImpl();
+
+
+    private int balance = 1000;
 
     @Override
-    public int getMoney(int amount) throws WrongSumException, NotEnoughMoney {
+    public int getMoney(int amount) {
         if (amount > balance) {
-            throw new NotEnoughMoney("Not Enough Money");
+            try {
+                throw new NotEnoughMoney("Not Enough Money");
+            } catch (NotEnoughMoney notEnoughMoney) {
+                showMsg.showNotEnoughMoney();
+                return 0;
+            }
         }
         return amount;
     }
 
     @Override
-    public void depositMoney(int amount) throws WrongSumException {
-        if (amount % 100 != 0) {
-            throw new WrongSumException("Enter the sum multiple 100");
-        }
+    public void depositMoney(int amount) {
         balance = balance + amount;
-
     }
 
     @Override

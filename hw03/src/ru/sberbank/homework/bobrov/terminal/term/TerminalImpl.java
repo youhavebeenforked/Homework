@@ -1,8 +1,10 @@
 package ru.sberbank.homework.bobrov.terminal.term;
 
 
-import ru.sberbank.homework.bobrov.terminal.exception.NotEnoughMoney;
+import ru.sberbank.homework.bobrov.terminal.exception.IdentificationException;
 import ru.sberbank.homework.bobrov.terminal.exception.WrongSumException;
+import ru.sberbank.homework.bobrov.terminal.msg.ShowMessage;
+import ru.sberbank.homework.bobrov.terminal.msg.ShowMessageImpl;
 import ru.sberbank.homework.bobrov.terminal.pin.PinValidator;
 import ru.sberbank.homework.bobrov.terminal.srv.TerminalServer;
 import ru.sberbank.homework.bobrov.terminal.srv.TerminalServerImpl;
@@ -21,29 +23,37 @@ import java.util.Scanner;
 public class TerminalImpl implements Terminal {
     private final TerminalServer server = new TerminalServerImpl();
     private final PinValidator pinValidator = new PinValidator();
-    Scanner scanner = new Scanner(System.in);
-    boolean isValidPin = false;
+    private final ShowMessage showMsg = new ShowMessageImpl();
+    private boolean isValidPin = false;
+    private long cardNumber;
 
     @Override
-    public void startTerminal(long cardNumber) throws CheckPinException, WrongSumException, NotEnoughMoney {
-        Integer pinCode;
+    public void startTerminal(long cardNumber) {
+        this.cardNumber = cardNumber;
+        Scanner scanner = new Scanner(System.in);
+        int pinCode;
         int countWrongPin = 0;
-        System.out.println("please enter your pin code");
+        int exit = -1;
+
+        System.out.println("Please enter your pin code");
         pinCode = scanner.nextInt();
         while (true) {
-            if (pinValidator.checkCredentials(cardNumber, pinCode)) {
+            if (pinCode == exit) {
+                break;
+            }
+            try {
+                pinValidator.checkCredentials(cardNumber, pinCode);
                 isValidPin = true;
                 startMenu();
-                break;
-            } else {
-                System.out.println("Please try again");
+            } catch (CheckPinException e) {
+                showMsg.showWrongPin();
                 pinCode = scanner.nextInt();
                 countWrongPin++;
             }
             if (countWrongPin == 2) {
                 try {
                     countWrongPin = 0;
-                    System.out.println("account locked for 5 seconds");
+                    System.out.println("Account locked for 5 seconds");
                     Thread.sleep(5000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -52,46 +62,90 @@ public class TerminalImpl implements Terminal {
         }
     }
 
-    private void startMenu() throws CheckPinException, WrongSumException, NotEnoughMoney {
-        System.out.println("start menu");
+    private void startMenu() {
+        System.out.println("Start menu");
         System.out.println("1 - Get money");
         System.out.println("2 - Deposit money");
         System.out.println("3 - Get balance");
         System.out.println("4 - Quit");
 
+        Scanner scanner = new Scanner(System.in);
         int select = scanner.nextInt();
         switch (select) {
             case 1:
                 getMoney();
+                break;
             case 2:
                 depositMoney();
+                break;
             case 3:
                 getBalance();
-            case 4:
                 break;
+            case 4:
+                System.exit(0);
 
         }
     }
 
-    public void getMoney() throws CheckPinException, WrongSumException, NotEnoughMoney {
+    public void getMoney() {
+        Scanner scanner = new Scanner(System.in);
         if (isValidPin) {
             System.out.println("Enter amount");
         } else {
-            throw new CheckPinException("Not entered pin");
+            callIdentification();
         }
-        int amount = scanner.nextInt();
-        if (amount % 100 != 0) {
-            throw new WrongSumException("Enter the sum multiple 100");
+        while (true) {
+            int amount = scanner.nextInt();
+            if (checkValidSum(amount)) {
+                server.getMoney(amount);
+                break;
+            }
+        }
+    }
+
+    public void depositMoney() {
+        Scanner scanner = new Scanner(System.in);
+        if (isValidPin) {
+            System.out.println("Enter amount");
         } else {
-            server.getMoney(amount);
+            callIdentification();
+        }
+        while (true) {
+            int amount = scanner.nextInt();
+            if (checkValidSum(amount)) {
+                server.depositMoney(amount);
+                break;
+            }
+        }
+    }
+
+    private boolean checkValidSum(int amount) {
+        boolean result = false;
+        if (amount % 100 != 0) {
+            try {
+                throw new WrongSumException("Wrong sum");
+            } catch (WrongSumException e) {
+                showMsg.showWrongSumException();
+            }
+        } else {
+            result = true;
         }
 
+        return result;
     }
 
-    private void getBalance() {
+    public int getBalance() {
+        return server.getBalance();
     }
 
-    private void depositMoney() {
+
+    private void callIdentification() {
+        try {
+            throw new IdentificationException("Identification failed");
+        } catch (IdentificationException e) {
+            showMsg.showIdentError();
+            startTerminal(cardNumber);
+        }
     }
 
 
