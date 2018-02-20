@@ -1,5 +1,5 @@
 public class Assert {
-    private static final double epsilon = 0.1e-4;  //Точность
+    private static final double epsilon = 0.1e-4;  //РўРѕС‡РЅРѕСЃС‚СЊ
 
     public static void equals(String message, double expected, double actual){
         if (Math.abs(expected-actual)>epsilon) throw new AssertionError(message);

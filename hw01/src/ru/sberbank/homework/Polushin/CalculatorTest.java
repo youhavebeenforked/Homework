@@ -3,9 +3,9 @@ import java.text.DecimalFormatSymbols;
 
 public class CalculatorTest {
     static Calculator calc = new Calculator();
-    private static DecimalFormat df4 = new DecimalFormat(".####"); //Формат вывода даблов
+    private static DecimalFormat df4 = new DecimalFormat(".####"); //Р¤РѕСЂРјР°С‚ РІС‹РІРѕРґР° РґР°Р±Р»РѕРІ
     public CalculatorTest(){
-        //По умолчанию разделитель дробной части запятая, а нужна точка
+        //РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ СЂР°Р·РґРµР»РёС‚РµР»СЊ РґСЂРѕР±РЅРѕР№ С‡Р°СЃС‚Рё Р·Р°РїСЏС‚Р°СЏ, Р° РЅСѓР¶РЅР° С‚РѕС‡РєР°
         DecimalFormatSymbols dfs= df4.getDecimalFormatSymbols();
         dfs.setDecimalSeparator('.');
         df4.setDecimalFormatSymbols(dfs);
@@ -19,30 +19,30 @@ public class CalculatorTest {
         Assert.equals("2+2 must be equals 4, not a " + sum, sum, 4);
     }
 
-    //Проверка умножения интов
+    //РџСЂРѕРІРµСЂРєР° СѓРјРЅРѕР¶РµРЅРёСЏ РёРЅС‚РѕРІ
     void multiplyIntTest(double a, double b) {
         int first= (int) a;
         int second= (int) b;
 
-        notValidArgumentTest(a, b, 3); //являются ли введенные значения целыми числами
-        overflowIntVariableTest(a, b); //Влазят ли эти цисла в инт
-        overflowTest(first,second,3); //переполняется ли результат инт после умножения
+        notValidArgumentTest(a, b, 3); //СЏРІР»СЏСЋС‚СЃСЏ Р»Рё РІРІРµРґРµРЅРЅС‹Рµ Р·РЅР°С‡РµРЅРёСЏ С†РµР»С‹РјРё С‡РёСЃР»Р°РјРё
+        overflowIntVariableTest(a, b); //Р’Р»Р°Р·СЏС‚ Р»Рё СЌС‚Рё С†РёСЃР»Р° РІ РёРЅС‚
+        overflowTest(first,second,3); //РїРµСЂРµРїРѕР»РЅСЏРµС‚СЃСЏ Р»Рё СЂРµР·СѓР»СЊС‚Р°С‚ РёРЅС‚ РїРѕСЃР»Рµ СѓРјРЅРѕР¶РµРЅРёСЏ
 
         int res = calc.multiply(first, second);
         Assert.equals(first + "*" + second + " must be equals" + first * second + ", not a " + res, res, first * second);
     }
 
-    //Проверка вычитания в даблах
+    //РџСЂРѕРІРµСЂРєР° РІС‹С‡РёС‚Р°РЅРёСЏ РІ РґР°Р±Р»Р°С…
     void subDoubleTest(double a, double b, double actual){
-        overflowTest(a,b,6); //Проверка переполнения дабла
+        overflowTest(a,b,6); //РџСЂРѕРІРµСЂРєР° РїРµСЂРµРїРѕР»РЅРµРЅРёСЏ РґР°Р±Р»Р°
 
         double res =  calc.sub(a,b);
         Assert.equals(a + "-" + b + " must be equals " + df4.format(actual) + ", not a " + df4.format(res), res, actual);
     }
 
-    //Деление в даблах
+    //Р”РµР»РµРЅРёРµ РІ РґР°Р±Р»Р°С…
     void divisionDoubleTest(double a, double b, double actual){
-        divisionByZeroTest(a, b, 8); // Проверка деления на ноль
+        divisionByZeroTest(a, b, 8); // РџСЂРѕРІРµСЂРєР° РґРµР»РµРЅРёСЏ РЅР° РЅРѕР»СЊ
         double res=calc.div(a,b);
         Assert.equals(a + "/" + b + " must be equals " + df4.format(actual) + ", not a " + df4.format(res), res, actual);
     }
@@ -68,7 +68,7 @@ public class CalculatorTest {
 
     }
     public void run(){
-        //тест 2+2
+        //С‚РµСЃС‚ 2+2
         try{
             twoPlusTwoTest();
             System.out.println("Test 2+2 passed");
@@ -77,7 +77,7 @@ public class CalculatorTest {
             System.out.println(error.getMessage());
         }
 
-        // не является интом
+        // РЅРµ СЏРІР»СЏРµС‚СЃСЏ РёРЅС‚РѕРј
         try {
             multiplyIntTest(3, 5);
             System.out.println("Test for int variables passed");
@@ -88,7 +88,7 @@ public class CalculatorTest {
             System.out.println(error.getMessage());
         }
 
-        //не влазит в инт
+        //РЅРµ РІР»Р°Р·РёС‚ РІ РёРЅС‚
         try {
             multiplyIntTest(30L, 5000000);
             System.out.println("Test for overflow int variables passed");
@@ -99,7 +99,7 @@ public class CalculatorTest {
             System.out.println(error.getMessage());
         }
 
-        //переполнение инта после вычисления
+        //РїРµСЂРµРїРѕР»РЅРµРЅРёРµ РёРЅС‚Р° РїРѕСЃР»Рµ РІС‹С‡РёСЃР»РµРЅРёСЏ
         try {
             multiplyIntTest(3000, 5000);
             System.out.println("Test for overflow result of int passed");
@@ -110,7 +110,7 @@ public class CalculatorTest {
             System.out.println(error.getMessage());
         }
 
-        //деление на ноль
+        //РґРµР»РµРЅРёРµ РЅР° РЅРѕР»СЊ
         try {
             divisionDoubleTest(4, 1.5, 2.667);
             System.out.println("Test for division doubles passed");
@@ -121,7 +121,7 @@ public class CalculatorTest {
             System.out.println(error.getMessage());
         }
 
-        //вычитание в double
+        //РІС‹С‡РёС‚Р°РЅРёРµ РІ double
         try {
             subDoubleTest(4.6,2.6,2);
             System.out.println("Test for sub doubles passed");

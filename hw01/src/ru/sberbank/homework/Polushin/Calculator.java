@@ -7,7 +7,7 @@ public class Calculator {
     private static DecimalFormat df3 = new DecimalFormat("0.000");
 
     public Calculator(){
-        //По умолчанию разделитель дробной части запятая, а нужна точка
+        //РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ СЂР°Р·РґРµР»РёС‚РµР»СЊ РґСЂРѕР±РЅРѕР№ С‡Р°СЃС‚Рё Р·Р°РїСЏС‚Р°СЏ, Р° РЅСѓР¶РЅР° С‚РѕС‡РєР°
         DecimalFormatSymbols dfs= df3.getDecimalFormatSymbols();
         dfs.setDecimalSeparator('.');
         df3.setDecimalFormatSymbols(dfs);
