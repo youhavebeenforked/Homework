@@ -1,5 +1,6 @@
 package ru.sberbank.homework.your_lastname.serialization;
 
+import ru.sberbank.homework.common.CachePathProvider;
 import ru.sberbank.homework.common.City;
 import ru.sberbank.homework.common.Route;
 import ru.sberbank.homework.common.RouteService;
@@ -15,9 +16,13 @@ import java.util.UUID;
 public class InMemoryRouteService extends RouteService<City, Route<City>> {
     private HashMap<String, Route<City>> routeHashMap = new HashMap<>();
 
+    public InMemoryRouteService(CachePathProvider cachePathProvider) {
+        super(cachePathProvider, false);
+    }
+
     @Override
     public Route<City> getRoute(String from, String to) {
-        String key = from + to;
+        String key = from + "_" + to;
         Route<City> route = routeHashMap.get(key);
         if (route == null) {
             route = super.getRoute(from, to);

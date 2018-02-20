@@ -5,17 +5,29 @@ import java.time.LocalDate;
 import java.util.*;
 
 public abstract class RouteService<C extends City, T extends Route> {
-    private final Set<String> cities = new HashSet<>(Arrays.asList("Санкт-Петербург", "Москва", "Челябинск", "Свердловск", "Пермь", "Сыктывкар", "Мурманск",
-            "Ростов-на-Дону", "Воронеж", "Владивосток", "Омск"));
+    private final Set<String> cities = new HashSet<>(Arrays.asList("Saint-Petersburg", "Moscow", "Chelyabinsk", "Berlin",
+            "Sverdlovsk", "Murmansk", "Vladimir", "London", "Kiev", "Minsk", "Astana", "Vladivostok", "Novosibirsk"));
+    protected CachePathProvider pathProvider;
     private int idCounter = 0;
     private SecureRandom rand = new SecureRandom();
+    private boolean devMode;
 
-    public RouteService() {
-
+    public RouteService(CachePathProvider pathProvider, boolean devMode) {
+        this.pathProvider = pathProvider;
+        this.devMode = devMode;
     }
 
-    /**
-     * Медленный, неэффективный, возможно расположенный в другой стране / на другой планете сервис.
+    public boolean isDevMode() {
+        return devMode;
+    }
+
+    /*
+     * Медленный, неэффективный, и, возможно, расположенный в другой стране / на другой планете, сервис.
+     * Главное, что присутствуют циклические зависимости.
+     *
+     * @param from Название города отправления
+     * @param to Название города назначения
+     * @return Готовый маршрут
      */
     public T getRoute(String from, String to) {
         checkNames(from, to);
@@ -23,31 +35,37 @@ public abstract class RouteService<C extends City, T extends Route> {
         Collections.shuffle(names);
 
         List<C> generated = new ArrayList<>(names.size());
-        names.forEach(s -> generated.add(generateCity(s)));
 
+        names.forEach(s -> generated.add(generateCity(s)));
         generated.forEach(c -> addRandomCities(c, generated));
 
-        generated.sort((o1, o2) -> {
+        generated.sort(getFirstToLastComparator(from, to));
+        if (!devMode) {
+            sleep();
+        }
+
+        return createRoute(generated);
+    }
+
+    private Comparator<C> getFirstToLastComparator(String from, String to) {
+        return (o1, o2) -> {
             if (o1.getCityName().equals(from) || o2.getCityName().equals(to)) {
                 return -1;
-            } else if (o1.getCityName().equals(to) ||o2.getCityName().equals(from)) {
+            } else if (o1.getCityName().equals(to) || o2.getCityName().equals(from)) {
                 return 1;
             }
             return 0;
-        });
-
-        T route = createRoute(generated);
-
-        sleep();
-
-        return route;
+        };
     }
 
+    /**
+     * Имитирует задержку
+     */
     private void sleep() {
         try {
             Thread.sleep(2000 + rand.nextInt(1000));
         } catch (InterruptedException ignore) {
-
+            ignore.printStackTrace();
         }
     }
 
@@ -65,8 +83,23 @@ public abstract class RouteService<C extends City, T extends Route> {
         return createCity(idCounter++, name, date, 6 * rand.nextInt(1000000));
     }
 
+    /**
+     * Создает город.
+     *
+     * @param id                  Уникальный идентификатор города
+     * @param cityName            Название
+     * @param foundDate           Дата основания
+     * @param numberOfInhabitants Число жителей
+     * @return новую сущность города
+     */
     protected abstract C createCity(int id, String cityName, LocalDate foundDate, long numberOfInhabitants);
 
+    /**
+     * Создает маршрут.
+     *
+     * @param cities Список всех сгенерированных городов
+     * @return готовый маршрут
+     */
     protected abstract T createRoute(List<C> cities);
 
     private void checkNames(String from, String to) {

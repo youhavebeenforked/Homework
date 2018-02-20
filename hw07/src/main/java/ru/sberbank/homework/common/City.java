@@ -10,16 +10,32 @@ public class City {
     private String cityName;
     private LocalDate foundDate;
     private long numberOfInhabitants;
-    private List<City> nearCities = new ArrayList<>();
+    private List<City> nearCities;
 
     public City() {
+        cityName = "";
+        foundDate = LocalDate.now();
+        nearCities = new ArrayList<>();
     }
 
     public City(int id, String cityName, LocalDate foundDate, long numberOfInhabitants) {
+        this(id, cityName, foundDate, numberOfInhabitants, new ArrayList<>());
+    }
+
+    public City(int id, String cityName, LocalDate foundDate, long numberOfInhabitants, List<City> nearCities) {
         this.id = id;
         this.cityName = cityName;
         this.foundDate = foundDate;
         this.numberOfInhabitants = numberOfInhabitants;
+        this.nearCities = nearCities;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getCityName() {
@@ -69,14 +85,25 @@ public class City {
 
     @Override
     public int hashCode() {
-
         return Objects.hash(id, cityName);
+    }
+
+    public boolean compare(City city) {
+        return id == city.id &&
+                numberOfInhabitants == city.numberOfInhabitants &&
+                Objects.equals(cityName, city.cityName) &&
+                Objects.equals(foundDate, city.foundDate) &&
+                Objects.equals(nearCities, city.nearCities);
     }
 
     @Override
     public String toString() {
         return "City{" +
-                "cityName='" + cityName + '\'' +
+                "id=" + id +
+                ", cityName='" + cityName + '\'' +
+                ", foundDate=" + foundDate +
+                ", numberOfInhabitants=" + numberOfInhabitants +
+                // ", nearCities=" + nearCities +
                 '}';
     }
 }
