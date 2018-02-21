@@ -13,6 +13,8 @@ public class TerminalServer {
     private long lockTime = 0;
     private int amountMoney = 1000;
     private boolean lock = false;
+    private static boolean UNBLOCK = false;
+    private static boolean BLOCK = true;
     private static final int MAX_WRONG_PINS = 3;
     private static final int MAX_LOCK_TIME = 5;
     private static final long MS_IN_SEC = 1000L;
@@ -49,13 +51,13 @@ public class TerminalServer {
     }
 
     private void locking() {
-        lock = true;
+        lock = BLOCK;
         lockTime = new Date().getTime();
         System.out.println("Account is locked");
     }
 
     public void unlock() {
-        lock = false;
+        lock = UNBLOCK;
     }
 
     public void locker(Date currentDate) {
