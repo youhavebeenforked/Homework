@@ -8,25 +8,18 @@ import java.net.URLConnection;
 
 public class PageReader {
     static boolean readPage(String url) throws IOException {
-        BufferedReader br = null;
-        try {
-            URL pageURL = new URL(url);
-            URLConnection uc = pageURL.openConnection();
-            br = new BufferedReader(
-                    new InputStreamReader(
-                            uc.getInputStream()));
+        URL pageURL = new URL(url);
+        URLConnection uc = pageURL.openConnection();
+        try (BufferedReader br = new BufferedReader(
+                new InputStreamReader(uc.getInputStream()))) {
             String inputLine;
             while ((inputLine = br.readLine()) != null) {
                 System.out.println(inputLine);
             }
             return true;
-        } catch (IOException e){
-            System.out.println("IOException catched!");
+        } catch (IOException | NullPointerException e){
+            System.out.println("Error while opening connection: " + e.getMessage());
             return false;
-        } finally {
-            if (br != null) {
-                br.close();
-            }
         }
     }
 }
