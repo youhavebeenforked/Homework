@@ -14,14 +14,13 @@ public abstract class EnterClass {
     public void enter() throws MalformedURLException {
         Scanner scanner = new Scanner(System.in);
         WebReader reader = new WebReader();
-        boolean isExit = false;
 
-        while (!isExit) {
+        while (true) {
             System.out.println(FIRST_MESSAGE);
             String link = scanner.nextLine();
 
             if (link.equals(EXIT_CONST)) {
-                isExit = true;
+                break;
             } else {
                 if (reader.isValid(link)) {
                     reader.readPage(link);

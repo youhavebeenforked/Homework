@@ -14,7 +14,6 @@ public class TerminalServer {
     public static long startTime;
     private String BILL_IS_EMPTY = "Недостаточно средств на счете\n";
 
-
     public int getBalance() {
         return balance;
     }

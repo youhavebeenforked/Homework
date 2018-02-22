@@ -1,6 +1,7 @@
 package ru.sberbank.homework.maruev.hw3_1.operations;
 
 import ru.sberbank.homework.maruev.hw3_1.TerminalServer;
+import ru.sberbank.homework.maruev.hw3_1.enums.BankCommand;
 import ru.sberbank.homework.maruev.hw3_1.exceptions.*;
 
 import java.util.Scanner;
@@ -12,24 +13,25 @@ public class SetOperation implements Operation {
 
     @Override
     public void move(TerminalServer server, Scanner scanner) {
-        System.out.println(PIN_CODE);
+        System.out.println(BankCommand.PIN_CODE.getCommand());
         String code = scanner.nextLine();
 
         if (validator.isValidPin(code)) {
-            System.out.println(MONEY_SUM);
+            System.out.println(BankCommand.MONEY_SUM.getCommand());
             int sum = Integer.parseInt(scanner.nextLine());
 
             if (sum % 100 == 0) {
                 server.upBalance(sum);
             } else {
-                throw new IllegalArgumentException(SET_MONEY);
+                throw new IllegalArgumentException(BankCommand.SET_MONEY.getCommand());
             }
         } else {
             server.setWrongPinCounter(server.getWrongPinCounter() + 1);
             if (server.getWrongPinCounter() == LOCK_NUMBER) {
                 server.lock();
             }
-            throw new LockException(INCORRECT_PIN + (LOCK_NUMBER - server.getWrongPinCounter()) + "\n");
+            throw new LockException(BankCommand.INCORRECT_PIN.getCommand() +
+                    (LOCK_NUMBER - server.getWrongPinCounter()) + "\n");
         }
     }
 }

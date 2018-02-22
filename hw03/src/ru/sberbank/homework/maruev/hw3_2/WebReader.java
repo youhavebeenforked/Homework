@@ -14,30 +14,23 @@ public class WebReader {
 
     public void readPage(String inputLink) throws MalformedURLException {
         URL linkURL = new URL(inputLink);
-        try {
-            BufferedReader linkReader = new BufferedReader(new InputStreamReader(linkURL.openStream()));
+
+        try (BufferedReader linkReader = new BufferedReader(new InputStreamReader(linkURL.openStream()))) {
             while (linkReader.readLine() != null) {
                 System.out.println(linkReader.readLine());
             }
-            linkReader.close();
         } catch (IOException e) {
             throw new MalformedURLException();
         }
     }
 
     public boolean isValid(String link) {
-        URL linkURL;
         try {
-            linkURL = new URL(link);
-        } catch (MalformedURLException e) {
-            return false;
-        }
-
-        try {
+            URL linkURL = new URL(link);
             linkURL.toURI();
-        } catch (URISyntaxException e) {
+            return true;
+        } catch (MalformedURLException | URISyntaxException e) {
             return false;
         }
-        return true;
     }
 }
