@@ -1,4 +1,4 @@
-package ru.sberbank.homework.abzaltdinov.exception;
+package ru.sberbank.homework.abzaltdinov.first.exception;
 
 public class AccountIsLockedException extends RuntimeException {
     public AccountIsLockedException() {

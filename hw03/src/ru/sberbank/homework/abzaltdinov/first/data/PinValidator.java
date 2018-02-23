@@ -1,6 +1,7 @@
-package ru.sberbank.homework.abzaltdinov.data;
+package ru.sberbank.homework.abzaltdinov.first.data;
 
-import ru.sberbank.homework.abzaltdinov.model.Account;
+import ru.sberbank.homework.abzaltdinov.first.model.Account;
+import ru.sberbank.homework.abzaltdinov.first.repository.AccountStorage;
 
 public class PinValidator {
     public boolean validate(int accountNumber, int pinCode) {
