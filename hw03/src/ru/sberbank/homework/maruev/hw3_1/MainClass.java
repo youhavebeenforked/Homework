@@ -1,6 +1,6 @@
 package ru.sberbank.homework.maruev.hw3_1;
 
-import ru.sberbank.homework.maruev.hw3_1.enums.EnterCommand;
+import ru.sberbank.homework.maruev.hw3_1.constants.EnterCommands;
 import ru.sberbank.homework.maruev.hw3_1.exceptions.*;
 
 import java.util.Date;
@@ -12,10 +12,10 @@ import java.util.concurrent.TimeUnit;
  */
 public class MainClass {
     private static final int LOCK_TIME = 5;
-    public final static String[] COMMANDS_LIST = {"1", "2", "3", "4"};
+    public static final String[] COMMANDS_LIST = {"1", "2", "3", "4"};
     public static Scanner scanner = new Scanner(System.in);
     public static TerminalServer server = new TerminalServer();
-    public static TerminalImpl client = new TerminalImpl();
+    public static Terminal client = new TerminalImpl();
 
     public static void main(String[] args) {
         MainClass.start();
@@ -28,7 +28,7 @@ public class MainClass {
                 openMenu();
                 enterCommand();
             } catch (AccountIsLockedException e) {
-                System.out.println(e.getMessage() + "\n" + EnterCommand.CONTINUE_MESSAGE.getCommand());
+                System.out.println(e.getMessage() + "\n" + EnterCommands.CONTINUE_MESSAGE);
                 String enter = scanner.nextLine();
 
                 if (enter.equals(COMMANDS_LIST[0])) {
@@ -50,26 +50,27 @@ public class MainClass {
     private static void lockInform() {
         if (!server.isLock()) {
             Date date = new Date();
-            if (TimeUnit.MILLISECONDS.toSeconds(date.getTime() - TerminalServer.startTime) > LOCK_TIME) {
+            if (TimeUnit.MILLISECONDS.toSeconds(date.getTime() - server.getStartTime()) > LOCK_TIME) {
                 server.unLock();
             } else {
-                throw new AccountIsLockedException(EnterCommand.UN_LOCK.getCommand() +
-                        (LOCK_TIME - TimeUnit.MILLISECONDS.toSeconds(date.getTime() - TerminalServer.startTime))
-                        + EnterCommand.SECONDS.getCommand());
+                throw new AccountIsLockedException(String.format(EnterCommands.UN_LOCK,
+                        LOCK_TIME -
+                                TimeUnit.MILLISECONDS.toSeconds(date.getTime() -
+                                        server.getStartTime())));
             }
         }
     }
 
     private static void openMenu() {
         System.out.println(
-                EnterCommand.CHOOSE_OPERATION.getCommand() +
-                        EnterCommand.BALANCE.getCommand() +
-                        EnterCommand.UP_BALANCE.getCommand() +
-                        EnterCommand.DOWN_BALANCE.getCommand() +
-                        EnterCommand.EXIT_CODE.getCommand());
+                EnterCommands.CHOOSE_OPERATION +
+                        EnterCommands.BALANCE +
+                        EnterCommands.UP_BALANCE +
+                        EnterCommands.DOWN_BALANCE +
+                        EnterCommands.EXIT_CODE);
     }
 
-    public static void enterCommand() {
+    private static void enterCommand() {
         String input = scanner.nextLine();
 
         if (input.equals(COMMANDS_LIST[3])) {
@@ -81,7 +82,7 @@ public class MainClass {
         } else if (input.equals(COMMANDS_LIST[2])) {
             client.getMoney(server, scanner);
         } else {
-            throw new IllegalArgumentException(EnterCommand.INCORRECT_COMMAND.getCommand());
+            throw new IllegalArgumentException(EnterCommands.INCORRECT_COMMAND);
         }
     }
 }

@@ -11,11 +11,15 @@ public class TerminalServer {
     private int balance = 2500;
     private int wrongPinCounter = 0;
     private boolean isLock = true;
-    public static long startTime;
+    private long startTime;
     private String BILL_IS_EMPTY = "Недостаточно средств на счете\n";
 
     public int getBalance() {
         return balance;
+    }
+
+    public long getStartTime() {
+        return startTime;
     }
 
     public void upBalance(int sum) {
@@ -52,5 +56,4 @@ public class TerminalServer {
     public boolean isLock() {
         return isLock;
     }
-
 }
