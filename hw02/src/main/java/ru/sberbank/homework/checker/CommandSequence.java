@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+
+
+
 public class CommandSequence {
     @Getter
     private List<Expression> expressions = new ArrayList<>();
@@ -23,4 +26,5 @@ public class CommandSequence {
         expressions.addAll(Arrays.asList(expressionArray));
         return this;
     }
+
 }

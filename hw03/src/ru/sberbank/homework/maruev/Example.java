@@ -1,4 +1,4 @@
-package ru.sberbank.homework.lastname;
+package ru.sberbank.homework.maruev;
 
 public class Example {
     public static void main(String[] args) {
