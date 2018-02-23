@@ -10,7 +10,7 @@ public class TerminalImpl implements Terminal {
     private static final long LOCK_TIME = 5000; // in milliseconds
     public static final int MAX_WRONG_PINCODES = 3;
     private static final int MIN_AVAILABLE_BILL = 100;
-    private static final TerminalServer server = new TerminalServer();
+    private static final TerminalServer server = new TerminalServerImpl();
     private static final PinValidator pinValidator = new PinValidator();
     private static final UserOutput out = new ConsoleUserOutput();
     private boolean isValidated = false;
@@ -62,7 +62,7 @@ public class TerminalImpl implements Terminal {
             isValidated = false;
             wrongPinCodesCount++;
             if (wrongPinCodesCount == MAX_WRONG_PINCODES) {
-                out.println("Аккаунт заблокирован на " + LOCK_TIME/1000 + " секунд");
+                out.println("Аккаунт заблокирован на " + LOCK_TIME / 1000 + " секунд");
                 setLock();
             }
         }
@@ -117,7 +117,7 @@ public class TerminalImpl implements Terminal {
 
     @Override
     public void getBalance() {
-        out.println("Ваш баланс " + server.getBalance(accountNumber) + " бурлей.");
+        out.println("Ваш баланс " + server.getBalanceRequest(accountNumber) + " бурлей.");
     }
 
     public boolean isSessionStarted() {

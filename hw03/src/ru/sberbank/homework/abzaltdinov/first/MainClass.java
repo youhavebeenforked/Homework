@@ -62,8 +62,7 @@ public class MainClass {
     }
 
     private static void printMenu() {
-        System.out.println(
-                "1 - Проверить баланс\n"
+        System.out.println("1 - Проверить баланс\n"
                 + "2 - Снять наличные\n"
                 + "3 - Внести наличные\n"
                 + "4 - Закончить"
