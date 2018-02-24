@@ -1,20 +1,20 @@
-package ru.sberbank.homework.your_lastname.generics;
+package ru.sberbank.homework.dergun.generics;
 
 import java.util.Map;
 
 /**
  * Дополнить. Параметризовать. Создать класс, реализующий интерфейс.
  */
-public interface CountMap {
+public interface CountMap <E> {
     /**
      * добавляет элемент в этот контейнер.
      */
-    void add(Object o);
+    void add(E e);
 
     /**
      * Возвращает количество добавлений данного элемента
      */
-    int getCount(Object o);
+    int getCount(E e);
 
     /**
      * Удаляет элемент и контейнера и возвращает количество его добавлений(до удаления)
@@ -29,16 +29,22 @@ public interface CountMap {
     /**
      * Добавить все элементы из source в текущий контейнер, при совпадении ключей, суммировать значения
      */
-    void addAll(CountMap source);
+    void addAll(CountMap<? extends E> source);
 
     /**
      * Вернуть java.util.Map. ключ - добавленный элемент, значение - количество его добавлений
      */
-    Map toMap();
+    Map<? extends E, Integer> toMap();
 
     /**
      * Тот же самый контракт как и toMap(), только всю информацию записать в destination
      */
-    void toMap(Map destination);
+    void toMap(Map<? super E, Integer> destination);
+
+    /**
+     * Возвращает t/f пустой ли контейнер
+     */
+    boolean isEmpty();
+
 
 }

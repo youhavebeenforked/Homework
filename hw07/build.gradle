@@ -1,4 +1,4 @@
-group 'ru.sberbank.homework'
+group 'dergun.homework.sberbank.ru'
 version '1.0-SNAPSHOT'
 
 apply plugin: 'java'
