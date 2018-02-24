@@ -5,6 +5,7 @@ import org.junit.Test;
 import ru.sberbank.homework.common.City;
 import ru.sberbank.homework.common.Route;
 import ru.sberbank.homework.common.RouteService;
+import ru.sberbank.homework.kashin.serialization.InFileExternalizationRouteService;
 import ru.sberbank.homework.kashin.serialization.InFileSerializationRouteService;
 import ru.sberbank.homework.your_lastname.serialization.InMemoryRouteService;
 
@@ -18,7 +19,7 @@ public class ServiceTest {
     @Before
     public void pre() {
         //routeService = new KryoRouteService();
-        routeService = new InFileSerializationRouteService(() -> "/tmp/hw07");
+        routeService = new InFileExternalizationRouteService(() -> "/tmp/hw07");
     }
 
     @Test
