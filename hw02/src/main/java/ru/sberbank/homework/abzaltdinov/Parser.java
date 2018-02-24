@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 public class Parser {
 
-    private static final String REGEX_CHECK_UNDERSCOPES = "^((_|0(_[bBxX]|[bBxX]_)).*|.*_[lL]?)$";
+    private static final String REGEX_CHECK_UNDERSCOPES = "^((_|0(_[bBxX]|[bBxX]_)).*|.*(\\._|_\\.).*|.*_[lL]?)$";
     private static HashMap<Character, Operation> operations;
 
     static {
@@ -94,6 +94,7 @@ public class Parser {
     }
 
     public static Double parseDouble(String number) throws NumberFormatException {
+        checkUnderscopes(number);
         return Double.valueOf(removeUnderscopes(removeSuffix(number)));
     }
 
