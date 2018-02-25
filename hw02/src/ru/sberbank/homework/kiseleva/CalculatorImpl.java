@@ -11,7 +11,7 @@ public class CalculatorImpl implements Calculator {
 
     private static CommonCalculatorImpl commonCalculator = new CommonCalculatorImpl();
     private DecimalFormat df = new DecimalFormat("#.##");
-    private static Number result;
+    private Number result;
 
     @Override
     public String calculate(String userInput) {
