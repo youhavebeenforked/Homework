@@ -1,6 +1,7 @@
-package ru.sberbank.homework.kashin.serialization;
+package ru.sberbank.homework.kashin.serialization.externalization;
 
 import ru.sberbank.homework.common.*;
+import ru.sberbank.homework.kashin.serialization.serialization.RouteSerialization;
 
 import java.io.*;
 import java.time.LocalDate;
@@ -10,10 +11,10 @@ import java.util.UUID;
 
 import static java.util.Objects.isNull;
 
-public class InFileSerializationRouteService extends RouteService<City, Route<City>> {
+public class InFileExternalizationRouteService extends RouteService<City, Route<City>> {
     private HashMap<String, String> routeHashMap = new HashMap<>();
 
-    public InFileSerializationRouteService(CachePathProvider pathProvider) {
+    public InFileExternalizationRouteService(CachePathProvider pathProvider) {
         super(pathProvider, false);
     }
 
@@ -25,8 +26,9 @@ public class InFileSerializationRouteService extends RouteService<City, Route<Ci
         if (isNull(pathFile)) {
             Route tmpRoute = super.getRoute(from, to);
             route = new RouteSerialization<>(tmpRoute.getRouteName(), tmpRoute.getCities());
-            serialize(pathProvider.getCacheDirectoryPath() + "/" + key, route);
-            routeHashMap.put(key, pathProvider.getCacheDirectoryPath() + "/" + key);
+            String absPath = pathProvider.getCacheDirectoryPath() + "/" + key;
+            serialize(absPath, route);
+            routeHashMap.put(key, absPath);
         } else {
             route = deserialize(routeHashMap.get(key));
         }

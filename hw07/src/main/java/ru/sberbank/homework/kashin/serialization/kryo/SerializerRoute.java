@@ -1,4 +1,4 @@
-package ru.sberbank.homework.kashin.serialization;
+package ru.sberbank.homework.kashin.serialization.kryo;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.Serializer;

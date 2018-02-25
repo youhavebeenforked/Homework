@@ -1,4 +1,4 @@
-package ru.sberbank.homework.kashin.serialization;
+package ru.sberbank.homework.kashin.serialization.serialization;
 
 import ru.sberbank.homework.common.City;
 import ru.sberbank.homework.common.Route;
