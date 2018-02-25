@@ -1,4 +1,4 @@
-package main.java.ru.sberbank.homework.common;
+package ru.sberbank.homework.common;
 
 /**
  * Вот такой простой интерфейс

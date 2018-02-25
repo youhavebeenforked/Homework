@@ -1,4 +1,4 @@
-package main.java.ru.sberbank.homework.Polushin;
+package ru.sberbank.homework.Polushin;
 
 /**
  * Арифметическая операция.
@@ -7,5 +7,9 @@ package main.java.ru.sberbank.homework.Polushin;
  * todo: удалить весь этот комментарий, написать свой
  */
 public enum Operation {
+    MULTIPLY,
+    SUM,
+    DIVISION,
+    SUBTRACT
     //todo: почитай про меня и реализуй.
 }
