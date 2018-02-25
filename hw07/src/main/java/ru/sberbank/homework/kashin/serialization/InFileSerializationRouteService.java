@@ -25,9 +25,8 @@ public class InFileSerializationRouteService extends RouteService<City, Route<Ci
         if (isNull(pathFile)) {
             Route tmpRoute = super.getRoute(from, to);
             route = new RouteSerialization<>(tmpRoute.getRouteName(), tmpRoute.getCities());
-            String absPath = pathProvider.getCacheDirectoryPath() + "/" + key;
-            serialize(absPath, route);
-            routeHashMap.put(key, absPath);
+            serialize(pathProvider.getCacheDirectoryPath() + "/" + key, route);
+            routeHashMap.put(key, pathProvider.getCacheDirectoryPath() + "/" + key);
         } else {
             route = deserialize(routeHashMap.get(key));
         }

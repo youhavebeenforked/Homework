@@ -5,9 +5,7 @@ import org.junit.Test;
 import ru.sberbank.homework.common.City;
 import ru.sberbank.homework.common.Route;
 import ru.sberbank.homework.common.RouteService;
-import ru.sberbank.homework.kashin.serialization.InFileExternalizationRouteService;
-import ru.sberbank.homework.kashin.serialization.InFileSerializationKryoRouteService;
-import ru.sberbank.homework.kashin.serialization.InFileSerializationRouteService;
+import ru.sberbank.homework.kashin.serialization.KryoRouteService;
 
 import java.util.List;
 
@@ -18,9 +16,9 @@ public class ServiceTest {
 
     @Before
     public void pre() {
-        routeService = new InFileSerializationRouteService(() -> "kashin");
+//        routeService = new InFileSerializationRouteService(() -> "kashin");
 //        routeService = new InFileExternalizationRouteService(() -> "kashin");
-//        routeService = new InFileSerializationKryoRouteService(() -> "kashin");
+        routeService = new KryoRouteService(() -> "kashin");
     }
 
     @Test
