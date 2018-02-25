@@ -14,17 +14,34 @@ import java.util.List;
 import static org.junit.Assert.assertTrue;
 
 public class ServiceTest {
-    RouteService<City, Route<City>> routeService;
+    RouteService<City, Route<City>> serializationRouteService;
+    RouteService<City, Route<City>> externalizationRouteService;
+    RouteService<City, Route<City>> kryoRouteService;
 
     @Before
     public void pre() {
-        routeService = new InFileSerializationRouteService(() -> "kashin");
-//        routeService = new InFileExternalizationRouteService(() -> "kashin");
-//        routeService = new KryoRouteService(() -> "kashin");
+        serializationRouteService = new InFileSerializationRouteService(() -> "kashin");
+        externalizationRouteService = new InFileExternalizationRouteService(() -> "kashin");
+        kryoRouteService = new KryoRouteService(() -> "kashin");
     }
 
     @Test
-    public void testExampleRouteService() {
+    public void testSerializationRouteService() {
+        testExampleRouteService(serializationRouteService);
+    }
+
+    @Test
+    public void testExternalizationRouteService() {
+        testExampleRouteService(externalizationRouteService);
+    }
+
+    @Test
+    public void testKryoRouteService() {
+        testExampleRouteService(kryoRouteService);
+    }
+
+
+    public void testExampleRouteService(RouteService<City, Route<City>> routeService) {
         long startTime = System.currentTimeMillis();
         Route<? extends City> route1 = routeService.getRoute("Saint-Petersburg", "Berlin");
         long endTime = System.currentTimeMillis() - startTime;
