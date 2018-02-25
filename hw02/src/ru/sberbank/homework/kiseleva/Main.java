@@ -9,9 +9,7 @@ public class Main {
     static CalculatorImpl calculator = new CalculatorImpl();
 
     public static void main(String[] args) {
-
         System.out.println("Please enter <number> <operation> <number> ");
-
         while (true) {
             Scanner scanner = new Scanner(System.in);
             String expression = scanner.nextLine();

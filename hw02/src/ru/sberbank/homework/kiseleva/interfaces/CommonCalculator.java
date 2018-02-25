@@ -13,5 +13,5 @@ public interface CommonCalculator {
 
     public Number divide(Number one, Number two);
 
-    public Number cast(String num);
+    public Number cast(String num) throws Exception;
 }

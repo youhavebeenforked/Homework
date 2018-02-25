@@ -34,23 +34,28 @@ public class CommonCalculatorImpl implements CommonCalculator {
     public Number cast(String originalNum) {
         String lowerCaseNum = originalNum.toLowerCase();
         try {
+            if (lowerCaseNum.charAt(lowerCaseNum.length() - 1) == 'l') { //L
+                lowerCaseNum = lowerCaseNum.substring(0, lowerCaseNum.length() - 1);
+            }
+
+            if (checkingDelimiter(lowerCaseNum)) {
+                lowerCaseNum = lowerCaseNum.replaceAll("_", "");
+            }
+
             if (checkWithRegExp(lowerCaseNum)) {
-                if (lowerCaseNum.charAt(lowerCaseNum.length() - 1) == 'l') { //L
-                    lowerCaseNum = lowerCaseNum.replaceAll("_", "");
-                    lowerCaseNum = lowerCaseNum.substring(0, lowerCaseNum.length() - 1);
+
+                if (lowerCaseNum.charAt(0) == '+') {
+                    lowerCaseNum = lowerCaseNum.replace("+", "");
                 }
+
                 if (lowerCaseNum.length() > 1 && lowerCaseNum.charAt(1) == 'b') {
-                    lowerCaseNum = replacing(lowerCaseNum);
-                    if (lowerCaseNum.length() > 33 && lowerCaseNum.charAt(2) == '1') {
-                        return -(Long.parseLong(negativeBin(lowerCaseNum), 2) + 1);
-                    }
                     return Long.parseLong(lowerCaseNum.substring(2), 2);
+                } else if (lowerCaseNum.contains("-0b")) {
+                    return -Long.parseLong(lowerCaseNum.substring(3), 2);
                 } else if (lowerCaseNum.length() > 1 && lowerCaseNum.charAt(1) == 'x') {
-                    lowerCaseNum = replacing(lowerCaseNum);
-                    if (lowerCaseNum.length() > 9 && lowerCaseNum.charAt(2) == 'f') {
-                        return -(Long.parseLong(negativeHex(lowerCaseNum), 16) + 1);
-                    }
                     return Long.parseLong(lowerCaseNum.substring(2), 16);
+                } else if (lowerCaseNum.contains("-0x")) {
+                    return -Long.parseLong(lowerCaseNum.substring(3), 16);
                 } else if (lowerCaseNum.length() > 1 && lowerCaseNum.charAt(0) == '0') {
                     lowerCaseNum = lowerCaseNum.replaceAll("_", "");
                     return Long.parseLong(lowerCaseNum, 8);
@@ -66,40 +71,30 @@ public class CommonCalculatorImpl implements CommonCalculator {
                 return Double.parseDouble(lowerCaseNum);
             }
         } catch (Exception e) {
+            if (originalNum.equals("null")) {
+                throw new NullPointerException();
+            }
             throw new IllegalArgumentException(originalNum);
         }
     }
 
-    public String negativeHex(String lowerCaseNum) {
-        byte[] b = lowerCaseNum.getBytes();
-        byte[] newBytes = new byte[b.length - 3];
-        for (int i = 3; i < b.length; i++) {
-            newBytes[i - 3] = (byte) (102 - b[i] + 48); // F - b[i]
-        }
-        return new String(newBytes);
-    }
-
-    private String negativeBin(String lowerCaseNum) {
-        byte[] b = lowerCaseNum.getBytes();
-        byte[] newBytes = new byte[b.length - 3];
-        for (int i = 3; i < b.length; i++) {
-            if (b[i] == 49) {
-                newBytes[i - 3] = 48; //заменяем 1 на 0
-            } else newBytes[i - 3] = 49;
-        }
-        return new String(newBytes);
-    }
-
-    public String replacing(String originalNum) {
-        if (originalNum.charAt(2) != '_') {
-            originalNum = originalNum.replaceAll("_", "");
-        }
-        return originalNum;
-    }
-
     public boolean checkWithRegExp(String num) {
-        Pattern p = Pattern.compile("^0([0-9]*)?(b.*)?(x.*)?( )?$");
+        Pattern p = Pattern.compile("^[-+]?0([0-9]*)?(b.*)?(x.*)?( )?$");
         Matcher m = p.matcher(num);
         return m.matches();
+    }
+
+    public boolean checkingDelimiter(String num) {
+        if (num.charAt(0) == '_') {
+            return false;
+        } else if (num.contains("0x_") || num.contains("0b_")) {
+            return false;
+        } else if (num.contains("._") || num.contains("_.")) {
+            return false;
+        } else if (num.lastIndexOf('_') == num.length() - 1) {
+            return false;
+        } else {
+            return true;
+        }
     }
 }

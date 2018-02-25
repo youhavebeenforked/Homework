@@ -17,15 +17,20 @@ public class CalculatorImpl implements Calculator {
     public String calculate(String userInput) {
         try {
             parse(userInput);
-            return df.format(result).replace(",",".");
+            return df.format(result).replace(",", ".");
         } catch (IllegalArgumentException e) {
             try {
+                if (e.getMessage().equals("Cannot format given Object as a Number")) {
+                    return "error > wrong expression";
+                }
                 String[] arr = e.getMessage().split(" ");
                 String wrongArgument = arr[arr.length - 1];
                 return "error > " + wrongArgument.replace("\"", "");
             } catch (Exception ex) {
-                return "Error > wrong expression";
+                return "error > wrong expression";
             }
+        } catch (NullPointerException ex) {
+            return "error > wrong expression";
         }
     }
 
@@ -44,20 +49,20 @@ public class CalculatorImpl implements Calculator {
 
     public void computation(String numOne, String numTwo, char operation) {
 
-            switch (operation) {
-                case ('+'):
-                    result = commonCalculator.sum(commonCalculator.cast(numOne), commonCalculator.cast(numTwo));
-                    break;
-                case ('-'):
-                    result = commonCalculator.subtract(commonCalculator.cast(numOne), commonCalculator.cast(numTwo));
-                    break;
-                case ('*'):
-                    result = commonCalculator.multiply(commonCalculator.cast(numOne), commonCalculator.cast(numTwo));
-                    break;
-                case ('/'):
-                    result = commonCalculator.divide(commonCalculator.cast(numOne), commonCalculator.cast(numTwo));
-                    break;
-            }
+        switch (operation) {
+            case ('+'):
+                result = commonCalculator.sum(commonCalculator.cast(numOne), commonCalculator.cast(numTwo));
+                break;
+            case ('-'):
+                result = commonCalculator.subtract(commonCalculator.cast(numOne), commonCalculator.cast(numTwo));
+                break;
+            case ('*'):
+                result = commonCalculator.multiply(commonCalculator.cast(numOne), commonCalculator.cast(numTwo));
+                break;
+            case ('/'):
+                result = commonCalculator.divide(commonCalculator.cast(numOne), commonCalculator.cast(numTwo));
+                break;
+        }
     }
 }
 
