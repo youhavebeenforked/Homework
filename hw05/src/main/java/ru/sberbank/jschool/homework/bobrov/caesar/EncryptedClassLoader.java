@@ -1,11 +1,8 @@
 package ru.sberbank.jschool.homework.bobrov.caesar;
 
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
+
 
 /**
  * TODO: comment
@@ -17,50 +14,43 @@ import java.io.InputStream;
 
 public class EncryptedClassLoader extends ClassLoader {
     private String pathToClass;
+    private int offset;
 
-    public EncryptedClassLoader(ClassLoader parent, String pathToClass) {
+    public EncryptedClassLoader(ClassLoader parent, String pathToClass, int offset) {
         super(parent);
         this.pathToClass = pathToClass;
+        this.offset = offset;
     }
 
 
     @Override
     protected Class<?> findClass(String name) throws ClassNotFoundException {
+        byte[] classBytes = null;
         try {
-            byte b[] = fetchClassFromFS(pathToClass + name + ".class");
-            return defineClass(name, b, 0, b.length);
-        } catch (FileNotFoundException ex) {
-            return super.findClass(name);
-        } catch (IOException ex) {
-            return super.findClass(name);
+            classBytes = loadClassBytes(name);
+        } catch (IOException e) {
+            throw new ClassNotFoundException(name);
         }
+
+        Class<?> cl = defineClass(name, classBytes, 0, classBytes.length);
+        if (cl == null) throw new ClassNotFoundException(name);
+        return cl;
 
     }
 
-    private byte[] fetchClassFromFS(String path) throws FileNotFoundException, IOException {
-//        InputStream is = new FileInputStream(new File(path));
-//        long length = new File(path).length();
-//
-//        byte[] bytes = new byte[(int) length];
-//
-//        int offset = 0;
-//        int numRead = 0;
-//        while (offset < bytes.length
-//                && (numRead = is.read(bytes, offset, bytes.length - offset)) >= 0) {
-//            offset += numRead;
-//        }
-//
-//        // Ensure all the bytes have been read in
-//        if (offset < bytes.length) {
-//            throw new IOException("Could not completely read file " + path);
-//        }
-//
-//        // Close the input stream and return bytes
-//        is.close();
-//        return bytes;
-        byte[] result = new byte[0];
-        
-        return result;
+    private byte[] loadClassBytes(String path) throws FileNotFoundException, IOException {
+        FileInputStream in = new FileInputStream(path);
+        try {
+            ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+            int ch;
+            while ((ch = in.read()) != -1) {
+                byte b = (byte) (ch - offset);
+                buffer.write(b);
+            }
+            return buffer.toByteArray();
+        } finally {
+            in.close();
+        }
 
     }
 
