@@ -21,7 +21,7 @@ public class InFileExternalizationRouteService extends RouteService<City, Route<
     @Override
     public Route<City> getRoute(String from, String to) {
         String key = from + "_" + to;
-        RouteSerialization<City> route;
+        RouteSerialization/*<City>*/ route;
         String pathFile = routeHashMap.get(key);
         if (isNull(pathFile)) {
             Route tmpRoute = super.getRoute(from, to);
@@ -41,8 +41,9 @@ public class InFileExternalizationRouteService extends RouteService<City, Route<
     }
 
     @Override
-    protected RouteSerialization<City> createRoute(List<City> cities) {
-        return new RouteSerialization<>(UUID.randomUUID().toString(), cities);
+    protected RouteSerialization/*<City>*/ createRoute(List<City> cities) {
+//        return new RouteSerialization<>(UUID.randomUUID().toString(), cities);
+        return null;
     }
 
     public void serialize(String fileName, RouteSerialization route) {

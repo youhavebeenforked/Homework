@@ -3,14 +3,13 @@ package ru.sberbank.homework.kashin.serialization.serialization;
 import ru.sberbank.homework.common.*;
 
 import java.io.*;
+import java.security.SecureRandom;
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import static java.util.Objects.isNull;
 
-public class InFileSerializationRouteService extends RouteService<City, Route<City>> {
+public class InFileSerializationRouteService<C extends SerializationCity, T extends RouteSerialization> extends RouteService<C, T> {
     private HashMap<String, String> routeHashMap = new HashMap<>();
 
     public InFileSerializationRouteService(CachePathProvider pathProvider) {
@@ -18,9 +17,9 @@ public class InFileSerializationRouteService extends RouteService<City, Route<Ci
     }
 
     @Override
-    public Route<City> getRoute(String from, String to) {
+    public T getRoute(String from, String to) {
         String key = from + "_" + to;
-        RouteSerialization<City> route;
+        RouteSerialization<SerializationCity> route;
         String pathFile = routeHashMap.get(key);
         if (isNull(pathFile)) {
             Route tmpRoute = super.getRoute(from, to);
@@ -30,17 +29,17 @@ public class InFileSerializationRouteService extends RouteService<City, Route<Ci
         } else {
             route = deserialize(routeHashMap.get(key));
         }
-        return route;
+        return (T) route;
     }
 
     @Override
-    protected City createCity(int id, String cityName, LocalDate foundDate, long numberOfInhabitants) {
-        return new City(id, cityName, foundDate, numberOfInhabitants);
+    protected C createCity(int id, String cityName, LocalDate foundDate, long numberOfInhabitants) {
+        return (C) new SerializationCity(id, cityName, foundDate, numberOfInhabitants);
     }
 
     @Override
-    protected RouteSerialization<City> createRoute(List<City> cities) {
-        return new RouteSerialization<>(UUID.randomUUID().toString(), cities);
+    protected T createRoute(List<C> cities) {
+        return (T) new RouteSerialization(UUID.randomUUID().toString(), cities);
     }
 
     public void serialize(String fileName, RouteSerialization route) {
@@ -62,4 +61,5 @@ public class InFileSerializationRouteService extends RouteService<City, Route<Ci
         }
         return route;
     }
+
 }
