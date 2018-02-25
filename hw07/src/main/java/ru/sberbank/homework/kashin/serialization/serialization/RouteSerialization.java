@@ -21,10 +21,11 @@ public class RouteSerialization<C extends SerializationCity> extends Route<C> im
         out.writeObject(getRouteName());
         out.writeObject(getCities());
     }
+
     private void readObject(ObjectInputStream in)
             throws IOException, ClassNotFoundException {
         in.defaultReadObject();
-        setRouteName((String)in.readObject());
+        setRouteName((String) in.readObject());
         setCities((List<C>) in.readObject());
     }
 
