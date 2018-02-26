@@ -9,6 +9,7 @@ import java.util.Locale;
 
 public class ExpressionParser implements Calculator {
     private String currentResult = "";
+    private static final String DOUBLE_AND_INTEGER_REGEX = "[-+]?([0-9]*\\.[0-9]+|[0-9]+)";
     private String[] dividingExpression;
     private int index;
     private double number;
@@ -25,6 +26,8 @@ public class ExpressionParser implements Calculator {
         char firstChar = userInput.charAt(0);
         if (firstChar != '+' && firstChar != '-' && firstChar != '/' && firstChar != '*') {
             currentResult = "";
+        } else if (userInput.charAt(1) != ' ') {
+            currentResult = "";
         } else if (currentResult.equals("")) {
             return "error > wrong expression";
         }
@@ -36,17 +39,17 @@ public class ExpressionParser implements Calculator {
             dividingExpression = currentExpression.split("\\s");
             Expression ans = sum();
             currentResult = String.valueOf(ans.evaluate());
-            return getCorrectString(String.valueOf(ans.evaluate()));
+            return getCorrectString(currentResult);
         } else {
             currentResult = "";
             return checker.getRefactorString();
         }
     }
 
-    public String getCorrectString(String answer) {
+    private String getCorrectString(String answer) {
         String pattern = "#.##";
         DecimalFormat decimalFormat = new DecimalFormat(pattern, DecimalFormatSymbols.getInstance(Locale.ENGLISH));
-        decimalFormat.setRoundingMode(RoundingMode.CEILING);
+        decimalFormat.setRoundingMode(RoundingMode.HALF_UP);
         return String.valueOf(decimalFormat.format(Double.parseDouble(answer)));
     }
 
@@ -54,7 +57,7 @@ public class ExpressionParser implements Calculator {
         if (index == dividingExpression.length) {
             return;
         }
-        if (dividingExpression[index].matches("^[0-9]*[.][0-9]+$") || (dividingExpression[index].startsWith("-") && dividingExpression[index].length() > 1)) {
+        if (dividingExpression[index].matches(DOUBLE_AND_INTEGER_REGEX)) {
             number = Double.parseDouble(dividingExpression[index]);
             index++;
             operation = Operation.NUMBER;
