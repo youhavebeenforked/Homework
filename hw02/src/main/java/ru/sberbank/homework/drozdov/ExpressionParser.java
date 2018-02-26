@@ -1,7 +1,15 @@
 package ru.sberbank.homework.drozdov;
 
+import ru.sberbank.homework.common.Calculator;
+
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
+
 public class ExpressionParser implements Calculator {
-    private String userInput;
+    private String currentResult = "";
+    private static final String DOUBLE_AND_INTEGER_REGEX = "[-+]?([0-9]*\\.[0-9]+|[0-9]+)";
     private String[] dividingExpression;
     private int index;
     private double number;
@@ -15,24 +23,41 @@ public class ExpressionParser implements Calculator {
      */
     @Override
     public String calculate(String userInput) {
-        this.userInput = userInput;
-        index = 0;
-        ExpressionChecker checker = new ExpressionChecker(userInput);
-        if (checker.isValid()) {
-            this.userInput = checker.getRefactorString().toString();
-            dividingExpression = this.userInput.split("\\s");
-            Expression ans = sum();
-            return String.valueOf(ans.evaluate());
-        } else {
-            return null;
+        char firstChar = userInput.charAt(0);
+        if (firstChar != '+' && firstChar != '-' && firstChar != '/' && firstChar != '*') {
+            currentResult = "";
+        } else if (userInput.charAt(1) != ' ') {
+            currentResult = "";
+        } else if (currentResult.equals("")) {
+            return "error > wrong expression";
         }
+        String currentExpression = currentResult + " " + userInput;
+        index = 0;
+        ExpressionChecker checker = new ExpressionChecker(currentExpression);
+        if (checker.isValid()) {
+            currentExpression = checker.getRefactorString();
+            dividingExpression = currentExpression.split("\\s");
+            Expression ans = sum();
+            currentResult = String.valueOf(ans.evaluate());
+            return getCorrectString(currentResult);
+        } else {
+            currentResult = "";
+            return checker.getRefactorString();
+        }
+    }
+
+    private String getCorrectString(String answer) {
+        String pattern = "#.##";
+        DecimalFormat decimalFormat = new DecimalFormat(pattern, DecimalFormatSymbols.getInstance(Locale.ENGLISH));
+        decimalFormat.setRoundingMode(RoundingMode.HALF_UP);
+        return String.valueOf(decimalFormat.format(Double.parseDouble(answer)));
     }
 
     private void getNext() {
         if (index == dividingExpression.length) {
             return;
         }
-        if (dividingExpression[index].matches("^[0-9]*[.][0-9]+$") || (dividingExpression[index].startsWith("-") && dividingExpression[index].length() > 1)) {
+        if (dividingExpression[index].matches(DOUBLE_AND_INTEGER_REGEX)) {
             number = Double.parseDouble(dividingExpression[index]);
             index++;
             operation = Operation.NUMBER;
@@ -83,10 +108,10 @@ public class ExpressionParser implements Calculator {
         while (true) {
             switch (operation) {
                 case MULTIPLICATION:
-                    left = new Multiplication(left,end());
+                    left = new Multiplication(left, end());
                     break;
                 case DIVISION:
-                    left = new Division(left,end());
+                    left = new Division(left, end());
                     break;
                 default:
                     return left;
@@ -99,10 +124,10 @@ public class ExpressionParser implements Calculator {
         while (true) {
             switch (operation) {
                 case SUBTRACTION:
-                    left = new Subtraction(left,multiply());
+                    left = new Subtraction(left, multiply());
                     break;
                 case ADDITION:
-                    left = new Addition(left,multiply());
+                    left = new Addition(left, multiply());
                     break;
                 default:
                     return left;
