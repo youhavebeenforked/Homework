@@ -1,4 +1,4 @@
-package ru.sberbank.homework.drozdov;
+package ru.sberbank.homework.drozdov.hw3_2;
 
 import java.io.BufferedReader;
 import java.io.IOException;
