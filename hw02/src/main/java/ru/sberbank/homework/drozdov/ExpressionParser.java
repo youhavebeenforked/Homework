@@ -24,7 +24,7 @@ public class ExpressionParser implements Calculator {
     @Override
     public String calculate(String userInput) {
         char firstChar = userInput.charAt(0);
-        if (firstChar != '+' && firstChar != '-' && firstChar != '/' && firstChar != '*') {
+        if ((firstChar != '+') && (firstChar != '-') && (firstChar != '/') && (firstChar != '*')) {
             currentResult = "";
         } else if (userInput.charAt(1) != ' ') {
             currentResult = "";

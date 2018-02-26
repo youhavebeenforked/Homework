@@ -42,7 +42,7 @@ public class ExpressionChecker {
             if (!checkUnderscoresAndValidLiterals(currentString)) {
                 return false;
             }
-            if (currentString.length() == 1 && (operations.containsValue(currentString.charAt(0)) || currentString.charAt(0) == '(' || currentString.charAt(0) == ')')) {
+            if ((currentString.length() == 1) && ((operations.containsValue(currentString.charAt(0))) || (currentString.charAt(0) == '(') || (currentString.charAt(0) == ')'))) {
                 refactorString.append(currentString.charAt(0)).append(" ");
                 continue;
             }
@@ -59,7 +59,7 @@ public class ExpressionChecker {
                     num = new BigDecimal(new BigInteger(refactoringCurrentString.substring(2), 16).longValue()).multiply(signDecimal);
                 } else if (refactoringCurrentString.startsWith("0b")) {
                     num = new BigDecimal(new BigInteger(refactoringCurrentString.substring(2), 2).longValue()).multiply(signDecimal);
-                } else if (refactoringCurrentString.startsWith("0") && refactoringCurrentString.length() > 1 && refactoringCurrentString.charAt(1) != '.') {
+                } else if ((refactoringCurrentString.startsWith("0")) && (refactoringCurrentString.length() > 1) && (refactoringCurrentString.charAt(1) != '.')) {
                     num = new BigDecimal(new BigInteger(refactoringCurrentString.substring(1), 8).longValue()).multiply(signDecimal);
                 } else if (refactoringCurrentString.contains(".")) {
                     num = new BigDecimal(Double.valueOf(refactoringCurrentString)).multiply(signDecimal);
@@ -80,17 +80,17 @@ public class ExpressionChecker {
         for (int i = 0; i < currentString.length(); i++) {
             char curChar = currentString.charAt(i);
             if (curChar == '_') {
-                if (i == 0 || i == currentString.length() - 1) {
+                if ((i == 0) || (i == currentString.length() - 1)) {
                     checkUnderscoresAndValidLiterals = true;
                 } else {
                     char prevChar = currentString.charAt(i - 1);
                     char nextChar = currentString.charAt(i + 1);
-                    if (!((Character.isDigit(prevChar) || (prevChar >= 'a' && prevChar <= 'f') || prevChar == '_') && (Character.isDigit(nextChar) || (nextChar >= 'a' && nextChar <= 'f') || nextChar == '_'))) {
+                    if (!(((Character.isDigit(prevChar)) || ((prevChar >= 'a') && (prevChar <= 'f')) || (prevChar == '_')) && ((Character.isDigit(nextChar)) || ((nextChar >= 'a') && (nextChar <= 'f')) || (nextChar == '_')))) {
                         checkUnderscoresAndValidLiterals = true;
                     }
                 }
             }
-            if (!validLiterals.containsValue(curChar) || currentString.startsWith("0b_")) {
+            if ((!validLiterals.containsValue(curChar)) || (currentString.startsWith("0b_"))) {
                 checkUnderscoresAndValidLiterals = true;
             }
             if (checkUnderscoresAndValidLiterals) {
@@ -108,10 +108,10 @@ public class ExpressionChecker {
             if (current.equals("")) {
                 continue;
             }
-            if (current.length() == 1 && (current.charAt(0) == '(' || current.charAt(0) == ')')) {
+            if ((current.length() == 1) && ((current.charAt(0) == '(') || (current.charAt(0) == ')'))) {
                 continue;
             }
-            if (current.length() == 1 && operations.containsValue(current.charAt(0))) {
+            if ((current.length() == 1) && (operations.containsValue(current.charAt(0)))) {
                 if (operation) {
                     return false;
                 } else {
