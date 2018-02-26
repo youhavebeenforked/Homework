@@ -16,40 +16,39 @@ public class EncryptedClassLoader extends ClassLoader {
     private String pathToClass;
     private int offset;
 
-    public EncryptedClassLoader(ClassLoader parent, String pathToClass, int offset) {
-        super(parent);
+    public EncryptedClassLoader(String pathToClass, int offset) {
         this.pathToClass = pathToClass;
         this.offset = offset;
     }
 
-
     @Override
     protected Class<?> findClass(String name) throws ClassNotFoundException {
+        String cname = String.format("%s.%s", pathToClass, name);
         byte[] classBytes = null;
         try {
-            classBytes = loadClassBytes(name);
+            classBytes = loadClassBytes(cname);
         } catch (IOException e) {
-            throw new ClassNotFoundException(name);
+            throw new ClassNotFoundException(cname);
         }
-
-        Class<?> cl = defineClass(name, classBytes, 0, classBytes.length);
-        if (cl == null) throw new ClassNotFoundException(name);
+        Class<?> cl = defineClass(cname, classBytes, 0, classBytes.length);
+        if (cl == null) {
+            throw new ClassNotFoundException(cname);
+        }
         return cl;
 
     }
 
-    private byte[] loadClassBytes(String path) throws FileNotFoundException, IOException {
-        FileInputStream in = new FileInputStream(path);
-        try {
-            ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+    private byte[] loadClassBytes(String name) throws FileNotFoundException, IOException {
+
+        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(name.replace(".", "/") + ".caesar");
+             ByteArrayOutputStream buffer = new ByteArrayOutputStream()
+        ) {
             int ch;
-            while ((ch = in.read()) != -1) {
+            while ((ch = inputStream.read()) != -1) {
                 byte b = (byte) (ch - offset);
                 buffer.write(b);
             }
             return buffer.toByteArray();
-        } finally {
-            in.close();
         }
 
     }
