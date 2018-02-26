@@ -68,6 +68,7 @@ public class SolutionChecker {
         for (CommandSequence cs : sequences) {
             Calculator calculator = supplier.get();
             log.info("============================== Starting sequence {} ============================== ", cs.getDescription());
+
             cs.getExpressions().forEach(expression -> calculateAndCheck(calculator, expression));
         }
     }
