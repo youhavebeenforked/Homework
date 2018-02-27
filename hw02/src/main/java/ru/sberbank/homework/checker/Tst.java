@@ -1,4 +1,4 @@
-package ru.sberbank.homework.checker;
+package main.java.ru.sberbank.homework.checker;
 
 public class Tst {
 }
