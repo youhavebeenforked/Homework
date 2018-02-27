@@ -1,3 +1,4 @@
+
 group 'ru.sberbank.homework'
 version '1.0-SNAPSHOT'
 
@@ -7,6 +8,16 @@ sourceCompatibility = 1.8
 
 repositories {
     mavenCentral()
+}
+
+jar {
+    manifest {
+        attributes "Main-Class": "ru.sberbank.homework.checker.SolutionLocator"
+    }
+
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
 }
 
 dependencies {
