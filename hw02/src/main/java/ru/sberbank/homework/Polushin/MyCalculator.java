@@ -4,12 +4,13 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.Scanner;
 
-public class SimpleCalculator implements Runnable {
+public class MyCalculator implements Runnable {
     private Scanner scanner;
     private OutputStreamWriter streamWriter;
     private Calculation calculator = new Calculation();
 
-    public SimpleCalculator(Scanner sc, OutputStreamWriter streamWriter) {
+
+    public MyCalculator(Scanner sc, OutputStreamWriter streamWriter) {
         this.scanner = sc;
         this.streamWriter = streamWriter;
     }
@@ -21,13 +22,18 @@ public class SimpleCalculator implements Runnable {
                     "Input your expression like a a_@_b or @_b; " +
                     "for exit program input 'quit'.\n");
             streamWriter.flush();
+            String userInput;
+            String output;
             do {
-                String userInput = scanner.nextLine();
-                String output = calculator.calculate(userInput);
-                streamWriter.write(output);
+                userInput = scanner.nextLine();
+                if (userInput.equals("quit")) {
+                    break;
+                }
+                output = calculator.calculate(userInput);
+                streamWriter.write(output+"\n");
                 streamWriter.flush();
 
-            } while (scanner.hasNext());
+            } while (true);
         } catch (IOException e) {
             System.out.println("Can't get outstream");
             e.printStackTrace();

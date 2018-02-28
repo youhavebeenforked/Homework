@@ -1,25 +1,17 @@
 package ru.sberbank.homework.Polushin;
 
 import ru.sberbank.homework.common.Calculator;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import ru.sberbank.homework.utils.StringAnalyzer;
 
 public class Calculation implements Calculator {
-    private Pattern pattern = Pattern.compile("/d");
-    private Matcher matcher;
+    private String result;
+
     @Override
     public String calculate(String userInput) {
-        userInput.toUpperCase();
-        switch (userInput) {
-            case ("QUIT"):
-                Operation.EXIT.toString();
-                break;
-            default:
-                matcher = pattern.matcher(userInput);
-                
+        userInput = userInput.toUpperCase();
 
-        }
-        return null;
+        result = new StringAnalyzer().analyze(userInput);
+
+        return result;
     }
 }

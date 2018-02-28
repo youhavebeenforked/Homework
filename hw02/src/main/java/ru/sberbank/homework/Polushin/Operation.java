@@ -30,12 +30,6 @@ public enum Operation {
         public String toString() {
             return super.toString();
         }
-    },
-    EXIT("QUIT") {
-        @Override
-        public String toString() {
-            return super.toString();
-        }
     };
 
     private String operation;
