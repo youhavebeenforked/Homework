@@ -6,7 +6,6 @@ public class TerminalServer {
     private double current;
 
     TerminalServer() {
-        current = 0;
     }
 
     TerminalServer(double current) {

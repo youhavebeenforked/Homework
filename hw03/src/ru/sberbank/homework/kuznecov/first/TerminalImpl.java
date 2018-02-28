@@ -23,20 +23,14 @@ public class TerminalImpl implements Terminal{
 
     @Override
     public double checkAccount(CardNumber cardNumber) {
-        if (!pinValidator.isValidated()){
-            throw new NotValidatedException("At first you should type your pin. " +
-                    "Please, type \"pin\" and then your pin.");
-        }
+        pinValidator.checkValidation();
         return server.getAccount(cardNumber);
     }
 
     @Override
     public double getCash(CardNumber cardNumber, double sum) {
-        if (!pinValidator.isValidated()){
-            throw new NotValidatedException("At first you should type your pin. " +
-                    "Please, type \"pin\" and then your pin.");
-        }
-        if (Math.abs(sum / 100 - (long)(sum / 100)) < 0.00000001){
+        pinValidator.checkValidation();
+        if (isMultiplyOfHundred(sum)){
             return server.getCash(cardNumber, sum);
         } else {
             throw new IllegalArgumentException("The sum must be a multiple of 100.");
@@ -45,14 +39,15 @@ public class TerminalImpl implements Terminal{
 
     @Override
     public double putCash(CardNumber cardNumber, double sum) {
-        if (!pinValidator.isValidated()){
-            throw new NotValidatedException("At first you should type your pin. " +
-                    "Please, type \"pin\" and then your pin.");
-        }
-        if (Math.abs(sum / 100 - (long)(sum / 100)) < 0.00000001){
+        pinValidator.checkValidation();
+        if (isMultiplyOfHundred(sum)){
             return server.putCash(cardNumber, sum);
         } else {
             throw new IllegalArgumentException("The sum must be a multiple of 100.");
         }
+    }
+
+    private boolean isMultiplyOfHundred(double value){
+        return Math.abs(value / 100 - (long)(value / 100)) < 0.00000001;
     }
 }
