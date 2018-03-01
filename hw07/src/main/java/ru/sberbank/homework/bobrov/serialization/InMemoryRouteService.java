@@ -1,4 +1,4 @@
-package ru.sberbank.homework.your_lastname.serialization;
+package ru.sberbank.homework.bobrov.serialization;
 
 import ru.sberbank.homework.common.CachePathProvider;
 import ru.sberbank.homework.common.City;

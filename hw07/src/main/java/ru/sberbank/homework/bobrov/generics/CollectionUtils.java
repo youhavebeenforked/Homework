@@ -1,4 +1,4 @@
-package ru.sberbank.homework.your_lastname.generics;
+package ru.sberbank.homework.bobrov.generics;
 
 import java.util.Comparator;
 import java.util.List;
