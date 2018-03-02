@@ -13,16 +13,8 @@ public class CalculatorImpl implements ru.sberbank.homework.common.Calculator {
     public String calculate(String userInput) {
         double[] operands = new double[OPERANDS_AMOUNT];
         Operation operation;
-
-        String[] splittedUserInput = userInput.split(" ");
-        if (splittedUserInput.length == 2) { // formatting "@_b" to "a_@_b", a,b-operands, @-operator
-            String[] largerSplittedInput = new String[3];
-            largerSplittedInput[0] = currentState;
-            for (int i = 0; i < OPERANDS_AMOUNT; ++i) {
-                largerSplittedInput[i + 1] = splittedUserInput[i];
-            }
-            splittedUserInput = largerSplittedInput;
-        }
+        String[] splittedUserInput;
+        splittedUserInput = splitUserInput(userInput);
         if (splittedUserInput.length != 3 || splittedUserInput[0] == null) {
             return getFormattedError(WRONG_EXPRESSION);
         }
@@ -41,11 +33,28 @@ public class CalculatorImpl implements ru.sberbank.homework.common.Calculator {
             return getFormattedError(WRONG_EXPRESSION);
         }
         double result = operation.calculate(operands[0], operands[1]);
+        currentState = formatResult(result);
+        return currentState;
+    }
+
+    private String formatResult(double result) {
         DecimalFormatSymbols otherSymbols = new DecimalFormatSymbols();
         otherSymbols.setDecimalSeparator('.');
         DecimalFormat df = new DecimalFormat("0.##", otherSymbols);
-        currentState = df.format(result);
-        return currentState;
+        return df.format(result);
+    }
+
+    private String[] splitUserInput(String userInput) {
+        String[] splittedUserInput = userInput.split(" ");
+        if (splittedUserInput.length == 2) { // formatting "@_b" to "a_@_b", a,b-operands, @-operator
+            String[] largerSplittedInput = new String[3];
+            largerSplittedInput[0] = currentState;
+            for (int i = 0; i < OPERANDS_AMOUNT; ++i) {
+                largerSplittedInput[i + 1] = splittedUserInput[i];
+            }
+            splittedUserInput = largerSplittedInput;
+        }
+        return splittedUserInput;
     }
 
     private String getFormattedError(String message) {
