@@ -48,8 +48,9 @@ public class Account {
 
     @Override
     public boolean equals(Object o) {
-        if (o == null || !(o instanceof Account))
+        if (o == null || !(o instanceof Account)) {
             return false;
+        }
         Account account = (Account) o;
         return account.id == this.id;
     }
