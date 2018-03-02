@@ -6,6 +6,8 @@ public class Parser {
 
     private static final String REGEX_CHECK_UNDERSCOPES = "^((_|0(_[bBxX]|[bBxX]_)).*|.*(\\._|_\\.).*|.*_[lL]?)$";
     private static HashMap<Character, Operation> operations;
+    private static HashMap<Character, Integer> alphabet;
+    private static HashMap<Integer, Character> reverseAlphabet;
 
     static {
         operations = new HashMap<>();
@@ -13,11 +15,7 @@ public class Parser {
         operations.put('-', new Subtraction());
         operations.put('*', new Multiplication());
         operations.put('/', new Division());
-    }
 
-    private static HashMap<Character, Integer> alphabet;
-
-    static {
         alphabet = new HashMap<>();
         for (int i = 0; i < 10; ++i) {
             alphabet.put((char) (i + '0'), i);
@@ -28,11 +26,7 @@ public class Parser {
         alphabet.put('D', 13);
         alphabet.put('E', 14);
         alphabet.put('F', 15);
-    }
 
-    private static HashMap<Integer, Character> reverseAlphabet;
-
-    static {
         reverseAlphabet = new HashMap<>();
         for (int i = 0; i < 10; ++i) {
             reverseAlphabet.put(i, (char) (i + '0'));
@@ -159,12 +153,6 @@ public class Parser {
         return number.replace("_", "");
     }
 
-    /**
-     * Removes prefixes: 0, 0x and 0b.
-     *
-     * @param number input number
-     * @return Tuple of formatted input number and its radix
-     */
     private static String removePrefix(String number) {
         if (number.length() > 1 && number.startsWith("0")) {
             number = number.substring(1);
