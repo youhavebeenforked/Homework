@@ -1,9 +1,7 @@
 package ru.sberbank.homework.bobrov.generics;
 
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -55,8 +53,7 @@ public class CountMapImpl<K> implements CountMap<K> {
     }
 
     @Override
-    public void toMap(Map destination) {
+    public void toMap(Map<? super K, Integer> destination) {
         destination = store;
-
     }
 }
