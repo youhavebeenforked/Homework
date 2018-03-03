@@ -10,7 +10,7 @@ import java.util.UUID;
 
 import static java.util.Objects.isNull;
 
-public class InFileExternalizationRouteService<C extends ExternalizationCity, T extends RouteExternalization> extends RouteService<C, T> {
+public class InFileExternalizationRouteService extends RouteService<City, RouteExternalization<City>> {
     private HashMap<String, String> routeHashMap = new HashMap<>();
 
     public InFileExternalizationRouteService(CachePathProvider pathProvider) {
@@ -18,33 +18,32 @@ public class InFileExternalizationRouteService<C extends ExternalizationCity, T 
     }
 
     @Override
-    public T getRoute(String from, String to) {
+    public RouteExternalization<City> getRoute(String from, String to) {
         String key = from + "_" + to;
-        RouteExternalization<ExternalizationCity> route;
+        RouteExternalization<City> route;
         String pathFile = routeHashMap.get(key);
         if (isNull(pathFile)) {
-            Route tmpRoute = super.getRoute(from, to);
-            route = new RouteExternalization<>(tmpRoute.getRouteName(), tmpRoute.getCities());
-            String absPath = pathProvider.getCacheDirectoryPath() + "/" + key;
-            serialize(absPath, route);
-            routeHashMap.put(key, absPath);
+            Route<City> tmpRoute = super.getRoute(from, to);
+            route = new RouteExternalization<City>(tmpRoute.getRouteName(), tmpRoute.getCities());
+            serialize(pathProvider.getCacheDirectoryPath() + "/" + key, route);
+            routeHashMap.put(key, pathProvider.getCacheDirectoryPath() + "/" + key);
         } else {
             route = deserialize(routeHashMap.get(key));
         }
-        return (T) route;
+        return route;
     }
 
     @Override
-    protected C createCity(int id, String cityName, LocalDate foundDate, long numberOfInhabitants) {
-        return (C) new ExternalizationCity(id, cityName, foundDate, numberOfInhabitants);
+    protected City createCity(int id, String cityName, LocalDate foundDate, long numberOfInhabitants) {
+        return new City(id, cityName, foundDate, numberOfInhabitants);
     }
 
     @Override
-    protected T createRoute(List<C> cities) {
-        return (T) new RouteExternalization<>(UUID.randomUUID().toString(), cities);
+    protected RouteExternalization<City> createRoute(List<City> cities) {
+        return new RouteExternalization<>(UUID.randomUUID().toString(), cities);
     }
 
-    public void serialize(String fileName, RouteExternalization route) {
+    private void serialize(String fileName, RouteExternalization route) {
         try (FileOutputStream fos = new FileOutputStream(fileName);
              ObjectOutputStream oos = new ObjectOutputStream(fos)) {
             oos.writeObject(route);
@@ -53,7 +52,7 @@ public class InFileExternalizationRouteService<C extends ExternalizationCity, T 
         }
     }
 
-    public RouteExternalization deserialize(String fileName) {
+    private RouteExternalization deserialize(String fileName) {
         RouteExternalization route;
         try (FileInputStream fis = new FileInputStream(fileName);
              ObjectInputStream ois = new ObjectInputStream(fis)) {

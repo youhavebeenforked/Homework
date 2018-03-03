@@ -20,7 +20,7 @@ public class SerializerRoute extends Serializer<Route> {
 
     @Override
     public Route read(Kryo kryo, Input input, Class<Route> type) {
-        Route route = new Route();
+        Route<City> route = new Route<>();
         route.setRouteName(kryo.readObject(input, String.class));
         int size = kryo.readObject(input, int.class);
         for (int i = 0; i < size; i++) {
