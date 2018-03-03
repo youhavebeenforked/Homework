@@ -1,5 +1,6 @@
 package ru.sberbank.homework.kashin.serialization.serialization;
 
+import ru.sberbank.homework.common.City;
 import ru.sberbank.homework.common.Route;
 
 import java.io.IOException;
@@ -10,37 +11,27 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class RouteSerialization<C extends SerializationCity> extends Route<C> implements Serializable {
-    public RouteSerialization(String s, List<C> cities) {
+public class RouteSerialization<C> extends Route<City> implements Serializable {
+    public RouteSerialization(String s, List<City> cities) {
         super(s, cities);
     }
 
     private void writeObject(ObjectOutputStream out)
             throws IOException {
         out.writeObject(getRouteName());
-        out.writeInt(getCities().size());
-        for (C c : getCities()) {
-            c.write(out);
-        }
+        out.writeObject(getCities());
     }
 
     private void readObject(ObjectInputStream in)
             throws IOException, ClassNotFoundException {
         setRouteName((String) in.readObject());
-        int size = in.readInt();
-        setCities(new LinkedList<>());
-        for (int i = 0; i < size; i++) {
-            getCities().add((C) new SerializationCity());
-        }
-        for (int i = 0; i < size; i++) {
-            getCities().get(i).read(in);
-        }
+        setCities((List<City>) in.readObject());
     }
 
     @Override
     public String toString() {
         return "Route: { " +
-                String.join(" -> ", getCities().stream().map(SerializationCity::getCityName).collect(Collectors.toList()))
+                String.join(" -> ", getCities().stream().map(City::getCityName).collect(Collectors.toList()))
                 + " }";
     }
 }

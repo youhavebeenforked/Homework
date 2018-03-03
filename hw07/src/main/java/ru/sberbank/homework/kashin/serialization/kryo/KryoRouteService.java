@@ -55,8 +55,6 @@ public class KryoRouteService extends RouteService<City, Route<City>> {
         try (FileOutputStream outputStream = new FileOutputStream(fileName);
              Output output = new Output(outputStream)) {
             serializer.write(kryo, output, route);
-            output.flush();
-            output.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
