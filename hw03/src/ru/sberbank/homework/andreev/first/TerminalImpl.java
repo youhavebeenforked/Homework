@@ -18,9 +18,9 @@ public class TerminalImpl implements Terminal {
         if (pinValidator.validate(cardNumber, pin)) {
             this.cardNumber = cardNumber;
             sessionStarted = true;
-            return true;
+            return sessionStarted;
         }
-        return false;
+        return sessionStarted;
     }
 
     @Override

@@ -5,11 +5,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Scanner;
 
-/*
-Реализуйте метод readPage(String url), который отображает на консоль содержимое сайта, ссылка задаётся параметром url.
-Напишите программу, считывающую строку (URL ресурса) из консоли, после чего вызывается метод readPage().
-Если URL неправильного формата или нет доступа до ресурса, пользователю предлагается повторить ввод.
- */
 class SimplePageDownloader {
     private static URL url;
 

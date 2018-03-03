@@ -13,12 +13,11 @@ public class TerminalViewer {
 
     public static void main(String[] args) {
         prepareTerminal();
-        int userChoose;
         System.out.println("Welcome in terminal");
         while (true) {
             authorisation();
             System.out.println("your account is " + cardNumber);
-            userChoose = 1;
+            int userChoose = 1;
             while (userChoose != 4) {
                 userChoose = getMenuResult();
                 switch (userChoose) {
@@ -35,6 +34,7 @@ public class TerminalViewer {
                         term.closeSession();
                         break;
                     case 5:
+                        scanner.close();
                         return;
                     default:
                         System.out.println("Wrong menu choice");
@@ -79,13 +79,12 @@ public class TerminalViewer {
     }
 
     private static void authorisation() {
-        String pin;
         boolean readingNumberAndPin = true;
         while (readingNumberAndPin) {
             System.out.println("Please input card number");
             cardNumber = scanner.nextLine();
             System.out.println("Please input pin");
-            pin = scanner.nextLine();
+            String pin = scanner.nextLine();
             try {
                 boolean result = term.openSession(cardNumber, pin);
                 if (result) {

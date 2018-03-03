@@ -10,9 +10,9 @@ public class PinValidator {
     }
 
     public boolean validate(String cardNumber, String pin) {
-        Checker.checkCardNumberLength(cardNumber);
-        Checker.checkPinLength(pin);
-        Checker.checkKeyContain(cardNumber, pinCode, "Your card number miss in our base");
+        Checker checker = new Checker(cardNumber, pin, pinCode);
+        checker.checkParameterCorrectness();
+        checker.checkExistence();
         return pinCode.get(cardNumber).equals(pin);
     }
 }

@@ -11,16 +11,14 @@ public class TerminalServer {
     }
 
     public BigDecimal getBalance(String cardNumber) {
-        Checker.checkCardNumberLength(cardNumber);
-        Checker.checkKeyContain(cardNumber, accounts, "Your card number miss in our base");
+        Checker checker = new Checker(cardNumber, accounts);
+        checker.checkParameterCorrectness();
+        checker.checkExistence();
         return accounts.get(cardNumber);
     }
 
     public BigDecimal withdraw(String cardNumber, BigDecimal amount) {
-        Checker.checkCardNumberLength(cardNumber);
-        Checker.checkKeyContain(cardNumber, accounts, "Your card number miss in our base");
-        BigDecimal accountBalance = accounts.get(cardNumber);
-        checkMoreThanZero(amount);
+        BigDecimal accountBalance = getAccountBalance(cardNumber, amount);
         checkHaveEnoughAmount(amount, accountBalance);
         BigDecimal result = accountBalance.subtract(amount);
         accounts.put(cardNumber, result.setScale(2, BigDecimal.ROUND_HALF_UP));
@@ -28,13 +26,22 @@ public class TerminalServer {
     }
 
     public BigDecimal deposit(String cardNumber, BigDecimal amount) {
-        Checker.checkCardNumberLength(cardNumber);
-        Checker.checkKeyContain(cardNumber, accounts, "Your card number miss in our base");
-        BigDecimal accountBalance = accounts.get(cardNumber);
-        checkMoreThanZero(amount);
+        BigDecimal accountBalance = getAccountBalance(cardNumber, amount);
         BigDecimal result = accountBalance.add(amount);
         accounts.put(cardNumber, result.setScale(2, BigDecimal.ROUND_HALF_UP));
         return accounts.get(cardNumber);
+    }
+
+    private BigDecimal getAccountBalance(String cardNumber, BigDecimal amount) {
+        checkInputParameter(cardNumber, amount);
+        return accounts.get(cardNumber);
+    }
+
+    private void checkInputParameter(String cardNumber, BigDecimal amount) {
+        Checker checker = new Checker(cardNumber, accounts);
+        checker.checkParameterCorrectness();
+        checker.checkExistence();
+        checkMoreThanZero(amount);
     }
 
     private void checkHaveEnoughAmount(BigDecimal amount, BigDecimal accountBalance) {
