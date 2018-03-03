@@ -8,7 +8,7 @@ import java.util.*;
 
 import static java.util.Objects.isNull;
 
-public class InFileSerializationRouteService extends RouteService<City, RouteSerialization<City>> {
+public class InFileSerializationRouteService extends RouteService<City, SerializableRoute<City>> {
     private HashMap<String, String> routeHashMap = new HashMap<>();
 
     public InFileSerializationRouteService(CachePathProvider pathProvider) {
@@ -16,13 +16,13 @@ public class InFileSerializationRouteService extends RouteService<City, RouteSer
     }
 
     @Override
-    public RouteSerialization<City> getRoute(String from, String to) {
+    public SerializableRoute<City> getRoute(String from, String to) {
         String key = from + "_" + to;
-        RouteSerialization<City> route;
+        SerializableRoute<City> route;
         String pathFile = routeHashMap.get(key);
         if (isNull(pathFile)) {
             Route<City> tmpRoute = super.getRoute(from, to);
-            route = new RouteSerialization<>(tmpRoute.getRouteName(), tmpRoute.getCities());
+            route = new SerializableRoute<>(tmpRoute.getRouteName(), tmpRoute.getCities());
             serialize(pathProvider.getCacheDirectoryPath() + "/" + key, route);
             routeHashMap.put(key, pathProvider.getCacheDirectoryPath() + "/" + key);
         } else {
@@ -37,11 +37,11 @@ public class InFileSerializationRouteService extends RouteService<City, RouteSer
     }
 
     @Override
-    protected RouteSerialization<City> createRoute(List<City> cities) {
-        return new RouteSerialization<>(UUID.randomUUID().toString(), cities);
+    protected SerializableRoute<City> createRoute(List<City> cities) {
+        return new SerializableRoute<>(UUID.randomUUID().toString(), cities);
     }
 
-    private void serialize(String fileName, RouteSerialization<City> route) {
+    private void serialize(String fileName, SerializableRoute<City> route) {
         try (FileOutputStream fos = new FileOutputStream(fileName);
              ObjectOutputStream oos = new ObjectOutputStream(fos)) {
             oos.writeObject(route);
@@ -50,11 +50,11 @@ public class InFileSerializationRouteService extends RouteService<City, RouteSer
         }
     }
 
-    private RouteSerialization<City> deserialize(String fileName) {
-        RouteSerialization<City> route;
+    private SerializableRoute<City> deserialize(String fileName) {
+        SerializableRoute<City> route;
         try (FileInputStream fis = new FileInputStream(fileName);
              ObjectInputStream ois = new ObjectInputStream(fis)) {
-            route = (RouteSerialization<City>) ois.readObject();
+            route = (SerializableRoute<City>) ois.readObject();
         } catch (IOException | ClassNotFoundException e) {
             throw new RouteFetchException(e);
         }

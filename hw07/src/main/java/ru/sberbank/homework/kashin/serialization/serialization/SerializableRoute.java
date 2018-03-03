@@ -10,8 +10,8 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class RouteSerialization<C> extends Route<City> implements Serializable {
-    RouteSerialization(String s, List<City> cities) {
+public class SerializableRoute<C> extends Route<City> implements Serializable {
+    SerializableRoute(String s, List<City> cities) {
         super(s, cities);
     }
 

@@ -6,10 +6,9 @@ import ru.sberbank.homework.common.City;
 import ru.sberbank.homework.common.Route;
 import ru.sberbank.homework.common.RouteService;
 import ru.sberbank.homework.kashin.serialization.externalization.InFileExternalizationRouteService;
-import ru.sberbank.homework.kashin.serialization.externalization.RouteExternalization;
+import ru.sberbank.homework.kashin.serialization.externalization.ExternalizableRoute;
 import ru.sberbank.homework.kashin.serialization.kryo.KryoRouteService;
 import ru.sberbank.homework.kashin.serialization.serialization.InFileSerializationRouteService;
-import ru.sberbank.homework.kashin.serialization.serialization.RouteSerialization;
 
 import java.util.List;
 
@@ -43,7 +42,7 @@ public class ServiceTest {
     }
 
 
-    public void testExampleRouteService(RouteService<City, RouteExternalization<City>> routeService) {
+    public void testExampleRouteService(RouteService<City, ExternalizableRoute<City>> routeService) {
         long startTime = System.currentTimeMillis();
         Route<? extends City> route1 = routeService.getRoute("Saint-Petersburg", "Berlin");
         long endTime = System.currentTimeMillis() - startTime;

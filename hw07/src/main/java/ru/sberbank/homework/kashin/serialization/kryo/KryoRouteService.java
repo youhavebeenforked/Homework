@@ -63,9 +63,10 @@ public class KryoRouteService extends RouteService<City, Route<City>> {
     public Route deserialize(String fileName) {
         Kryo kryo = new Kryo();
         Route route = null;
-        try (Input input = new Input(new FileInputStream(fileName))) {
+        try(FileInputStream outputStream = new FileInputStream(fileName);
+            Input input = new Input(outputStream)) {
             route = (Route) serializer.read(kryo, input, Route.class);
-        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return route;

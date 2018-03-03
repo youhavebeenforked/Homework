@@ -10,7 +10,7 @@ import java.util.UUID;
 
 import static java.util.Objects.isNull;
 
-public class InFileExternalizationRouteService extends RouteService<City, RouteExternalization<City>> {
+public class InFileExternalizationRouteService extends RouteService<City, ExternalizableRoute<City>> {
     private HashMap<String, String> routeHashMap = new HashMap<>();
 
     public InFileExternalizationRouteService(CachePathProvider pathProvider) {
@@ -18,13 +18,13 @@ public class InFileExternalizationRouteService extends RouteService<City, RouteE
     }
 
     @Override
-    public RouteExternalization<City> getRoute(String from, String to) {
+    public ExternalizableRoute<City> getRoute(String from, String to) {
         String key = from + "_" + to;
-        RouteExternalization<City> route;
+        ExternalizableRoute<City> route;
         String pathFile = routeHashMap.get(key);
         if (isNull(pathFile)) {
             Route<City> tmpRoute = super.getRoute(from, to);
-            route = new RouteExternalization<City>(tmpRoute.getRouteName(), tmpRoute.getCities());
+            route = new ExternalizableRoute<City>(tmpRoute.getRouteName(), tmpRoute.getCities());
             serialize(pathProvider.getCacheDirectoryPath() + "/" + key, route);
             routeHashMap.put(key, pathProvider.getCacheDirectoryPath() + "/" + key);
         } else {
@@ -39,11 +39,11 @@ public class InFileExternalizationRouteService extends RouteService<City, RouteE
     }
 
     @Override
-    protected RouteExternalization<City> createRoute(List<City> cities) {
-        return new RouteExternalization<>(UUID.randomUUID().toString(), cities);
+    protected ExternalizableRoute<City> createRoute(List<City> cities) {
+        return new ExternalizableRoute<>(UUID.randomUUID().toString(), cities);
     }
 
-    private void serialize(String fileName, RouteExternalization route) {
+    private void serialize(String fileName, ExternalizableRoute route) {
         try (FileOutputStream fos = new FileOutputStream(fileName);
              ObjectOutputStream oos = new ObjectOutputStream(fos)) {
             oos.writeObject(route);
@@ -52,11 +52,11 @@ public class InFileExternalizationRouteService extends RouteService<City, RouteE
         }
     }
 
-    private RouteExternalization deserialize(String fileName) {
-        RouteExternalization route;
+    private ExternalizableRoute deserialize(String fileName) {
+        ExternalizableRoute route;
         try (FileInputStream fis = new FileInputStream(fileName);
              ObjectInputStream ois = new ObjectInputStream(fis)) {
-            route = (RouteExternalization) ois.readObject();
+            route = (ExternalizableRoute) ois.readObject();
         } catch (IOException | ClassNotFoundException e) {
             throw new RouteFetchException(e);
         }

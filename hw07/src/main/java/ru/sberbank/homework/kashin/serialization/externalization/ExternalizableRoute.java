@@ -7,12 +7,12 @@ import java.io.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class RouteExternalization<C> extends Route<City> implements Externalizable {
-    RouteExternalization(String s, List<City> cities) {
+public class ExternalizableRoute<C> extends Route<City> implements Externalizable {
+    ExternalizableRoute(String s, List<City> cities) {
         super(s, cities);
     }
 
-    public RouteExternalization() {
+    public ExternalizableRoute() {
     }
 
     @Override
