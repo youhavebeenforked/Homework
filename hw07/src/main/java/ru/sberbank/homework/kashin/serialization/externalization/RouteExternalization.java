@@ -3,7 +3,6 @@ package ru.sberbank.homework.kashin.serialization.externalization;
 import ru.sberbank.homework.common.Route;
 
 import java.io.*;
-import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;

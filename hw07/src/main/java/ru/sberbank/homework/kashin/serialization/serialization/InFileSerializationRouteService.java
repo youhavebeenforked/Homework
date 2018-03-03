@@ -3,7 +3,6 @@ package ru.sberbank.homework.kashin.serialization.serialization;
 import ru.sberbank.homework.common.*;
 
 import java.io.*;
-import java.security.SecureRandom;
 import java.time.LocalDate;
 import java.util.*;
 

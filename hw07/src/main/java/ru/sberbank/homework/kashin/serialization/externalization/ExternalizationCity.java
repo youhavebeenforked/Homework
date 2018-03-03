@@ -6,7 +6,6 @@ import java.io.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class ExternalizationCity extends City implements Externalizable {
     private List<ExternalizationCity> nearCities;

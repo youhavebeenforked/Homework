@@ -1,7 +1,6 @@
 package ru.sberbank.homework.kashin.serialization.externalization;
 
 import ru.sberbank.homework.common.*;
-import ru.sberbank.homework.kashin.serialization.serialization.RouteSerialization;
 
 import java.io.*;
 import java.time.LocalDate;

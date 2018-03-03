@@ -1,13 +1,11 @@
 package ru.sberbank.homework.kashin.serialization.serialization;
 
-import ru.sberbank.homework.common.City;
 import ru.sberbank.homework.common.Route;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;

@@ -12,7 +12,6 @@ import java.util.UUID;
 
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
-import ru.sberbank.homework.kashin.serialization.kryo.SerializerRoute;
 
 import static java.util.Objects.isNull;
 
