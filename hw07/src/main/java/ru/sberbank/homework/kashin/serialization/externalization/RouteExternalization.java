@@ -21,11 +21,7 @@ public class RouteExternalization<C extends ExternalizationCity> extends Route<C
         out.writeObject(getRouteName());
         out.writeInt(getCities().size());
         for (C c : getCities()) {
-            out.writeInt(c.getId());
-            out.writeObject(c.getCityName());
-            out.writeObject(c.getFoundDate());
-            out.writeLong(c.getNumberOfInhabitants());
-            out.writeObject(c.getNearCities());
+            c.writeExternal(out);
         }
     }
 
@@ -38,11 +34,7 @@ public class RouteExternalization<C extends ExternalizationCity> extends Route<C
             getCities().add((C) new ExternalizationCity());
         }
         for (int i = 0; i < size; i++) {
-            getCities().get(i).setId(in.readInt());
-            getCities().get(i).setCityName((String) in.readObject());
-            getCities().get(i).setFoundDate((LocalDate) in.readObject());
-            getCities().get(i).setNumberOfInhabitants(in.readLong());
-            getCities().get(i).setNearCities((List) in.readObject());
+            getCities().get(i).readExternal(in);
         }
     }
 

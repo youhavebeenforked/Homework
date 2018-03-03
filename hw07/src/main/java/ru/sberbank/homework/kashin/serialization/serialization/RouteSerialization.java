@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,16 +19,24 @@ public class RouteSerialization<C extends SerializationCity> extends Route<C> im
 
     private void writeObject(ObjectOutputStream out)
             throws IOException {
-        out.defaultWriteObject();
         out.writeObject(getRouteName());
-        out.writeObject(getCities());
+        out.writeInt(getCities().size());
+        for (C c : getCities()) {
+            c.write(out);
+        }
     }
 
     private void readObject(ObjectInputStream in)
             throws IOException, ClassNotFoundException {
-        in.defaultReadObject();
         setRouteName((String) in.readObject());
-        setCities((List<C>) in.readObject());
+        int size = in.readInt();
+        setCities(new LinkedList<>());
+        for (int i = 0; i < size; i++) {
+            getCities().add((C) new SerializationCity());
+        }
+        for (int i = 0; i < size; i++) {
+            getCities().get(i).read(in);
+        }
     }
 
     @Override
