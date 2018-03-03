@@ -21,9 +21,9 @@ public class ServiceTest {
 
     @Before
     public void pre() {
-        serializationRouteService = new InFileSerializationRouteService(() -> "kashin");
-        externalizationRouteService = new InFileExternalizationRouteService(() -> "kashin");
-        kryoRouteService = new KryoRouteService(() -> "kashin");
+        serializationRouteService = new InFileSerializationRouteService(() -> "kashin1");
+        externalizationRouteService = new InFileExternalizationRouteService(() -> "kashin2");
+        kryoRouteService = new KryoRouteService(() -> "kashin3");
     }
 
     @Test
