@@ -79,8 +79,6 @@ public class CalculatorImpl implements Calculator {
     }
 
     public void clearAll() {
-        //operands.clear();
-        //operation.clear();
         result.clear();
     }
 }
