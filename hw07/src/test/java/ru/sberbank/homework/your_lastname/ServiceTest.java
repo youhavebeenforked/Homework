@@ -1,6 +1,5 @@
 package ru.sberbank.homework.your_lastname;
 
-import com.sun.org.apache.xpath.internal.SourceTree;
 import org.junit.Before;
 import org.junit.Test;
 import ru.sberbank.homework.common.City;
@@ -27,15 +26,15 @@ public class ServiceTest {
         kryoRouteService = new KryoRouteService(() -> "kashin3");
     }
 
-//    @Test
-//    public void testSerializationRouteService() {
-//        testExampleRouteService(serializationRouteService);
-//    }
-//
-//    @Test
-//    public void testExternalizationRouteService() {
-//        testExampleRouteService(externalizationRouteService);
-//    }
+    @Test
+    public void testSerializationRouteService() {
+        testExampleRouteService(serializationRouteService);
+    }
+
+    @Test
+    public void testExternalizationRouteService() {
+        testExampleRouteService(externalizationRouteService);
+    }
 
     @Test
     public void testKryoRouteService() {

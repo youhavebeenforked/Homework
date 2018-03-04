@@ -16,12 +16,11 @@ import com.esotericsoftware.kryo.io.Output;
 import static java.util.Objects.isNull;
 
 public class KryoRouteService extends RouteService<City, Route<City>> {
-    private HashMap<String, String> routeHashMap = new HashMap<>();
-    private Serializer serializerRoute = new SerializerRoute();
-    private Serializer serializerCity = new SerializerCity();
+    private final HashMap<String, String> routeHashMap = new HashMap<>();
+    private final Serializer serializerRoute = new SerializerRoute();
+    private final Serializer serializerCity = new SerializerCity();
     private final ThreadLocal<Kryo> kryoFactory = ThreadLocal.withInitial(() -> {
         Kryo kryo = new Kryo();
-        kryo.setReferences(true);
         kryo.register(Route.class, serializerRoute);
         kryo.register(City.class, serializerCity);
         return kryo;
