@@ -104,7 +104,7 @@ public class City implements Serializable {
                 ", cityName='" + cityName + '\'' +
                 ", foundDate=" + foundDate +
                 ", numberOfInhabitants=" + numberOfInhabitants +
-                // ", nearCities=" + nearCities +
+//                 ", nearCities=" + nearCities +
                 '}';
     }
 }

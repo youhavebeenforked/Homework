@@ -17,10 +17,13 @@ import static java.util.Objects.isNull;
 
 public class KryoRouteService extends RouteService<City, Route<City>> {
     private HashMap<String, String> routeHashMap = new HashMap<>();
-    private Serializer serializer = new SerializerRoute();
-    private final ThreadLocal<Kryo> kryos = ThreadLocal.withInitial(() -> {
+    private Serializer serializerRoute = new SerializerRoute();
+    private Serializer serializerCity = new SerializerCity();
+    private final ThreadLocal<Kryo> kryoFactory = ThreadLocal.withInitial(() -> {
         Kryo kryo = new Kryo();
-        kryo.register(Route.class, serializer);
+        kryo.setReferences(true);
+        kryo.register(Route.class, serializerRoute);
+        kryo.register(City.class, serializerCity);
         return kryo;
     });
 
@@ -56,21 +59,21 @@ public class KryoRouteService extends RouteService<City, Route<City>> {
     }
 
     private void serialize(String fileName, Route route) {
-        Kryo kryo = kryos.get();
+        Kryo kryo = kryoFactory.get();
         try (FileOutputStream outputStream = new FileOutputStream(fileName);
              Output output = new Output(outputStream)) {
-            serializer.write(kryo, output, route);
+            kryo.writeObject(output, route);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     private Route deserialize(String fileName) {
-        Kryo kryo = kryos.get();
+        Kryo kryo = kryoFactory.get();
         Route route = null;
-        try(FileInputStream outputStream = new FileInputStream(fileName);
-            Input input = new Input(outputStream)) {
-            return (Route) serializer.read(kryo, input, Route.class);
+        try (FileInputStream outputStream = new FileInputStream(fileName);
+             Input input = new Input(outputStream)) {
+            route = kryo.readObject(input, Route.class);
         } catch (IOException e) {
             e.printStackTrace();
         }
