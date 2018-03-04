@@ -8,6 +8,10 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 
+/**
+ * Методы реализованы с условием что в данном пакете найдет только один файл, в классе одно поле,
+ * и один метод, так как по условию один класс, одно поле и один метод.
+ */
 public class Finder {
     public Method getMethodWithAnnotationExperimentalFeature(Class clazz) throws NotFoundException {
         return Arrays.stream(clazz.getDeclaredMethods())
