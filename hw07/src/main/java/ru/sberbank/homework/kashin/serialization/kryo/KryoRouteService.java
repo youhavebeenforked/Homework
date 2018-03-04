@@ -18,7 +18,11 @@ import static java.util.Objects.isNull;
 public class KryoRouteService extends RouteService<City, Route<City>> {
     private HashMap<String, String> routeHashMap = new HashMap<>();
     private Serializer serializer = new SerializerRoute();
-    private final ThreadLocal<Kryo> kryos = ThreadLocal.withInitial(Kryo::new);
+    private final ThreadLocal<Kryo> kryos = ThreadLocal.withInitial(() -> {
+        Kryo kryo = new Kryo();
+        kryo.register(Route.class, serializer);
+        return kryo;
+    });
 
 
     public KryoRouteService(CachePathProvider pathProvider) {
@@ -53,7 +57,6 @@ public class KryoRouteService extends RouteService<City, Route<City>> {
 
     private void serialize(String fileName, Route route) {
         Kryo kryo = kryos.get();
-        kryo.register(serializer.getClass());
         try (FileOutputStream outputStream = new FileOutputStream(fileName);
              Output output = new Output(outputStream)) {
             serializer.write(kryo, output, route);
@@ -64,11 +67,10 @@ public class KryoRouteService extends RouteService<City, Route<City>> {
 
     private Route deserialize(String fileName) {
         Kryo kryo = kryos.get();
-        kryo.register(serializer.getClass());
         Route route = null;
         try(FileInputStream outputStream = new FileInputStream(fileName);
             Input input = new Input(outputStream)) {
-            route = (Route) serializer.read(kryo, input, Route.class);
+            return (Route) serializer.read(kryo, input, Route.class);
         } catch (IOException e) {
             e.printStackTrace();
         }

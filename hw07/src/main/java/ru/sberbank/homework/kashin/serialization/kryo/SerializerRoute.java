@@ -7,22 +7,22 @@ import com.esotericsoftware.kryo.io.Output;
 import ru.sberbank.homework.common.City;
 import ru.sberbank.homework.common.Route;
 
+import java.util.ArrayList;
+
 public class SerializerRoute extends Serializer<Route> {
 
     @Override
-    public void write(Kryo kryo, Output output, Route object) {
-        kryo.writeObject(output, object.getRouteName());
-        kryo.writeObject(output, object.getCities().size());
-        for (Object city : object.getCities()) {
-            kryo.writeObject(output, city);
-        }
+    public void write(Kryo kryo, Output output, Route route) {
+        kryo.writeObject(output, route.getRouteName());
+        output.write(route.getCities().size());
+        route.getCities().forEach(city -> kryo.writeObject(output, city));
     }
 
     @Override
     public Route read(Kryo kryo, Input input, Class<Route> type) {
-        Route<City> route = new Route<>();
+        Route<City> route = kryo.newInstance(type);
         route.setRouteName(kryo.readObject(input, String.class));
-        int size = kryo.readObject(input, int.class);
+        int size = input.read();
         for (int i = 0; i < size; i++) {
             route.getCities().add(kryo.readObject(input, City.class));
         }
