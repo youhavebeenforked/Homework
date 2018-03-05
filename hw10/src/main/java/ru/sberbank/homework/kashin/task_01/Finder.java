@@ -9,8 +9,9 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 
 /**
- * Методы реализованы с условием что в данном пакете найдет только один файл, в классе одно поле,
- * и один метод, так как по условию один класс, одно поле и один метод.
+ * Методы реализованы с условием что в данном пакете найдет только один класс с аннотацией Prototype,
+ * в классе одно поле c аннотацией ExperimentalFeature,
+ * и один метод с аннотацией ExperimentalFeature, так как по условию один класс, одно поле и один метод.
  */
 public class Finder {
     public Method getMethodWithAnnotationExperimentalFeature(Class clazz) throws NotFoundException {
