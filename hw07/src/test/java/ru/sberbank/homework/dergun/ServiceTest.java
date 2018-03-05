@@ -1,11 +1,11 @@
-package ru.sberbank.homework.your_lastname;
+package ru.sberbank.homework.dergun;
 
 import org.junit.Before;
 import org.junit.Test;
 import ru.sberbank.homework.common.City;
 import ru.sberbank.homework.common.Route;
 import ru.sberbank.homework.common.RouteService;
-import ru.sberbank.homework.your_lastname.serialization.InMemoryRouteService;
+import ru.sberbank.homework.dergun.serialization.InMemoryRouteService;
 
 import java.util.List;
 
