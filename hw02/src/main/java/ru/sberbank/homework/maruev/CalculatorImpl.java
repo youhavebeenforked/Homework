@@ -27,6 +27,12 @@ public class CalculatorImpl implements Calculator {
     public Deque<Double> result = new ArrayDeque<>();
     public ParsingHelper parser = new ParsingHelper();
     public DecimalFormatSymbols symbols = new DecimalFormatSymbols();
+    public DecimalFormat decimalFormat;
+
+    public CalculatorImpl() {
+        symbols.setDecimalSeparator('.');
+        this.decimalFormat = new DecimalFormat("#.##", symbols);
+    }
 
     @Override
     public String calculate(String userInput) {
@@ -41,8 +47,6 @@ public class CalculatorImpl implements Calculator {
             } else {
                 throw new InvalidExpression();
             }
-            symbols.setDecimalSeparator('.');
-            DecimalFormat decimalFormat = new DecimalFormat("#.##", symbols);
             return decimalFormat.format(result.peek());
 
         } catch (InvalidExpression e) {
