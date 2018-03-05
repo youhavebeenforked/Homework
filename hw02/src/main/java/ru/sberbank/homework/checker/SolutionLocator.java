@@ -2,9 +2,7 @@ package ru.sberbank.homework.checker;
 
 import io.github.lukehutch.fastclasspathscanner.FastClasspathScanner;
 import lombok.extern.slf4j.Slf4j;
-import ru.sberbank.homework.common.*;
-
-
+import ru.sberbank.homework.common.Calculator;
 
 @Slf4j
 public class SolutionLocator {
