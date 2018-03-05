@@ -51,7 +51,7 @@ public class CalculatorImpl implements Calculator {
             return MESSAGE_ERROR + e.getMessage();
         } catch (InvalidOperandException e) {
             return MESSAGE_ERROR + e.getMessage();
-        } catch (DivisionException e) {
+        } catch (ArithmeticException e) {
             return MESSAGE_ERROR + DIVISION_ERROR;
         }
     }

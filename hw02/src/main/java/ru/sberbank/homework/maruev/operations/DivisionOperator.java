@@ -11,7 +11,7 @@ public class DivisionOperator implements Operator {
         if (two != 0) {
             return one / two;
         } else {
-            throw new DivisionException();
+            throw new ArithmeticException("division by zero");
         }
     }
 }
