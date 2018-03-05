@@ -7,7 +7,7 @@ import java.util.*;
 /**
  * Параметризовать методы, используя правило PECS, и реализовать их.
  */
-public class CollectionUtils<T> {
+public class CollectionUtils {
     public static <T> void addAll(List<? extends T> source, List<? super T> destination) {
         destination.addAll(source);
     }
@@ -33,14 +33,14 @@ public class CollectionUtils<T> {
     }
 
     public static <T> boolean containsAll(List<? extends T> c1, List<? extends T> c2) {
-        return c1.contains(c2);
+        return c1.containsAll(c2);
     }
 
     //true если первый лист содержит хотя-бы 1 второго
     public static <T> boolean containsAny(List<? extends T> c1, List<? extends T> c2) {
         boolean result = false;
-        for (T object : c1) {
-            if (c2.contains(object)) {
+        for (T value : c1) {
+            if (c2.contains(value)) {
                 result = true;
                 break;
             }
@@ -55,7 +55,7 @@ public class CollectionUtils<T> {
         List result = new ArrayList<>();
         for (Comparable<T> value : list) {
             if (value.compareTo(max) <= 0 && value.compareTo(min) >= 0) {
-                result.add((T) value);
+                result.add(value);
             }
         }
         Collections.sort(result);
@@ -65,7 +65,7 @@ public class CollectionUtils<T> {
     public static <T> List range(List<? extends T> list, T min, T max, Comparator<T> comparator) {
         List result = new ArrayList();
         for (T value : list) {
-            if (comparator.compare(max, value) <= 0 && comparator.compare(min, value) >= 0) {
+            if (comparator.compare(value, max) <= 0 && comparator.compare(value, min) >= 0) {
                 result.add(value);
             }
         }
