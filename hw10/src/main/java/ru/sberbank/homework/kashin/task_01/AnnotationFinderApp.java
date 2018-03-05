@@ -6,14 +6,14 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-import static ru.sberbank.homework.kashin.task_01.Helper.getClasses;
-
 public class AnnotationFinderApp {
-    private static Finder finder = new Finder();
+    private static final String pathToFiles = "ru.sberbank.homework.common.entity";
 
     public static void main(String[] args) {
+        Finder finder = new Finder();
+        Loader loader = new Loader(pathToFiles);
         try {
-            Class[] classes = getClasses("ru.sberbank.homework.common.entity");
+            Class[] classes = loader.getClasses();
 
             Class clazz = finder.getClassWithAnnotationPrototype(classes);
             System.out.println("Имя класса с аннотацией Prototype: " + clazz.getSimpleName());

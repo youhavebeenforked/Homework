@@ -7,12 +7,18 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
-public class Helper {
-    public static Class[] getClasses(String packageName)
+public class Loader {
+    private String pathToFiles;
+
+    public Loader(String pathToFiles) {
+        this.pathToFiles = pathToFiles;
+    }
+
+    public Class[] getClasses()
             throws ClassNotFoundException, IOException {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         assert classLoader != null;
-        String path = packageName.replace('.', '/');
+        String path = pathToFiles.replace('.', '/');
         Enumeration<URL> resources = classLoader.getResources(path);
         List<File> dirs = new ArrayList<>();
         while (resources.hasMoreElements()) {
@@ -21,12 +27,12 @@ public class Helper {
         }
         ArrayList<Class> classes = new ArrayList<>();
         for (File directory : dirs) {
-            classes.addAll(findClasses(directory, packageName));
+            classes.addAll(findClasses(directory, pathToFiles));
         }
         return classes.toArray(new Class[classes.size()]);
     }
 
-    private static List<Class> findClasses(File directory, String packageName) throws ClassNotFoundException {
+    private List<Class> findClasses(File directory, String packageName) throws ClassNotFoundException {
         List<Class> classes = new ArrayList<>();
         if (!directory.exists()) {
             return classes;
