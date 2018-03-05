@@ -1,14 +1,18 @@
 package ru.sberbank.homework.maruev;
 
 import ru.sberbank.homework.common.Calculator;
+import ru.sberbank.homework.maruev.exceptions.DivisionException;
 import ru.sberbank.homework.maruev.exceptions.InvalidExpression;
 import ru.sberbank.homework.maruev.exceptions.InvalidOperandException;
 import ru.sberbank.homework.maruev.exceptions.InvalidOperatorException;
 import ru.sberbank.homework.maruev.operations.*;
 
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.Locale;
 
 /**
  * Created by Иван on 26.02.2018.
@@ -22,6 +26,7 @@ public class CalculatorImpl implements Calculator {
     public Deque<String> operation = new ArrayDeque<>();
     public Deque<Double> result = new ArrayDeque<>();
     public ParsingHelper parser = new ParsingHelper();
+    public DecimalFormatSymbols symbols = new DecimalFormatSymbols();
 
     @Override
     public String calculate(String userInput) {
@@ -36,7 +41,9 @@ public class CalculatorImpl implements Calculator {
             } else {
                 throw new InvalidExpression();
             }
-            return new DecimalFormat("#.##").format(result.peek()).replaceAll(",", ".");
+            symbols.setDecimalSeparator('.');
+            DecimalFormat decimalFormat = new DecimalFormat("#.##", symbols);
+            return decimalFormat.format(result.peek());
 
         } catch (InvalidExpression e) {
             return MESSAGE_ERROR + WR_EXPRESSION;
@@ -44,7 +51,7 @@ public class CalculatorImpl implements Calculator {
             return MESSAGE_ERROR + e.getMessage();
         } catch (InvalidOperandException e) {
             return MESSAGE_ERROR + e.getMessage();
-        } catch (ArithmeticException e) {
+        } catch (DivisionException e) {
             return MESSAGE_ERROR + DIVISION_ERROR;
         }
     }

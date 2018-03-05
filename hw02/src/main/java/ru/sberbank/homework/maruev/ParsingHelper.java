@@ -20,14 +20,14 @@ public class ParsingHelper {
         operandStack.addLast(inputMass[2]);
         operatorStack.add(inputMass[1]);
 
-        if (isOperand(operandStack.peekFirst())) {
+        if (validOperand(operandStack.peekFirst())) {
             operandStack.pollFirst();
             operandDeque.addFirst(currentOperand);
         } else {
             throw new InvalidOperandException(operandStack.pollFirst());
         }
 
-        if (isOperand((operandStack.peekLast()))) {
+        if (validOperand((operandStack.peekLast()))) {
             operandStack.pollLast();
             operandDeque.addLast(currentOperand);
         } else {
@@ -35,33 +35,32 @@ public class ParsingHelper {
         }
 
         if (isOperator(operatorStack.peek())) {
-
+            return operandDeque;
         } else {
             throw new InvalidOperatorException(operatorStack.poll());
         }
-        return operandDeque;
+
     }
 
     public Deque<Double> nextParse(String[] input) {
         operatorStack.add(input[0]);
         operandStack.addFirst(input[1]);
 
-        if (isOperator(operatorStack.peek())) {
-
-        } else {
-            throw new InvalidOperatorException(operatorStack.poll());
-        }
-
-        if (isOperand((operandStack.peekFirst()))) {
+        if (validOperand((operandStack.peekFirst()))) {
             operandStack.pollFirst();
             operandDeque.addFirst(currentOperand);
         } else {
             throw new InvalidOperandException(operandStack.poll());
         }
-        return operandDeque;
+
+        if (isOperator(operatorStack.peek())) {
+            return operandDeque;
+        } else {
+            throw new InvalidOperatorException(operatorStack.poll());
+        }
     }
 
-    public boolean isOperand(String operand) {
+    public boolean validOperand(String operand) {
         operand = operand.toLowerCase();
         if (operand.startsWith("_")
                 || operand.endsWith("_")

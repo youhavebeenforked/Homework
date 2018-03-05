@@ -1,5 +1,7 @@
 package ru.sberbank.homework.maruev.operations;
 
+import ru.sberbank.homework.maruev.exceptions.DivisionException;
+
 /**
  * Created by Иван on 15.02.2018.
  */
@@ -9,7 +11,7 @@ public class DivisionOperator implements Operator {
         if (two != 0) {
             return one / two;
         } else {
-            throw new ArithmeticException();
+            throw new DivisionException();
         }
     }
 }

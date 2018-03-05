@@ -10,6 +10,8 @@ public class Expression {
     private final String input;
     private final String expectedOutput;
     private boolean isFailed;
+    @Setter
+    private CommandSequence parent;
 
     public Expression fail() {
         isFailed = true;
