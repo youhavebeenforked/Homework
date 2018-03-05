@@ -12,11 +12,17 @@ public class ExternalizableRouteServiceTest {
 
     @Test
     public void simple() {
-        ExternalizableRouteService service = new ExternalizableRouteService(() -> "C:\\test\\");
+        ExternalizableRouteService service = new ExternalizableRouteService(() -> "C:\\Karina\\");
         Route<? extends City> serialize = service.getRoute("Saint-Petersburg", "Berlin");
         System.out.println(serialize);
         Route<? extends City> deserialize = service.getRoute("Saint-Petersburg", "Berlin");
         System.out.println(deserialize);
+        compareCities(deserialize.getCities(), serialize.getCities());
+        for (int i = 0; i < 100; i++) {
+            deserialize = service.getRoute("Saint-Petersburg", "Berlin");
+        }
+        serialize = service.getRoute("Saint-Petersburg", "Novosibirsk");
+        deserialize = service.getRoute("Saint-Petersburg", "Novosibirsk");
         compareCities(deserialize.getCities(), serialize.getCities());
     }
 

@@ -28,7 +28,7 @@ public class ExternalizableRouteService extends RouteService<City, Route<City>> 
             statistic.add(key);
             try (FileOutputStream fos = new FileOutputStream(pathProvider.getCacheDirectoryPath() + "\\" + key + ".txt");
                  ObjectOutputStream out = new ObjectOutputStream(fos);) {
-                new ExternalizableRoute(route).writeExternal(out);
+                ((Externalizable) route).writeExternal(out);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -37,7 +37,7 @@ public class ExternalizableRouteService extends RouteService<City, Route<City>> 
                  ObjectInputStream in = new ObjectInputStream(fis);) {
                 ExternalizableRoute ext = new ExternalizableRoute();
                 ext.readExternal(in);
-                route = ext.getRoute();
+                route = ext;
 
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
@@ -48,11 +48,11 @@ public class ExternalizableRouteService extends RouteService<City, Route<City>> 
 
     @Override
     protected City createCity(int id, String cityName, LocalDate foundDate, long numberOfInhabitants) {
-        return new City(id, cityName, foundDate, numberOfInhabitants);
+        return new ExternalizableCity(id, cityName, foundDate, numberOfInhabitants);
     }
 
     @Override
     protected Route<City> createRoute(List<City> cities) {
-        return new Route<>(UUID.randomUUID().toString(), cities);
+        return new ExternalizableRoute(UUID.randomUUID().toString(), cities);
     }
 }

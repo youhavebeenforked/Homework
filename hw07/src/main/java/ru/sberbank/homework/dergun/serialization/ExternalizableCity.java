@@ -11,12 +11,12 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 public class ExternalizableCity extends City implements Externalizable {
-    public ExternalizableCity(City city) {
-        super(city.getId(), city.getCityName(), city.getFoundDate(), city.getNumberOfInhabitants(), city.getNearCities());
-    }
-
     public ExternalizableCity() {
         super();
+    }
+
+    public ExternalizableCity (int id, String cityName, LocalDate foundDate, long numberOfInhabitants) {
+        super(id, cityName, foundDate, numberOfInhabitants);
     }
 
     private void writeExternal(ObjectOutput out, City city, HashSet<Integer> visited) throws IOException {
@@ -51,7 +51,7 @@ public class ExternalizableCity extends City implements Externalizable {
                 city.getNearCities().add(visited.get(id));
                 continue;
             }
-            City cityNear = new City();
+            City cityNear = new ExternalizableCity();
             cityNear.setId(id);
             readExternal(in, cityNear, visited);
             city.getNearCities().add(cityNear);
