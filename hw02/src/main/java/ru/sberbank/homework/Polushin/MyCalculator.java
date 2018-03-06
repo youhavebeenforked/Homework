@@ -30,7 +30,7 @@ public class MyCalculator implements Runnable {
                     break;
                 }
                 output = calculator.calculate(userInput);
-                streamWriter.write(output+"\n");
+                streamWriter.write(output + "\n");
                 streamWriter.flush();
 
             } while (true);

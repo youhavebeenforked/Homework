@@ -7,39 +7,69 @@ package ru.sberbank.homework.Polushin;
  * todo: удалить весь этот комментарий, написать свой
  */
 public enum Operation {
-    MULTIPLY("*") {
+    MULTIPLY('*') {
+        @Override
+        public Double calculate(double var1, double var2) {
+            return var1 * var2;
+        }
+
         @Override
         public String toString() {
-            return super.toString();
+            return this.name() + " " + this.getOperation();
         }
     },
-    SUM("+") {
+    SUM('+') {
+        @Override
+        public Double calculate(double var1, double var2) {
+            return var1 + var2;
+        }
+
         @Override
         public String toString() {
-            return super.toString();
+            return this.name() + " " + this.getOperation();
         }
     },
-    DIVISION("/") {
+    DIVISION('/') {
+        @Override
+        public Double calculate(double var1, double var2) {
+            return var1 / var2;
+        }
+
         @Override
         public String toString() {
-            return super.toString();
+            return this.name() + " " + this.getOperation();
         }
     },
-    SUBTRACT("-") {
+    SUBTRACT('-') {
+        @Override
+        public Double calculate(double var1, double var2) {
+            return var1 - var2;
+        }
+
         @Override
         public String toString() {
-            return super.toString();
+            return this.name() + " " + this.getOperation();
         }
+    },
+    PARENTHESIS_LEFT('(') {
+
+    },
+    PARENTHESIS_RIGHT(')') {
+
     };
 
-    private String operation;
+    private char operation;
 
-    private Operation(String s) {
-        operation = s;
+    Operation(char c) {
+        operation = c;
     }
 
-    public String getOperation() {
+    public char getOperation() {
         return this.operation;
+    }
+
+    public Double calculate(double var1, double var2) {
+        return null;
     }
 
     public String toString() {
