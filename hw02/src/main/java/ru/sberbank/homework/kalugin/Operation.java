@@ -4,8 +4,6 @@ import java.util.function.DoubleBinaryOperator;
 
 /**
  * Арифметическая операция.
- * При вызове конструктора, через лямбду, задаем нужную матем. операцию функциональному интерфейсу DoubleBinaryOperator
- * который принимает два объекта типа Double, возвращает Double
  */
 public enum Operation {
     ADD ((x, y) -> (x + y)),
