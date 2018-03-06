@@ -2,6 +2,8 @@ package ru.sberbank.homework.bobrov;
 
 import org.junit.Before;
 import org.junit.Test;
+import ru.sberbank.homework.bobrov.serialization.BuiltInSerializable;
+import ru.sberbank.homework.common.CachePathProvider;
 import ru.sberbank.homework.common.City;
 import ru.sberbank.homework.common.Route;
 import ru.sberbank.homework.common.RouteService;
@@ -17,7 +19,8 @@ public class ServiceTest {
     @Before
     public void pre() {
         //routeService = new KryoRouteService();
-        routeService = new InMemoryRouteService(() -> "C:\\temp\\");
+//        routeService = new InMemoryRouteService(() -> "C:\\temp\\");
+        routeService = new BuiltInSerializable(() -> "C:\\temp\\");
     }
 
     @Test
