@@ -27,13 +27,17 @@ public class StringAnalyzer {
 
         if (matcher.find() == false) {
             input = input.replaceAll("[(,)]", "")
-                         .replaceAll("[+,\\-,*,/]", " ");
+                         .replaceAll("[+,\\-,*,/,^]", " ");
 
             String[] numbers = input.split("[ ]+");
 
             for (String s : numbers) {
                 matcher = Pattern.compile("^" + RegularExpr.NUMBER.getRegExp() + "$").matcher(s);
-                if (matcher.find() == false) {
+                /*
+                Если не указать второе условие, то при вводе пустой строки будет "error> "
+                вместо "error> wrong expression".
+                 */
+                if (matcher.find() == false && s.length()>0) {
                     return ("error > " + s);
                 }
             }

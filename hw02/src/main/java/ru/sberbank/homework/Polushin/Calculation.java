@@ -4,6 +4,9 @@ import ru.sberbank.homework.common.Calculator;
 import ru.sberbank.homework.utils.StringConverter;
 import ru.sberbank.homework.utils.UserInputException;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.LinkedList;
 import java.util.Stack;
 
@@ -16,7 +19,7 @@ public class Calculation implements Calculator {
         LinkedList postfixExpression;
         try {
             postfixExpression = StringConverter.convertToPostfix(userInput);
-
+           // postfixExpression.forEach(System.out::println); //for debug only
             Stack<Double> temp = new Stack<>();
             if ((postfixExpression.peekFirst() instanceof Operation)) {
                 temp.push(result);
@@ -35,11 +38,17 @@ public class Calculation implements Calculator {
                 }
             }
             result = temp.pop();
-            //TODO округление и форматирование результата
-            output = result.toString();
+
+            DecimalFormat df = new DecimalFormat("#0.##");
+            DecimalFormatSymbols dfs= df.getDecimalFormatSymbols();
+            dfs.setDecimalSeparator('.');
+            df.setDecimalFormatSymbols(dfs);
+            df.setRoundingMode(RoundingMode.HALF_UP);
+
+            output = df.format(result);
 
         } catch (UserInputException e) {
-            System.out.println(e.getMessage());
+            output = e.getMessage();
         }
         return output;
     }

@@ -1,10 +1,10 @@
 package ru.sberbank.homework.utils;
 
 public enum RegularExpr {
-    OPERATOR("[\\s][+,\\-,*,\\/][\\s]") {
+    OPERATOR("[\\s][+,\\-,*,\\/,^][\\s]") {
 
     },
-    SHORT_OPERATOR("^[+,\\-,*,\\/][\\s]") {
+    SHORT_OPERATOR("^[+,\\-,*,\\/,^][\\s]") {
 
     },
     INTEGER_TYPE("[+,-]?((0B)[0,1]+([_]*[0,1]+)*|[0][0-7]+([_]*[0-7]+)*" +

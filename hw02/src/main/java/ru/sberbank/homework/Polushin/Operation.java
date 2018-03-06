@@ -1,5 +1,7 @@
 package ru.sberbank.homework.Polushin;
 
+import com.sun.istack.internal.NotNull;
+
 /**
  * Арифметическая операция.
  * Если использование Enum не ложится на вашу архитектуры, просто продемонстрируйте понимание Enum - предоставьте
@@ -21,7 +23,7 @@ public enum Operation {
     SUM('+') {
         @Override
         public Double calculate(double var1, double var2) {
-            return var1 + var2;
+            return var1 + var2 ;
         }
 
         @Override
@@ -31,7 +33,7 @@ public enum Operation {
     },
     DIVISION('/') {
         @Override
-        public Double calculate(double var1, double var2) {
+        public Double calculate(double var1, double var2 )  {
             return var1 / var2;
         }
 
@@ -51,11 +53,28 @@ public enum Operation {
             return this.name() + " " + this.getOperation();
         }
     },
-    PARENTHESIS_LEFT('(') {
+    POWER('^') {
+        @Override
+        public Double calculate(double var1, double var2) {
+            return Math.pow(var1, var2);
+        }
 
+        @Override
+        public String toString() {
+            return this.name() + " " + this.getOperation();
+        }
+    },
+    PARENTHESIS_LEFT('(') {
+        @Override
+        public String toString() {
+            return this.name() + " " + this.getOperation();
+        }
     },
     PARENTHESIS_RIGHT(')') {
-
+        @Override
+        public String toString() {
+            return this.name() + " " + this.getOperation();
+        }
     };
 
     private char operation;

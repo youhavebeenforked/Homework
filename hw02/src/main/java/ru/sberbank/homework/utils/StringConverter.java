@@ -17,7 +17,7 @@ public class StringConverter {
             throw new UserInputException(isCorrect);
         }
 
-        String[] infix = inputExpression                                  //Парсим строку на операнды и операторы
+        String[] infix = inputExpression   //Парсим строку на операнды и операторы
                 .toUpperCase()
                 .replaceAll("[(]", "( ")
                 .replaceAll("[)]", " )")
@@ -56,14 +56,28 @@ public class StringConverter {
                         break;
                     case '/':
                         operation = Operation.DIVISION;
-                        while (!temp.empty() && (temp.peek() == Operation.MULTIPLY || temp.peek() == Operation.DIVISION)) {
+                        while (!temp.empty()
+                                && (temp.peek() == Operation.MULTIPLY
+                                || temp.peek() == Operation.DIVISION
+                                || temp.peek() == Operation.POWER)) {
                             postfixExpression.push(temp.pop());
                         }
                         temp.push(operation);
                         break;
                     case '*':
                         operation = Operation.MULTIPLY;
-                        while (!temp.empty() && (temp.peek() == Operation.MULTIPLY || temp.peek() == Operation.DIVISION)) {
+                        while (!temp.empty()
+                                && (temp.peek() == Operation.MULTIPLY
+                                || temp.peek() == Operation.DIVISION
+                                || temp.peek() == Operation.POWER)) {
+
+                            postfixExpression.push(temp.pop());
+                        }
+                        temp.push(operation);
+                        break;
+                    case '^':
+                        operation = Operation.POWER;
+                        while (!temp.empty() && temp.peek() == Operation.POWER) {
                             postfixExpression.push(temp.pop());
                         }
                         temp.push(operation);
@@ -84,7 +98,7 @@ public class StringConverter {
                             temp.pop();
                         }
                         break;
-                        //Может понадобится, если литерал из одного символа, например "7". и он всегда будет инт.
+                    //Может понадобится, если литерал из одного символа, например "7". и он всегда будет инт.
                     default:
                         postfixExpression.push(Double.parseDouble(infix[i]));
                 }
@@ -103,7 +117,8 @@ public class StringConverter {
     Преобразует строку в число и возращает его как double
      */
     //TODO подумать и возможно переделать метод, чтобы возвращал значение + тип
-    protected static Double valueOf(String input) {
+    protected static Double valueOf(String input) throws UserInputException {
+        String value = input;
         if (Pattern.compile("^" + RegularExpr.INTEGER_TYPE.getRegExp() + "$").matcher(input).find()) {
             int radix = 10;
             int sign = 0;
@@ -135,14 +150,30 @@ public class StringConverter {
             }
             if (input.charAt(input.length() - 1) == 'L') {
                 input = input.substring(0, input.length() - 1);
-                long var = Long.parseUnsignedLong(input, radix);
+                long var;
+                try {
+                    var = Long.parseUnsignedLong(input, radix);
+                } catch (NumberFormatException e) {
+                    throw new UserInputException("Вы ввели недопустимое значение для данного типа Long: " + value);
+                }
                 return Double.valueOf(sign == 1 ? 0 - var : var);
             } else {
-                int var = Integer.parseUnsignedInt(input, radix);
-                return Double.valueOf(sign == 1 ? 0 - var : var);
+                long var;
+                try {
+                    var = Integer.parseUnsignedInt(input, radix);
+                } catch (NumberFormatException e) {
+                    throw new UserInputException("Вы ввели недопустимое значение для данного типа Integer: " + value);
+                }
+                return Double.valueOf((sign == 1 ? 0 - var : var));
             }
         } else {
-            return Double.parseDouble(input);
+            double var;
+            try {
+                var = Double.parseDouble(input);
+            } catch (NumberFormatException e) {
+                throw new UserInputException("Вы ввели недопустимое значение для данного типа Double: " + value);
+            }
+            return var;
         }
 
     }
