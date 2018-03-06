@@ -20,9 +20,7 @@ public class ReflectionFieldCopier implements BeanFieldCopier {
         Map<String, Object> getters = getGetters(from);
         Map<String, Method> setters = getSetters(to);
         if (nonNull(getters)) {
-            for (Map.Entry<String, Object> entry : getters.entrySet()) {
-                invokeSetter(to, setters, entry);
-            }
+            getters.entrySet().forEach(entry -> invokeSetter(to, setters, entry));
         }
     }
 
