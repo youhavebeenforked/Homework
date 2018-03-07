@@ -6,7 +6,7 @@ package ru.sberbank.homework.drozdov.hw3_1;
 public class TerminalImpl implements Terminal {
     private final TerminalServer server;
     private final PinValidator pinValidator;
-    private static final String WRONG_PIN_EXCEPTION = "Для работы с терминалом введите корректный пин 4-х значного вида";
+    private static final String WRONG_PIN_EXCEPTION = "Для работы с терминалом введите корректный пин";
 
     TerminalImpl() {
         server = new TerminalServer();
@@ -27,8 +27,9 @@ public class TerminalImpl implements Terminal {
     public boolean checkPin(String pin) {
         if (!pinValidator.checkPin(pin)) {
             throw new WrongPinException(WRONG_PIN_EXCEPTION);
+        } else {
+            return true;
         }
-        return true;
     }
 
     @Override
