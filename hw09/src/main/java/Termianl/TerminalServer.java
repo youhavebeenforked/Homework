@@ -7,10 +7,14 @@ import Termianl.exeptions.NotCorrectPinExeption;
 import java.util.Random;
 
 public class TerminalServer {
-    private final int NETWORK_QUALITY = 99;
+    private final static int NETWORK_QUALITY = 99;
     private final Random random = new Random();
-    private int bankBook = 10200;
+    private int bankBook = 0;
     private PinStorage pinStorage;
+
+    public void setScore(int money) {
+        bankBook = money;
+    }
 
     public void checkPin(int pin) {
         if (hasNetworkProblem()) {

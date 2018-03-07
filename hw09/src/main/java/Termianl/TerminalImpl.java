@@ -6,29 +6,28 @@ public class TerminalImpl implements Terminal {
     private final TerminalServer server = new TerminalServer();
     private final PinValidator pinValidator = new PinValidator();
     private final MoneyValidator moneyValidator = new MoneyValidator();
-    private final int MAX_INCORRECT_ATTEMP = 3;
-    private final int TIME_BLOCK = 5000; //mlsec
+    private final static int MAX_INCORRECT_ATTEMP = 3;
+    private final static int TIME_BLOCK = 5000; //mlsec
     private long startTime = 0L;
     private long currentTime = 0L;
     private boolean correctPin = false;
     private int currentIncorrectAttemp = 0;
-    private boolean time = true;
+    private boolean isBlock = false;
 
     @Override
-    public boolean setPinStorage(PinStorage pinStorage) {
+    public void setPinStorage(PinStorage pinStorage) {
         server.setPinStorage(pinStorage);
-        return true;
     }
 
     @Override
-    public boolean setPin(int pin) {
+    public boolean isCorrectPin(int pin) {
         unblock();
         if (correctPin) {
             System.out.println("You already entered a valid pin");
-            return true;
+            return correctPin;
         }
         try {
-            if (!time) {
+            if (isBlock) {
                 throw new AccountIsLockedException("Your account is locked, please try again after:" +
                         (TIME_BLOCK - (int) (currentTime - startTime)) / 1000 + " seconds");
             }
@@ -38,7 +37,7 @@ public class TerminalImpl implements Terminal {
                 correctPin = true;
                 currentIncorrectAttemp = 0;
                 System.out.println("Access");
-                return true;
+                return correctPin;
             }
         } catch (ValidatePinExeption | NotCorrectPinExeption  e) {
             System.out.println(e.getMessage());
@@ -47,12 +46,12 @@ public class TerminalImpl implements Terminal {
                 currentIncorrectAttemp = 0;
                 block();
             }
-            return false;
+            return correctPin;
         } catch (NetworkConnectionExeption | AccountIsLockedException e) {
             System.out.println(e.getMessage());
-            return false;
+            return correctPin;
         }
-        return false;
+        return correctPin;
     }
 
     @Override
@@ -64,7 +63,7 @@ public class TerminalImpl implements Terminal {
         } catch (NetworkConnectionExeption | LoggedExeption e) {
             System.out.println(e.getMessage());
         }
-        return -1;
+        throw new LoggedExeption();
     }
 
     @Override
@@ -93,6 +92,12 @@ public class TerminalImpl implements Terminal {
         return true;
     }
 
+    @Override
+    public void setScore(int money) {
+        moneyValidator.validMoney(money);
+        server.setScore(money);
+    }
+
     private void isCorrectPin() {
         if (!correctPin) {
             throw new LoggedExeption();
@@ -100,14 +105,14 @@ public class TerminalImpl implements Terminal {
     }
 
     private void block() {
-        time = false;
+        isBlock = true;
         startTime = System.currentTimeMillis();
     }
 
     private void unblock() {
         currentTime = System.currentTimeMillis();
         if (currentTime - startTime >= TIME_BLOCK) {
-            time = true;
+            isBlock = false;
         }
     }
 }

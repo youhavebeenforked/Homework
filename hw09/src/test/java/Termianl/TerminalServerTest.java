@@ -21,38 +21,26 @@ public class TerminalServerTest {
         } catch (NotCorrectPinExeption e) {
             Assert.assertTrue(false);
         }
-        Assert.assertTrue(true);
     }
 
     @Test(expected = NotCorrectPinExeption.class)
     public void checkPinIncorrect() throws Exception {
         server.checkPin(111);
-        server.checkPin(1111);
-        server.checkPin(11111);
-    }
-
-    @Test
-    public void setPinStorage() throws Exception {
-        server.setPinStorage(() -> 9999);
     }
 
     @Test
     public void getBankBook() throws Exception {
+        server.setScore(10200);
         Assert.assertEquals(server.getBankBook(), 10200);
-        Assert.assertNotEquals(server.getBankBook(), 1020);
-        Assert.assertNotEquals(server.getBankBook(), 0);
         Assert.assertNotEquals(server.getBankBook(), -10200);
     }
 
     @Test
     public void withdrawMoneyCorrect() throws Exception {
+        server.setScore(1000);
         final int startMoney = server.getBankBook();
         server.withdrawMoney(100);
         Assert.assertEquals(server.getBankBook(), startMoney - 100);
-        server.withdrawMoney(0);
-        Assert.assertEquals(server.getBankBook(), startMoney - 100);
-        server.withdrawMoney(-100);
-        Assert.assertEquals(server.getBankBook(), startMoney);
     }
 
     @Test(expected = InsufficientFundsExeption.class)
