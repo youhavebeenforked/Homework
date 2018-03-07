@@ -19,8 +19,9 @@ public class Calculation implements Calculator {
         LinkedList postfixExpression;
         try {
             postfixExpression = StringConverter.convertToPostfix(userInput);
-           // postfixExpression.forEach(System.out::println); //for debug only
+
             Stack<Double> temp = new Stack<>();
+
             if ((postfixExpression.peekFirst() instanceof Operation)) {
                 temp.push(result);
             } else {
@@ -39,8 +40,11 @@ public class Calculation implements Calculator {
             }
             result = temp.pop();
 
+            /*
+            блок форматирования вывода.
+             */
             DecimalFormat df = new DecimalFormat("#0.##");
-            DecimalFormatSymbols dfs= df.getDecimalFormatSymbols();
+            DecimalFormatSymbols dfs = df.getDecimalFormatSymbols();
             dfs.setDecimalSeparator('.');
             df.setDecimalFormatSymbols(dfs);
             df.setRoundingMode(RoundingMode.HALF_UP);

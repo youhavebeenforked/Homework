@@ -100,7 +100,7 @@ public class StringConverter {
                         break;
                     //Может понадобится, если литерал из одного символа, например "7". и он всегда будет инт.
                     default:
-                        postfixExpression.push(Double.parseDouble(infix[i]));
+                        postfixExpression.push(Integer.parseInt(infix[i]));
                 }
             }
         }

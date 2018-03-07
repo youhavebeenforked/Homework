@@ -1,12 +1,8 @@
 package ru.sberbank.homework.Polushin;
 
-import com.sun.istack.internal.NotNull;
-
 /**
- * Арифметическая операция.
- * Если использование Enum не ложится на вашу архитектуры, просто продемонстрируйте понимание Enum - предоставьте
- * свой вариант реализации с внутренними полями, описанием, значением. И можете его не использовать.
- * todo: удалить весь этот комментарий, написать свой
+ * Арифметические операции и скобки.
+ * У перечисления есть встроенный метод calculate, переопределенный для каждой операции, кроме скобок.
  */
 public enum Operation {
     MULTIPLY('*') {
@@ -23,7 +19,7 @@ public enum Operation {
     SUM('+') {
         @Override
         public Double calculate(double var1, double var2) {
-            return var1 + var2 ;
+            return var1 + var2;
         }
 
         @Override
@@ -33,7 +29,7 @@ public enum Operation {
     },
     DIVISION('/') {
         @Override
-        public Double calculate(double var1, double var2 )  {
+        public Double calculate(double var1, double var2) {
             return var1 / var2;
         }
 
