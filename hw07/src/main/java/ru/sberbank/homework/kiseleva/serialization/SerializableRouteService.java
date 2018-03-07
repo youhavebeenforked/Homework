@@ -26,18 +26,6 @@ public class SerializableRouteService extends RouteService<City, Route<City>> im
     public Route<City> getRoute(String from, String to) {
         String key = from + "_" + to;
 
-        if (new File(cachePath + "/" + key).isFile()) {
-            try (FileInputStream fis = new FileInputStream(cachePath + "/" + key);
-                 ObjectInputStream ois = new ObjectInputStream(fis)) {
-                SerialRoute route = (SerialRoute) ois.readObject();
-                return route;
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-        }
-
         Route<City> route = routeHashMap.get(key);
 
         if (route == null) {
@@ -50,6 +38,17 @@ public class SerializableRouteService extends RouteService<City, Route<City>> im
                 oos.writeObject(serialRoute);
             } catch (IOException e) {
                 e.printStackTrace();
+            }
+        } else {
+            if (new File(cachePath + "/" + key).isFile()) {
+                try (FileInputStream fis = new FileInputStream(cachePath + "/" + key);
+                     ObjectInputStream ois = new ObjectInputStream(fis)) {
+                    route = (SerialRoute) ois.readObject();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
             }
         }
         return route;

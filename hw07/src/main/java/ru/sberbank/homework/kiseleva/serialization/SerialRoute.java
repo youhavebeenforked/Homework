@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
  */
 public class SerialRoute<C extends SerialCity> extends Route implements Serializable, Externalizable {
     private String routeName;
-    private List<SerialCity> cities = new LinkedList<>();
+    private List<City> cities = new LinkedList<>();
 
     public SerialRoute() {
 
@@ -21,26 +21,33 @@ public class SerialRoute<C extends SerialCity> extends Route implements Serializ
 
     public SerialRoute(String routeName, List<City> cities) {
         this.routeName = routeName;
-        for (City city : cities) {
-            this.cities.add(new SerialCity(city.getId(), city.getCityName(), city.getFoundDate(), city.getNumberOfInhabitants()));
-        }
+        this.cities = cities;
     }
 
     public String toString() {
         return "Route: { " +
-                String.join(" -> ", cities.stream().map(SerialCity::getCityName).collect(Collectors.toList()))
+                String.join(" -> ", cities.stream().map(City::getCityName).collect(Collectors.toList()))
                 + " }";
     }
 
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
         out.writeObject(routeName);
-        out.writeObject(cities);
+        out.writeObject(cities.size());
+        for (City city : cities) {
+            new SerialCity(city.getId(), city.getCityName(), city.getFoundDate(), city.getNumberOfInhabitants())
+                    .writeExternal(out);
+        }
     }
 
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
         routeName = (String) in.readObject();
-        cities = (List<SerialCity>) in.readObject();
+        int size = (int) in.readObject();
+        for (int i = 0; i < size; i++) {
+            SerialCity city = new SerialCity();
+            city.readExternal(in);
+            cities.add(city);
+        }
     }
 }

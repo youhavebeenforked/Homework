@@ -28,30 +28,31 @@ public class ExternalizableRouteService extends RouteService<City, Route<City>> 
     public Route<City> getRoute(String from, String to) {
         String key = from + "_" + to;
 
-        if (new File(cachePath + "/" + key).isFile()) {
-            try {
-                SerialRoute route = new SerialRoute();
-                route.readExternal(new ObjectInputStream(new FileInputStream(cachePath + "/" + key)));
-                return route;
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-        }
-
         Route<City> route = routeHashMap.get(key);
         if (route == null) {
             route = super.getRoute(from, to);
             routeHashMap.put(key, route);
 
             SerialRoute serialRoute = new SerialRoute(route.getRouteName(), route.getCities());
-            try {
-                serialRoute.writeExternal(new ObjectOutputStream(new FileOutputStream(cachePath + "/" + key)));
+            try (FileOutputStream fos = new FileOutputStream(cachePath + "/" + key);
+                 ObjectOutputStream oos = new ObjectOutputStream(fos)) {
+                serialRoute.writeExternal(oos);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
+        } else {
+            if (new File(cachePath + "/" + key).isFile()) {
+                try (FileInputStream fis = new FileInputStream(cachePath + "/" + key);
+                     ObjectInputStream ois = new ObjectInputStream(fis)) {
+                    SerialRoute serialRoute = new SerialRoute();
+                    serialRoute.readExternal(ois);
+                    return serialRoute;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
         }
         return route;
     }
