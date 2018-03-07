@@ -16,6 +16,7 @@ public class TerminalServerTest {
 
     @Test
     public void checkPinCorrect() throws Exception {
+        server.setPinStorage(() -> 5555);
         try {
             server.checkPin(5555);
         } catch (NotCorrectPinExeption e) {
