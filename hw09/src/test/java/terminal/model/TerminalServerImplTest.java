@@ -11,6 +11,7 @@ public class TerminalServerImplTest {
     @Before
     public void before() {
         server = new TerminalServerImpl();
+        server.putMoney(10000);
 
     }
 

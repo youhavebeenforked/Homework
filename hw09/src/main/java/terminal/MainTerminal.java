@@ -54,42 +54,5 @@ public class MainTerminal {
     }
 
     public static void main(String[] args) {
-        /*
-        MainTerminal mainTerminal = new MainTerminal();
-        try {
-            mainTerminal.enterPin("7812");
-            mainTerminal.checkBalance();
-            mainTerminal.enterPin("7812");
-            mainTerminal.checkBalance();
-            mainTerminal.enterPin("7812");
-            mainTerminal.checkBalance();
-            mainTerminal.enterPin("7812");
-            mainTerminal.checkBalance();
-            Thread.sleep(1500);
-            mainTerminal.checkBalance();
-            Thread.sleep(1500);
-            mainTerminal.enterPin("0000");
-            mainTerminal.checkBalance();
-            Thread.sleep(2100);
-            mainTerminal.checkBalance();
-            mainTerminal.enterPin("0000");
-            mainTerminal.checkBalance();
-            mainTerminal.withdrawMoney(152);
-            mainTerminal.checkBalance();
-            mainTerminal.withdrawMoney(200);
-            mainTerminal.checkBalance();
-            mainTerminal.putMoney(45);
-            mainTerminal.checkBalance();
-            mainTerminal.putMoney(100);
-            mainTerminal.checkBalance();
-            mainTerminal.withdrawMoney(100000);
-            mainTerminal.checkBalance();
-            mainTerminal.withdrawMoney(900);
-            mainTerminal.checkBalance();
-            mainTerminal.checkBalance();
-        }catch (Exception e) {
-            e.printStackTrace();
-        }
-        */
     }
 }

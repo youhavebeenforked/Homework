@@ -43,6 +43,7 @@ public class PinValidatorImplTest {
 
     @Test
     public void checkBlockFalse() {
+        validator.checkPin("0000");
         validator.checkBlock();
     }
 

@@ -12,6 +12,7 @@ public class AccountImplTest {
     @Before
     public void before() {
         account = new AccountImpl();
+        account.putMoney(10000);
     }
 
     @Test

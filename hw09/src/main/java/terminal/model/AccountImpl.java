@@ -3,7 +3,7 @@ package terminal.model;
 import terminal.exception.NotEnoughMoneyException;
 
 public class AccountImpl implements Account {
-    private long moneyAccount = 10000;
+    private long moneyAccount = 0;
 
     @Override
     public long checkBalance() {

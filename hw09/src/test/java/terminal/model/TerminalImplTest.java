@@ -19,7 +19,7 @@ public class TerminalImplTest {
     @Test
     public void checkBalanceTruePin() {
         terminal.enterPin("0000");
-        assertEquals(10000, terminal.checkBalance());
+        assertEquals(0, terminal.checkBalance());
     }
 
     @Test(expected = NotAuthorizedException.class)
@@ -55,6 +55,7 @@ public class TerminalImplTest {
     @Test
     public void withdrawMoneySuccessfully() {
         terminal.enterPin("0000");
+        terminal.putMoney(10000);
         long money = 1000;
         long startMoney = terminal.checkBalance();
         terminal.withdrawMoney(money);
