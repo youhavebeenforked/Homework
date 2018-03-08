@@ -1,27 +1,21 @@
 package terminal.model;
 
-import org.junit.Before;
 import org.junit.Test;
 import terminal.exception.NotEnoughMoneyException;
 
 import static org.junit.Assert.*;
 
 public class AccountImplTest {
-    Account account;
-
-    @Before
-    public void before() {
-        account = new AccountImpl();
-        account.putMoney(10000);
-    }
+    Account account = new AccountImpl();
 
     @Test
     public void checkBalance() {
-        assertEquals(10000, account.checkBalance());
+        assertEquals(0, account.checkBalance());
     }
 
     @Test
     public void withdrawMoneySuccessfully() {
+        account.putMoney(10000);
         long money = 1000;
         long startMoney = account.checkBalance();
         account.withdrawMoney(money);
@@ -31,7 +25,7 @@ public class AccountImplTest {
 
     @Test(expected = NotEnoughMoneyException.class)
     public void withdrawMoneyUnsuccessfully() {
-        long money = 11000;
+        long money = 1000;
         account.withdrawMoney(money);
     }
 
