@@ -1,8 +1,8 @@
-package java.ru.sberbank.homework.kudryavukh;
+package ru.sberbank.homework.kudryavukh;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.ru.sberbank.homework.common.*;
+import java.util.List;
 
 public class Calculate implements ru.sberbank.homework.common.Calculator {
 
@@ -10,17 +10,21 @@ public class Calculate implements ru.sberbank.homework.common.Calculator {
     private String previousResult = "";
     private Parse parse = new Parse();
 
-    //public static
-
     public String calculate(String inputText) {
 
         errorFlag = false;
         String value = "";
         inputText = previousResult + inputText;
-        //System.out.println("Выражение" + inputText);
-        ArrayList<String> sArray;
-        sArray = new ArrayList<>(Arrays.asList(inputText.split(" ")));
-        //System.out.println("Количество ячеек в списке " + sArray.size());
+        List<String> sArray = new ArrayList<>(Arrays.asList(inputText.split(" ")));
+        if(sArray.size() == 1) {
+            return "error > wrong expression";
+        }
+        if(firstAndLastIsOperator(sArray)) {
+            return "error > wrong expression";
+        }
+        if(notContainsOperators(sArray)) {
+            return "error > wrong expression";
+        }
         for (int i = 0; i < sArray.size(); ) {
             value = Parse.validationEndParser(sArray.get(i));
             if (value == null) {
@@ -34,31 +38,35 @@ public class Calculate implements ru.sberbank.homework.common.Calculator {
             }
         }
         if (errorFlag == false) {
-            //Обработка
             String result = computation(sArray, "*", "/");
             if (result.contains("Ошибка")) {
-                return result;
+                return "error > wrong expression";
             }
             result = computation(sArray, "+", "-");
             if (result.contains("Ошибка")) {
-                return result;
+                return "error > wrong expression";
             }
         } else {
             return "error > " + value;
+        }
+        if(sArray.size() == 2) {
+            previousResult = parse.output(sArray.get(1)) + " ";
+            return parse.output(sArray.get(1));
         }
         previousResult = parse.output(sArray.get(0)) + " ";
         return parse.output(sArray.get(0));
     }
 
     /**
-     * Входные данные - ArrayList, символы операторы + - или * /
-     * Метод проходит по всему массиву, ищет символ-оператор и при удачном поиске проверяет боковые
-     * элементы на наличие "=-/*" . Тем самым исключается сценарий + + 8 + 1. После получения значения
-     * enum происходит схлопывание трех ячеек в одну с результатом операции. Метод получился тяжелым
-     * но у меня, к сожалению, нет идей сделать его более читабельным, а сроки я и так затянул.
+     * Метод проходит по всему массиву, ищет операторы и вычисляет подвыражения из двух операндов и оператора.
+     * В параметры передаются пары операндов: '*' и '/' для первого прохода, '+' и '-' для второго.
+     * @param sArray
+     * @param firstSymbol - символ + или *
+     * @param secondSymbol - символ - или /
+     * @return
      */
 
-    private String computation(ArrayList<String> sArray, String firstSymbol, String secondSymbol) {
+    private String computation(List<String> sArray, String firstSymbol, String secondSymbol) {
         String result;
         for (int i = 1; i < sArray.size(); i++) {
             if (sArray.get(i).equals(firstSymbol) || sArray.get(i).equals(secondSymbol)) {
@@ -86,7 +94,13 @@ public class Calculate implements ru.sberbank.homework.common.Calculator {
         return "Общая ошибка";
     }
 
-    private boolean neighborElementNotContainOperator(ArrayList<String> sArray, int index) {
+    /**
+     * Проверяет соседние элементы оператора, точно ли они являются операндами.
+     * @param sArray
+     * @param index
+     * @return
+     */
+    private boolean neighborElementNotContainOperator(List<String> sArray, int index) {
 
         if (sArray.get(index - 1).equals("+")) {
             return false;
@@ -107,5 +121,41 @@ public class Calculate implements ru.sberbank.homework.common.Calculator {
         } else {
             return true;
         }
+    }
+
+    /**
+     * Проверяет, являются ли первый или последний элемент оператором +-/*
+     * @param sArray
+     * @return true -> первый или последний элемент - оператор
+     */
+    private boolean firstAndLastIsOperator(List<String> sArray) {
+        if(sArray.get(0).length() == 1) {
+            char firstElement = sArray.get(0).charAt(0);
+            OperationEnum operationEnum = OperationEnum.setValue(firstElement);
+            if(operationEnum != null) {
+                return true;
+            }
+        }
+        if(sArray.get(sArray.size() - 1).length() == 1) {
+            char lastElement = sArray.get(sArray.size() - 1).charAt(0);
+            OperationEnum operationEnum = OperationEnum.setValue(lastElement);
+            if(operationEnum != null) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean notContainsOperators(List<String> sArray) {
+        for(int i = 0; i < sArray.size(); i++) {
+            if(sArray.get(i).length() == 1) {
+                char element = sArray.get(i).charAt(0);
+                OperationEnum operationEnum = OperationEnum.setValue(element);
+                if(operationEnum != null) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }

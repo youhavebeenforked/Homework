@@ -1,4 +1,4 @@
-package java.ru.sberbank.homework.kudryavukh;
+package ru.sberbank.homework.kudryavukh;
 
 public enum OperationEnum {
 
