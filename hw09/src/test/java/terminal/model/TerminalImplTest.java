@@ -18,7 +18,7 @@ public class TerminalImplTest {
 
     @Test
     public void checkBalanceTruePin() {
-        terminal.enterPin("0000");
+        setCorrectPin();
         assertEquals(0, terminal.checkBalance());
     }
 
@@ -30,12 +30,12 @@ public class TerminalImplTest {
 
     @Test
     public void putMoneySuccessfully() {
-        terminal.enterPin("0000");
+        setCorrectPin();
         long money = 1000;
         long startMoney = terminal.checkBalance();
         terminal.putMoney(money);
         long endMoney = terminal.checkBalance();
-        assertEquals(String.format("Баланс должен увеличиться на %s рублей", money) ,money, endMoney - startMoney);
+        assertEquals(String.format("Баланс должен увеличиться на %s рублей", money), money, endMoney - startMoney);
     }
 
     @Test(expected = NotAuthorizedException.class)
@@ -47,20 +47,20 @@ public class TerminalImplTest {
 
     @Test(expected = NumberException.class)
     public void putMoneyNotDivisibleNumber() {
-        terminal.enterPin("0000");
+        setCorrectPin();
         long money = 1010;
         terminal.putMoney(money);
     }
 
     @Test
     public void withdrawMoneySuccessfully() {
-        terminal.enterPin("0000");
+        setCorrectPin();
         terminal.putMoney(10000);
         long money = 1000;
         long startMoney = terminal.checkBalance();
         terminal.withdrawMoney(money);
         long endMoney = terminal.checkBalance();
-        assertEquals(String.format("Баланс должен уменшиться на %s рублей", money) ,money, startMoney - endMoney);
+        assertEquals(String.format("Баланс должен уменшиться на %s рублей", money), money, startMoney - endMoney);
     }
 
     @Test(expected = NotAuthorizedException.class)
@@ -72,18 +72,22 @@ public class TerminalImplTest {
 
     @Test(expected = NotEnoughMoneyException.class)
     public void withdrawMoneyNotEnoughMoney() {
-        terminal.enterPin("0000");
+        setCorrectPin();
         long money = 11000;
         terminal.withdrawMoney(money);
     }
 
     @Test
     public void enterPinSuccessfully() {
-        assertEquals("Введен верный пин, должен быть доступ" ,true ,terminal.enterPin("0000"));
+        assertEquals("Введен верный пин, должен быть доступ", true, terminal.enterPin("0000"));
     }
 
     @Test
     public void enterPinUnsuccessfully() {
-        assertEquals( "Введен неверный пин, не должно быть доступа" ,false ,terminal.enterPin("1234"));
+        assertEquals("Введен неверный пин, не должно быть доступа", false, terminal.enterPin("1234"));
+    }
+
+    private void setCorrectPin() {
+        terminal.enterPin("0000");
     }
 }

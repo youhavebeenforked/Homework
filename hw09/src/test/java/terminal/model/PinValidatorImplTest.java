@@ -21,7 +21,7 @@ public class PinValidatorImplTest {
 
     @Test
     public void giveAccessTruePin() {
-        validator.checkPin("0000");
+        setCorrectPin();
         assertEquals("Должен быть доступ к аккаунту" ,true, validator.giveAccess());
     }
 
@@ -43,7 +43,7 @@ public class PinValidatorImplTest {
 
     @Test
     public void checkBlockFalse() {
-        validator.checkPin("0000");
+        setCorrectPin();
         validator.checkBlock();
     }
 
@@ -54,5 +54,9 @@ public class PinValidatorImplTest {
         validator.checkPin("1234");
 
         validator.checkBlock();
+    }
+
+    private void setCorrectPin() {
+        validator.checkPin("0000");
     }
 }
