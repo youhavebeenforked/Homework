@@ -10,6 +10,7 @@ public class Calculate implements ru.sberbank.homework.common.Calculator {
     private String previousResult = "";
     private Parse parse = new Parse();
 
+
     public String calculate(String inputText) {
 
         errorFlag = false;
@@ -70,25 +71,22 @@ public class Calculate implements ru.sberbank.homework.common.Calculator {
         String result;
         for (int i = 1; i < sArray.size(); i++) {
             if (sArray.get(i).equals(firstSymbol) || sArray.get(i).equals(secondSymbol)) {
-                if (neighborElementNotContainOperator(sArray, i)) {
-                    OperationEnum operatEnum = OperationEnum.setValue(sArray.get(i).charAt(0));
-                    if (operatEnum != null) {
-                        result = OperationEnum.getResult(operatEnum, Double.parseDouble(sArray.get(i - 1)),
-                                Double.parseDouble(sArray.get(i + 1)));
-                        if (result != null) {
-                            sArray.set(i, result);
-                            sArray.remove(i - 1);
-                            i--;
-                            sArray.remove(i + 1);
-                        } else {
-                            return "Ошибка ввода! Деление на ноль или я в коде накосячил";
-                        }
-                    } else {
-                        throw new NullPointerException("Обьект Enum хранит null");
-                    }
-                } else {
-                    return "Ошибка ввода! Два знака подрят.";
+                if (!neighborElementNotContainOperator(sArray, i)) {
+                        return "Ошибка ввода! Два знака подрят.";
                 }
+                OperationEnum operatEnum = OperationEnum.setValue(sArray.get(i).charAt(0));
+                if(operatEnum == null) {
+                    throw new NullPointerException("Обьект Enum хранит null");
+                }
+                result = OperationEnum.getResult(operatEnum, Double.parseDouble(sArray.get(i - 1)),
+                        Double.parseDouble(sArray.get(i + 1)));
+                if(result == null) {
+                    return "Ошибка ввода!";
+                }
+                sArray.set(i, result);
+                sArray.remove(i - 1);
+                i--;
+                sArray.remove(i + 1);
             }
         }
         return "Общая ошибка";

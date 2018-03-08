@@ -18,7 +18,7 @@ public class Main {
         System.out.print("Введите выражение: ");
         Calculator calc = new Calculate();;
         for (;;) {
-            if(previousResult.contains("Ошибка")) {
+            if(previousResult.contains("error")) {
                 previousResult = "";
             }
             Scanner in = new Scanner(System.in);
