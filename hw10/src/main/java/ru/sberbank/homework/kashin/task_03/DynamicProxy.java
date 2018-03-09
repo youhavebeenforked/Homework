@@ -22,7 +22,7 @@ public class DynamicProxy {
         Object result;
         String name = object.getClass().getName();
 
-        if (cache.containsKey(name)) {
+        if (cache.containsKey(name + ".ser")) {
             result = cache.get(name);
         } else {
             result = cloneObject(object);
