@@ -10,16 +10,8 @@ import ru.sberbank.homework.kiseleva.exceptions.NotEnoughMoneyException;
  */
 public class TerminalImplTest extends Assert {
 
-    static TerminalImpl terminal;
-    static TerminalServer server;
-    static PinValidator pinValidator;
-
-    @BeforeClass
-    public static void initTest() {
-        terminal = new TerminalImpl();
-        server = new TerminalServer();
-        pinValidator = new PinValidator();
-    }
+    private TerminalImpl terminal = new TerminalImpl();
+    private TerminalServer server = new TerminalServer();
 
     @Test
     public void amountMoney() {
@@ -29,7 +21,7 @@ public class TerminalImplTest extends Assert {
     @Test
     public void pullMoney() {
         int startMoney = server.getAmountMoney();
-        int  changeMoney = 100;
+        int changeMoney = 100;
         terminal.pullMoney(server, changeMoney);
         assertEquals(startMoney - changeMoney, terminal.checkAccount(server));
     }
@@ -37,7 +29,7 @@ public class TerminalImplTest extends Assert {
     @Test
     public void putMoney() {
         int startMoney = server.getAmountMoney();
-        int  changeMoney = 100;
+        int changeMoney = 100;
         terminal.putMoney(server, changeMoney);
         assertEquals(startMoney + changeMoney, terminal.checkAccount(server));
     }
@@ -45,7 +37,7 @@ public class TerminalImplTest extends Assert {
     @Test(expected = IllegalArgumentException.class)
     public void pullMoneyNotMultiply100() {
         int startMoney = server.getAmountMoney();
-        int  changeMoney = 150;
+        int changeMoney = 150;
         terminal.pullMoney(server, changeMoney);
         assertEquals(startMoney - changeMoney, terminal.checkAccount(server));
     }
@@ -53,7 +45,7 @@ public class TerminalImplTest extends Assert {
     @Test(expected = IllegalArgumentException.class)
     public void putMoneyNotMultiply100() {
         int startMoney = server.getAmountMoney();
-        int  changeMoney = 150;
+        int changeMoney = 150;
         terminal.putMoney(server, changeMoney);
         assertEquals(startMoney + changeMoney, terminal.checkAccount(server));
     }

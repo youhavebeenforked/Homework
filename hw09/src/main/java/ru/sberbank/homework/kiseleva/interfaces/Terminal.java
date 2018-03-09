@@ -8,6 +8,6 @@ import ru.sberbank.homework.kiseleva.TerminalServer;
  */
 public interface Terminal {
     public int checkAccount(TerminalServer server);
-    public void pullMoney(TerminalServer server, int i) throws NotEnoughMoneyException;
-    public void putMoney(TerminalServer server, int i);
+    public void pullMoney(TerminalServer server, int amountMoney) throws NotEnoughMoneyException;
+    public void putMoney(TerminalServer server, int amountMoney);
 }

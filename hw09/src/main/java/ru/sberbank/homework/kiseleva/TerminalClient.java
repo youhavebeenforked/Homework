@@ -9,8 +9,8 @@ import java.util.Scanner;
 public class TerminalClient {
 
     private TerminalImpl terminal = new TerminalImpl();
-    private static TerminalServer server = new TerminalServer();
-    private static PinValidator pinValidator = new PinValidator();
+    private TerminalServer server = new TerminalServer();
+    private PinValidator pinValidator = new PinValidator();
 
     public void start() {
         while (true) {
@@ -26,8 +26,8 @@ public class TerminalClient {
                     System.out.println("1 - check account");
                     System.out.println("2 - pull money");
                     System.out.println("3 - put money");
-                    Integer i = scanner.nextInt();
-                    switch (i) {
+                    Integer bankOperation = scanner.nextInt();
+                    switch (bankOperation) {
                         case 1:
                             System.out.println(terminal.checkAccount(server));
                             break;

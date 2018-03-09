@@ -10,26 +10,20 @@ import java.util.Date;
  */
 public class TerminalServerTest extends Assert {
 
-    static TerminalImpl terminal;
-    static TerminalServer server;
-    static PinValidator pinValidator;
-
-    @BeforeClass
-    public static void initTest() {
-        terminal = new TerminalImpl();
-        server = new TerminalServer();
-        pinValidator = new PinValidator();
-    }
+    private TerminalServer server = new TerminalServer();
+    private PinValidator pinValidator = new PinValidator();
 
     @Test
     public void isRightPassword() {
-        final String pass = "1234";
+        pinValidator.setPin("1234");
+        final String pass = pinValidator.getPin();
         assertTrue(pinValidator.validate(pass));
     }
 
     @Test
     public void isWrongPassword() {
-        final String pass = "1111";
+        pinValidator.setPin("1234");
+        final String pass = pinValidator.getPin() + "00";
         assertFalse(pinValidator.validate(pass));
     }
 
