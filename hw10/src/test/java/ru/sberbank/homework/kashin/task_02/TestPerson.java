@@ -1,8 +1,12 @@
 package ru.sberbank.homework.kashin.task_02;
 
+import ru.sberbank.homework.kashin.task_03.Cache;
+
+import java.io.Serializable;
 import java.util.Objects;
 
-public class TestPerson {
+@Cache
+public class TestPerson implements Serializable {
     private int id;
     private String name;
     private boolean active;

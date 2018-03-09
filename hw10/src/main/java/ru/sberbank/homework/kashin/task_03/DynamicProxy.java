@@ -1,21 +1,37 @@
 package ru.sberbank.homework.kashin.task_03;
 
+import ru.sberbank.homework.kashin.task_03.storage.FileStorage;
+import ru.sberbank.homework.kashin.task_03.storage.InMemoryStorage;
+import ru.sberbank.homework.kashin.task_03.storage.Storage;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.HashMap;
-import java.util.Map;
 
 public class DynamicProxy {
-    private final Map<String, Object> cache = new HashMap<>();
+    private Storage cache;
+
+    public DynamicProxy() {
+        cache = new InMemoryStorage();
+    }
+
+    public DynamicProxy(String path) {
+        cache = new FileStorage(path);
+    }
 
     public Object cloneAndAddCache(Object object) {
-        Object result = cloneObject(object);
+        Object result;
+        String name = object.getClass().getName();
 
-        Cache annotation = object.getClass().getAnnotation(Cache.class);
-        if (annotation != null) {
-//            cache.put()
+        if (cache.containsKey(name)) {
+            result = cache.get(name);
+        } else {
+            result = cloneObject(object);
+
+            Cache annotation = object.getClass().getAnnotation(Cache.class);
+            if (annotation != null) {
+                cache.put(name, result);
+            }
         }
-
         return result;
     }
 
