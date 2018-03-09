@@ -20,10 +20,7 @@ public class Validator {
      */
     private static final Pattern NOT_SUPPORT_LITERAL_NUMBER =
             Pattern.compile("(^_.*)|(.*_$)|(.*_x.*)|(.*x_.*)|(.*_\\..*)|(.*\\._.*)|(.*_b.*)|(.*b_.*)|(.*_f$)|(.*_l$)");
-    /**
-     * The entered user expression.
-     */
-    private String userInput;
+
     /**
      * Arithmetic operations of Enum.
      */
@@ -34,10 +31,6 @@ public class Validator {
      */
     private String[] usersCommand;
 
-    public Validator(String userInput) {
-        this.userInput = userInput;
-    }
-
     /**
      * Checking command is valid.
      * It should not process commands other than expressions a_@_b и @_b
@@ -46,7 +39,7 @@ public class Validator {
      *
      * @return true, if entered command a_@_b и @_b otherwise - false;
      */
-    public boolean isValidCommand() {
+    public boolean isValidCommand(String userInput) {
         if (userInput == null) {
             return false;
         }

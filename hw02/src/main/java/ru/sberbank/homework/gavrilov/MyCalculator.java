@@ -32,36 +32,30 @@ public class MyCalculator implements Calculator {
      */
     @Override
     public String calculate(String userInput) {
-        BigDecimal first;
-        BigDecimal second;
-        Validator validator = new Validator(userInput);
-        if (!validator.isValidCommand()) {
+        Validator validator = new Validator();
+        BigDecimal first = null;
+        BigDecimal second = null;
+        if (!validator.isValidCommand(userInput)) {
             resultBigDec = null;
             return WRONG_LINE;
         }
 
-        if (validator.getUsersCommand().length == 2) {
-            try {
-                second = validator.parseNumber(validator.getUsersCommand()[1]);
+        try {
+            if (validator.getUsersCommand().length == 2) {
                 if (resultBigDec == null) {
                     throw new NumberFormatException(WRONG_LINE);
                 }
-                resultBigDec = validator.execute().calculating(resultBigDec, second);
-            } catch (ArithmeticException | NumberFormatException exp) {
-                resultBigDec = null;
-                return exp.getMessage();
+                first = resultBigDec;
+                second = validator.parseNumber(validator.getUsersCommand()[1]);
             }
-        }
-
-        if (validator.getUsersCommand().length == 3) {
-            try {
+            if (validator.getUsersCommand().length == 3) {
                 first = validator.parseNumber(validator.getUsersCommand()[0]);
                 second = validator.parseNumber(validator.getUsersCommand()[2]);
-                resultBigDec = validator.execute().calculating(first, second);
-            } catch (ArithmeticException | NumberFormatException exp) {
-                resultBigDec = null;
-                return exp.getMessage();
             }
+            resultBigDec = validator.execute().calculating(first, second);
+        } catch (ArithmeticException | NumberFormatException exp) {
+            resultBigDec = null;
+            return exp.getMessage();
         }
         return printDecFormat(resultBigDec);
     }
