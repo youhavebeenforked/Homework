@@ -14,7 +14,6 @@ public class SolutionChecker {
     private final String testedPackage;
 
     private final CommandSequence[] sequences = {
-<<<<<<< HEAD
             cs("Простые примеры. happy path all operations",
                     ex("2 + 2", "4"), ex("- 1", "3"), ex("* 2", "6"), ex("/ 4", "1.5"), ex("1 - 1", "0")),
             cs("Неаккуратный пользователь",
@@ -62,12 +61,7 @@ public class SolutionChecker {
             cs("Дополнительно: исключение ошибочных литералов для вещественных типов",
                     ex("23.40.4 + 1.34e-4", "error > 23.40.4"), ex("2 / -3.4_f", "error > -3.4_f"),
                     ex("5 + +0xCAFEpBABE-2", "error > +0xCAFEpBABE-2"), ex("0.2d * 0.fe3", "error > 0.fe3"))
-
-=======
-            cs(ex("2 + 2", "4"), ex("- 1", "3"),  ex("* 2", "6"),  ex("/ 4", "1.5"),  ex("1 - 1", "0")), //happy path all operations
-            cs(ex("1+1", "error > wrong expression"), ex("1 - foo", "error > foo")) // неаккуратный пользователь.
-            // Остальные тесты пишите сами, своими не поделюсь ;)
->>>>>>> parent of e2fb9e7... Merge branch 'Dergun' into hw_03_01_terminal_interface
+    
     };
 
     public void startTesting(Supplier<Calculator> supplier) {
