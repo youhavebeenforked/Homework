@@ -17,12 +17,14 @@ public class TestPerson implements Person {
         this.name = name;
     }
 
+    @Cache(typeStorage = true, name = "qwerty")
     @Override
     public int doItInFile(int i) {
         System.out.println("invoke method");
         return i * id * name.hashCode();
     }
 
+    @Cache
     @Override
     public int doItInMemory(int i) {
         System.out.println("invoke method");
