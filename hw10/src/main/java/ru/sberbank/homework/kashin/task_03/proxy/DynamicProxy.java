@@ -20,20 +20,21 @@ public class DynamicProxy {
     @SuppressWarnings("unchecked")
     public <T> T create(final Class[] interfaces, final T code) {
 
-        return (T) Proxy.newProxyInstance(code.getClass().getClassLoader(), interfaces, (proxy, method, args) -> {
-            Method methodImpl = code.getClass().getDeclaredMethod(method.getName(), method.getParameterTypes());
-            Cache annotationCache = methodImpl.getAnnotation(Cache.class);
+        return (T) Proxy.newProxyInstance(code.getClass().getClassLoader(), interfaces, (proxy, interfaceMethod, args) -> {
+            Method method = code.getClass().getDeclaredMethod(interfaceMethod.getName(), interfaceMethod.getParameterTypes());
+            Cache annotationCache = method.getAnnotation(Cache.class);
             if (annotationCache != null) {
                 if (annotationCache.typeStorage()) {
                     storage = new FileStorage(root);
                 } else {
                     storage = new InMemoryStorage();
                 }
-                MethodAndArgs input = new MethodAndArgs(methodImpl, args);
+
+                MethodAndArgs input = new MethodAndArgs(method, args);
                 Object result = storage.get(input);
                 if (result == null && !storage.containsKey(input)) {
                     try {
-                        result = methodImpl.invoke(code, args);
+                        result = method.invoke(code, args);
                         storage.put(input, result);
                     } catch (InvocationTargetException e) {
                         throw e.getTargetException();
@@ -41,7 +42,7 @@ public class DynamicProxy {
                 }
                 return result;
             } else {
-                return method.invoke(code, args);
+                return interfaceMethod.invoke(code, args);
             }
         });
     }
