@@ -1,5 +1,7 @@
 package ru.sberbank.homework.kashin.task_03.storage;
 
+import ru.sberbank.homework.kashin.task_03.proxy.Args;
+
 import java.io.*;
 
 import static java.util.Objects.nonNull;
@@ -12,18 +14,18 @@ public class FileStorage implements Storage {
     }
 
     @Override
-    public boolean containsKey(String  key) {
-        return findFile(key) != null;
+    public boolean containsKey(Args key) {
+        return findFile(key.getFileName()) != null;
     }
 
     @Override
-    public Object get(String  key) {
-        return deserialize(key);
+    public Object get(Args key) {
+        return deserialize(key.getFileName());
     }
 
     @Override
-    public Object put(String key, Object value) {
-        return serialize(key, value);
+    public Object put(Args key, Object value) {
+        return serialize(key.getFileName(), value);
     }
 
     private File findFile(String fileName) {
@@ -40,28 +42,26 @@ public class FileStorage implements Storage {
         return result;
     }
 
-    private Object serialize(String fileName, Object object){
-        String filePath = path + "/" + fileName + ".ser";
-        try (FileOutputStream fileOut = new FileOutputStream(filePath);
+    private Object serialize(String fileName, Object object) {
+        try (FileOutputStream fileOut = new FileOutputStream(getAbsolutPath(fileName));
              ObjectOutputStream out = new ObjectOutputStream(fileOut)) {
             out.writeObject(object);
         } catch (IOException e) {
-//            throw new RuntimeException(e.getMessage());
-            e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
         }
         return object;
     }
 
-    private Object deserialize(String fileName){
-        String filePath = path + "/" + fileName + ".ser";
-        Object result;
-        try {
-            FileInputStream fileIn = new FileInputStream(filePath);
-            ObjectInputStream in = new ObjectInputStream(fileIn);
-            result = in.readObject();
+    private Object deserialize(String fileName) {;
+        try (FileInputStream fileIn = new FileInputStream(getAbsolutPath(fileName));
+             ObjectInputStream in = new ObjectInputStream(fileIn)){
+            return in.readObject();
         } catch (IOException | ClassNotFoundException e) {
-            throw new RuntimeException(e.getMessage());
+            return null;
         }
-        return result;
+    }
+
+    private String getAbsolutPath(String fileName) {
+        return path + "/" + fileName + ".ser";
     }
 }

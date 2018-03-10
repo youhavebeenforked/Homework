@@ -2,6 +2,8 @@ package ru.sberbank.homework.kashin.task_02;
 
 import org.junit.Before;
 import org.junit.Test;
+import ru.sberbank.homework.kashin.data.Person;
+import ru.sberbank.homework.kashin.data.TestPerson;
 
 import static org.junit.Assert.assertEquals;
 
@@ -15,8 +17,8 @@ public class ReflectionFieldCopierTest {
 
     @Test
     public void copy() {
-        TestPerson firstPerson = new TestPerson(10, "Ivan", true);
-        TestPerson secondPerson = new TestPerson();
+        Person firstPerson = new TestPerson(10, "Ivan");
+        Person secondPerson = new TestPerson();
         fieldCopier.copy(firstPerson, secondPerson);
 
         assertEquals(firstPerson, secondPerson);

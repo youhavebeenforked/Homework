@@ -1,22 +1,28 @@
 package ru.sberbank.homework.kashin.task_03;
 
+import ru.sberbank.homework.kashin.task_03.proxy.DynamicProxy;
+
 /**
- * Если создаем экземпляр CacheProxy без параметров, то хранение кэша будет в памяти JVM.
- * Чтобы хранение было в файловой системе, то в аргумент при создании передать директорию для хранения кэша.
- * При хранении в файловой системе класс должен имплементировать интерфейс Serializable.
+ * CacheProxy можно создать конструктором без параметров, тогда файлы кэша будут храниться по умолчанию
+ * в корневой директории проекта /storage.
+ * Можно создать с параметром корневой директории для хранения файлов кэша.
+ * Чтобы метод кэшировался, он должен быть отмечен аннотацией Cache.
+ * @see ru.sberbank.homework.kashin.task_03.annotations.Cache
  */
 public class CacheProxy {
-    private DynamicProxy proxy;
+
+    private String root;
 
     public CacheProxy() {
-        proxy = new DynamicProxy();
+        root = "storage";
     }
 
-    public CacheProxy(String path) {
-        proxy = new DynamicProxy(path);
+    public CacheProxy(String root) {
+        this.root = root;
     }
 
     public Object cache(Object service) {
-        return proxy.cloneAndAddCache(service);
+        DynamicProxy proxy = new DynamicProxy(root);
+        return proxy.create(service.getClass().getInterfaces(), service);
     }
 }
