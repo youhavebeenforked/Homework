@@ -67,9 +67,6 @@ public class ServiceTest {
         for (int i = 0; i < cached.size(); i++) {
             City city = unCached.get(i);
             City city1 = cached.get(i);
-            System.out.println(city.getNearCities());
-            System.out.println(city1.getNearCities());
-            System.out.println();
             boolean equals = city.compare(city1);
             System.out.println(city + (equals ? " == " : " != ") + city1);
             assertTrue(equals);
