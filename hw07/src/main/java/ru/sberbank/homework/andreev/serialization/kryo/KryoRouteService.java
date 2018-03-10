@@ -14,7 +14,7 @@ import java.util.*;
 
 public class KryoRouteService extends RouteService<City, Route<City>> {
     private Kryo kryo;
-    private Map<String, Boolean> cachedCity = new HashMap<>();
+    private Set<String> cachedCity = new HashSet<>();
 
     public KryoRouteService(CachePathProvider pathProvider) {
         super(pathProvider, false);
@@ -32,7 +32,7 @@ public class KryoRouteService extends RouteService<City, Route<City>> {
 
     private Optional<Route<City>> getCachedCityRoute(String key) {
         Optional<Route<City>> route = Optional.empty();
-        if (cachedCity.containsKey(key)) {
+        if (cachedCity.contains(key)) {
             try (FileInputStream fis = new FileInputStream(pathProvider.getCacheDirectoryPath() + File.separator + key)) {
                 Input input = new Input(fis);
                 route = Optional.of(kryo.readObject(input, Route.class));
@@ -52,7 +52,7 @@ public class KryoRouteService extends RouteService<City, Route<City>> {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        cachedCity.put(key, true);
+        cachedCity.add(key);
         return route;
     }
 

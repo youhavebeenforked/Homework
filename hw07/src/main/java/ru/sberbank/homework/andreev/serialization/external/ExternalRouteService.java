@@ -1,6 +1,5 @@
 package ru.sberbank.homework.andreev.serialization.external;
 
-import ru.sberbank.homework.andreev.serialization.internal.InternalRoute;
 import ru.sberbank.homework.common.CachePathProvider;
 import ru.sberbank.homework.common.City;
 import ru.sberbank.homework.common.Route;
@@ -11,7 +10,7 @@ import java.time.LocalDate;
 import java.util.*;
 
 public class ExternalRouteService extends RouteService<City, Route<City>> {
-    private Map<String, Boolean> cachedCity = new HashMap<>();
+    private Set<String> cachedCity = new HashSet<>();
     public ExternalRouteService(CachePathProvider pathProvider) {
         super(pathProvider, false);
     }
@@ -25,7 +24,7 @@ public class ExternalRouteService extends RouteService<City, Route<City>> {
 
     private Optional<Route<City>> getCachedCityRoute(String key) {
         Optional<Route<City>> route = Optional.empty();
-        if (cachedCity.containsKey(key)) {
+        if (cachedCity.contains(key)) {
             try (FileInputStream fis = new FileInputStream(pathProvider.getCacheDirectoryPath() + File.separator + key)) {
                 ObjectInputStream ois = new ObjectInputStream(fis);
                 route = Optional.of((ExternalRoute) ois.readObject());
@@ -45,7 +44,7 @@ public class ExternalRouteService extends RouteService<City, Route<City>> {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        cachedCity.put(key, true);
+        cachedCity.add(key);
         return route;
     }
 
