@@ -16,12 +16,6 @@ public class SolutionLocator {
             SolutionChecker sc = new SolutionChecker(name);
             sc.startTesting(() -> get(subclass));
             log.info(sc.getStatus());
-            try {
-                log.debug("Checking class from package: {}", subclass.getPackage().getName());
-                sc.startTesting(subclass.newInstance());
-            } catch (InstantiationException | IllegalAccessException e) {
-                log.error("Calculator instance creation failed", e);
-            }
         });
         scanner.scan();
     }
