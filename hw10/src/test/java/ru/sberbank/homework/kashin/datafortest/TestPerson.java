@@ -1,4 +1,4 @@
-package ru.sberbank.homework.kashin.data;
+package ru.sberbank.homework.kashin.datafortest;
 
 
 import ru.sberbank.homework.kashin.task_03.annotations.Cache;
@@ -8,6 +8,7 @@ import java.util.Objects;
 public class TestPerson implements Person {
     private int id;
     private String name;
+    private TestCounter counter = new TestCounter();
 
     public TestPerson() {
     }
@@ -17,17 +18,22 @@ public class TestPerson implements Person {
         this.name = name;
     }
 
+    public int doItWithoutCache(int i){
+        counter.count(i);
+        return i * id * name.hashCode();
+    }
+
     @Cache(typeStorage = true, name = "qwerty")
     @Override
     public int doItInFile(int i) {
-        System.out.println("invoke method");
+        counter.count(i);
         return i * id * name.hashCode();
     }
 
     @Cache
     @Override
     public int doItInMemory(int i) {
-        System.out.println("invoke method");
+        counter.count(i);
         return i * id * name.hashCode();
     }
 

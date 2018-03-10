@@ -1,6 +1,8 @@
-package ru.sberbank.homework.kashin.data;
+package ru.sberbank.homework.kashin.datafortest;
 
 public interface Person {
+
+    int doItWithoutCache(int i);
 
     int doItInFile(int i);
 

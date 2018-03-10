@@ -1,28 +1,28 @@
 package ru.sberbank.homework.kashin.task_03.proxy;
 
 import org.junit.Test;
-import ru.sberbank.homework.kashin.data.Person;
-import ru.sberbank.homework.kashin.data.TestPerson;
+import org.junit.runner.RunWith;
+import org.mockito.runners.MockitoJUnitRunner;
+import ru.sberbank.homework.kashin.datafortest.Person;
+import ru.sberbank.homework.kashin.datafortest.DataForTestInFile;
+import ru.sberbank.homework.kashin.datafortest.TestPerson;
 
+import static org.junit.Assert.assertEquals;
+
+
+@RunWith(MockitoJUnitRunner.class)
 public class DynamicProxyTest {
+    private DynamicProxy proxy = new DynamicProxy(DataForTestInFile.ROOT);
 
     @Test
     public void create() {
-        Person person = new TestPerson(10, "Qwerty");
+        String name = "Qwerty";
+        Person person = new TestPerson(10, name);
+        Person proxyPerson = proxy.create(person.getClass().getInterfaces(), person);
 
-        DynamicProxy proxy = new DynamicProxy("storage");
-        Person testPerson = proxy.create(person.getClass().getInterfaces(), person);
+        int actual = proxyPerson.doItWithoutCache(20);
+        int expected = 20 * 10 * name.hashCode();
 
-        System.out.println(testPerson.doItInMemory(10));
-        System.out.println(testPerson.doItInMemory(10));
-        System.out.println(testPerson.doItInMemory(20));
-        System.out.println(testPerson.doItInMemory(10));
-        System.out.println(testPerson.doItInMemory(20));
-        System.out.println();
-        System.out.println(testPerson.doItInFile(10));
-        System.out.println(testPerson.doItInFile(10));
-        System.out.println(testPerson.doItInFile(20));
-        System.out.println(testPerson.doItInFile(10));
-        System.out.println(testPerson.doItInFile(20));
+        assertEquals(expected, actual);
     }
 }

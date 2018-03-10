@@ -37,7 +37,7 @@ public class DynamicProxy {
                         result = method.invoke(code, args);
                         storage.put(input, result);
                     } catch (InvocationTargetException e) {
-                        throw e.getTargetException();
+                        throw new RuntimeException("Ошибка при выполнее метода " + method.getName() + ". Описание: " +  e.getMessage());
                     }
                 }
                 return result;

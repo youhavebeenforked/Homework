@@ -2,8 +2,8 @@ package ru.sberbank.homework.kashin.task_02;
 
 import org.junit.Before;
 import org.junit.Test;
-import ru.sberbank.homework.kashin.data.Person;
-import ru.sberbank.homework.kashin.data.TestPerson;
+import ru.sberbank.homework.kashin.datafortest.Person;
+import ru.sberbank.homework.kashin.datafortest.TestPerson;
 
 import static org.junit.Assert.assertEquals;
 

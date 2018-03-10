@@ -8,9 +8,6 @@ import java.lang.annotation.Target;
 /**
  * Данной аннотацией отмечается метод, для кэширования с помощью CacheProxy.
  * @see ru.sberbank.homework.kashin.task_03.CacheProxy
- *
- * Для хранения кэша в файловой системе, класс должен имплементировать интерфейс Serializable.
- * @see java.io.Serializable
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)

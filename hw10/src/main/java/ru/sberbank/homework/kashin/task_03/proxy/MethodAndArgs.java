@@ -11,7 +11,7 @@ public final class MethodAndArgs {
 
     private final int methodHash;
 
-    MethodAndArgs(final Method method, final Object[] args) {
+    public MethodAndArgs(final Method method, final Object[] args) {
         this.method = method;
         methodArgs = args;
         methodHash = calcHash();
