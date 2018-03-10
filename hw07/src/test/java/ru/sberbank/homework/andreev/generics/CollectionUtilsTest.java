@@ -56,12 +56,12 @@ public class CollectionUtilsTest {
 
     @Test
     public void containsAll() {
-        assertTrue(CollectionUtils.containsAll(testList,testList.subList(0,5)));
+        assertTrue(CollectionUtils.containsAll(testList, testList.subList(0, 5)));
     }
 
     @Test
     public void containsAny() {
-       assertTrue(CollectionUtils.containsAny(testList, Arrays.asList(4,9,16, 25, 36, 49, 64, 81)));
+        assertTrue(CollectionUtils.containsAny(testList, Arrays.asList(4, 9, 16, 25, 36, 49, 64, 81)));
     }
 
     @Test
