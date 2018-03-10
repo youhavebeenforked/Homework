@@ -1,4 +1,4 @@
-package ru.sberbank.homework.your_lastname;
+package ru.sberbank.homework.andreev;
 
 import ru.sberbank.homework.common.tasks.CalculationTask;
 import ru.sberbank.homework.common.tasks.SleepyTask;
@@ -6,14 +6,14 @@ import ru.sberbank.homework.common.tasks.StringsTask;
 
 public class ParallelThreads {
     public static void main(String[] args) {
-        long millisecondsForSingleThread = singleThreadExecution();
         long millisecondsForMultiThread = multiThreadExecution();
+        long millisecondsForSingleThread = singleThreadExecution();
         System.out.printf("All task completed! \n Time for single thread: %d \n Time for multi thread: %d",
                 millisecondsForSingleThread, millisecondsForMultiThread);
 
     }
 
-    private static long singleThreadExecution() {
+    public static long singleThreadExecution() {
         long millis = System.currentTimeMillis();
         new StringsTask().run();
         new CalculationTask().run();
@@ -22,7 +22,7 @@ public class ParallelThreads {
     }
 
 
-    private static long multiThreadExecution() {
+    public static long multiThreadExecution() {
         long millis = System.currentTimeMillis();
         Thread stringThread = new Thread(new StringsTask());
         Thread calcTask = new Thread(new CalculationTask());
