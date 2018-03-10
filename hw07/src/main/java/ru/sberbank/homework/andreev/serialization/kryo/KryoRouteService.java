@@ -33,10 +33,9 @@ public class KryoRouteService extends RouteService<City, Route<City>> {
     private Optional<Route<City>> getCachedCityRoute(String key) {
         Optional<Route<City>> route = Optional.empty();
         if (cachedCity.contains(key)) {
-            try (FileInputStream fis = new FileInputStream(pathProvider.getCacheDirectoryPath() + File.separator + key)) {
-                Input input = new Input(fis);
+            try (FileInputStream fis = new FileInputStream(pathProvider.getCacheDirectoryPath() + File.separator + key);
+                 Input input = new Input(fis)) {
                 route = Optional.of(kryo.readObject(input, Route.class));
-                input.close();
             } catch (IOException e) {
             }
         }
@@ -45,10 +44,9 @@ public class KryoRouteService extends RouteService<City, Route<City>> {
 
     private Route<City> createAndCacheCityRoute(String key, String from, String to) {
         Route<City> route = super.getRoute(from, to);
-        try (FileOutputStream fos = new FileOutputStream(pathProvider.getCacheDirectoryPath() + File.separator + key)) {
-            Output output = new Output(fos);
+        try (FileOutputStream fos = new FileOutputStream(pathProvider.getCacheDirectoryPath() + File.separator + key);
+            Output output = new Output(fos)) {
             kryo.writeObject(output, route);
-            output.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

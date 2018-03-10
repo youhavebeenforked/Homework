@@ -26,10 +26,9 @@ public class InternalRouteService extends RouteService<City, Route<City>> {
     private Optional<Route<City>> getCachedCityRoute(String key) {
         Optional<Route<City>> route = Optional.empty();
         if (cachedCity.contains(key)) {
-            try (FileInputStream fis = new FileInputStream(pathProvider.getCacheDirectoryPath() + File.separator + key)) {
-                ObjectInputStream ois = new ObjectInputStream(fis);
+            try (FileInputStream fis = new FileInputStream(pathProvider.getCacheDirectoryPath() + File.separator + key);
+                 ObjectInputStream ois = new ObjectInputStream(fis)) {
                 route = Optional.of((InternalRoute) ois.readObject());
-                ois.close();
             } catch (IOException | ClassNotFoundException doNothing) {
             }
         }

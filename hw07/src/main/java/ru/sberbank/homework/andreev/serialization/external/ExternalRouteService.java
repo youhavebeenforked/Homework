@@ -11,6 +11,7 @@ import java.util.*;
 
 public class ExternalRouteService extends RouteService<City, Route<City>> {
     private Set<String> cachedCity = new HashSet<>();
+
     public ExternalRouteService(CachePathProvider pathProvider) {
         super(pathProvider, false);
     }
@@ -25,10 +26,9 @@ public class ExternalRouteService extends RouteService<City, Route<City>> {
     private Optional<Route<City>> getCachedCityRoute(String key) {
         Optional<Route<City>> route = Optional.empty();
         if (cachedCity.contains(key)) {
-            try (FileInputStream fis = new FileInputStream(pathProvider.getCacheDirectoryPath() + File.separator + key)) {
-                ObjectInputStream ois = new ObjectInputStream(fis);
+            try (FileInputStream fis = new FileInputStream(pathProvider.getCacheDirectoryPath() + File.separator + key);
+                 ObjectInputStream ois = new ObjectInputStream(fis)) {
                 route = Optional.of((ExternalRoute) ois.readObject());
-                ois.close();
             } catch (IOException | ClassNotFoundException doNothing) {
             }
         }
@@ -37,10 +37,9 @@ public class ExternalRouteService extends RouteService<City, Route<City>> {
 
     private Route<City> createAndCacheCityRoute(String key, String from, String to) {
         Route<City> route = super.getRoute(from, to);
-        try (FileOutputStream fos = new FileOutputStream(pathProvider.getCacheDirectoryPath() + File.separator + key)) {
-            ObjectOutputStream oos = new ObjectOutputStream(fos);
+        try (FileOutputStream fos = new FileOutputStream(pathProvider.getCacheDirectoryPath() + File.separator + key);
+             ObjectOutputStream oos = new ObjectOutputStream(fos)) {
             oos.writeObject(route);
-            oos.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
