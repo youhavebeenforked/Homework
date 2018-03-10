@@ -61,6 +61,7 @@ public class SolutionChecker {
             cs("Дополнительно: исключение ошибочных литералов для вещественных типов",
                     ex("23.40.4 + 1.34e-4", "error > 23.40.4"), ex("2 / -3.4_f", "error > -3.4_f"),
                     ex("5 + +0xCAFEpBABE-2", "error > +0xCAFEpBABE-2"), ex("0.2d * 0.fe3", "error > 0.fe3"))
+    
     };
 
     public void startTesting(Supplier<Calculator> supplier) {
