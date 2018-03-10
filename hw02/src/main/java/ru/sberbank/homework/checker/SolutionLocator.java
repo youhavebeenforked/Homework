@@ -11,13 +11,11 @@ public class SolutionLocator {
         FastClasspathScanner scanner = new FastClasspathScanner();
         scanner.addClassLoader(SolutionLocator.class.getClassLoader());
         scanner.matchClassesImplementing(Calculator.class, subclass -> {
-
             String name = subclass.getPackage().getName();
             log.debug("Checking class from package: {}", name);
             SolutionChecker sc = new SolutionChecker(name);
             sc.startTesting(() -> get(subclass));
             log.info(sc.getStatus());
-
         });
         scanner.scan();
     }
