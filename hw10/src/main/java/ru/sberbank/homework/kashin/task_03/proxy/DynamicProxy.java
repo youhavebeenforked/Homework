@@ -27,7 +27,7 @@ public class DynamicProxy {
                 } else {
                     storage = new InMemoryStorage();
                 }
-                final Args input = new Args(method, args);
+                MethodAndArgs input = new MethodAndArgs(method, args);
                 Object result = storage.get(input);
                 if (result == null && !storage.containsKey(input)) {
                     try {

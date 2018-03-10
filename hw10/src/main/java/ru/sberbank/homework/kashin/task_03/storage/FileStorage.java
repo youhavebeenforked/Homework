@@ -1,6 +1,6 @@
 package ru.sberbank.homework.kashin.task_03.storage;
 
-import ru.sberbank.homework.kashin.task_03.proxy.Args;
+import ru.sberbank.homework.kashin.task_03.proxy.MethodAndArgs;
 
 import java.io.*;
 
@@ -14,17 +14,17 @@ public class FileStorage implements Storage {
     }
 
     @Override
-    public boolean containsKey(Args key) {
+    public boolean containsKey(MethodAndArgs key) {
         return findFile(key.getFileName()) != null;
     }
 
     @Override
-    public Object get(Args key) {
+    public Object get(MethodAndArgs key) {
         return deserialize(key.getFileName());
     }
 
     @Override
-    public Object put(Args key, Object value) {
+    public Object put(MethodAndArgs key, Object value) {
         return serialize(key.getFileName(), value);
     }
 

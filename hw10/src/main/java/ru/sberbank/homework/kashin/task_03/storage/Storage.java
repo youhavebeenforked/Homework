@@ -1,11 +1,11 @@
 package ru.sberbank.homework.kashin.task_03.storage;
 
-import ru.sberbank.homework.kashin.task_03.proxy.Args;
+import ru.sberbank.homework.kashin.task_03.proxy.MethodAndArgs;
 
 public interface Storage {
-    boolean containsKey(Args key);
+    boolean containsKey(MethodAndArgs key);
 
-    Object get(Args key);
+    Object get(MethodAndArgs key);
 
-    Object put(Args key, Object value);
+    Object put(MethodAndArgs key, Object value);
 }

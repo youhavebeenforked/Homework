@@ -4,14 +4,14 @@ import ru.sberbank.homework.kashin.task_03.annotations.Cache;
 
 import java.lang.reflect.Method;
 
-public final class Args {
+public final class MethodAndArgs {
     private final Method method;
 
     private final Object[] methodArgs;
 
     private final int methodHash;
 
-    Args(final Method method, final Object[] args) {
+    MethodAndArgs(final Method method, final Object[] args) {
         this.method = method;
         methodArgs = args;
         methodHash = calcHash();
@@ -19,7 +19,7 @@ public final class Args {
 
     @Override
     public boolean equals(final Object obj) {
-        final Args other = (Args) obj;
+        final MethodAndArgs other = (MethodAndArgs) obj;
         if (!method.equals(other.method)) {
             return false;
         }
