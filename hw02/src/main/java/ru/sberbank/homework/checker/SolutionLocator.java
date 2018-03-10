@@ -11,11 +11,20 @@ public class SolutionLocator {
         FastClasspathScanner scanner = new FastClasspathScanner();
         scanner.addClassLoader(SolutionLocator.class.getClassLoader());
         scanner.matchClassesImplementing(Calculator.class, subclass -> {
+<<<<<<< HEAD
             String name = subclass.getPackage().getName();
             log.debug("Checking class from package: {}", name);
             SolutionChecker sc = new SolutionChecker(name);
             sc.startTesting(() -> get(subclass));
             log.info(sc.getStatus());
+=======
+            try {
+                log.debug("Checking class from package: {}", subclass.getPackage().getName());
+                sc.startTesting(subclass.newInstance());
+            } catch (InstantiationException | IllegalAccessException e) {
+                log.error("Calculator instance creation failed", e);
+            }
+>>>>>>> parent of e2fb9e7... Merge branch 'Dergun' into hw_03_01_terminal_interface
         });
         scanner.scan();
     }
