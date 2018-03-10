@@ -7,9 +7,12 @@ import com.esotericsoftware.kryo.io.Output;
 import ru.sberbank.homework.common.City;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class CitySerializer extends Serializer<City> {
+    private List<City> cachedCities = new ArrayList<>();
 
     @Override
     public void write(Kryo kryo, Output output, City city) {
@@ -26,11 +29,25 @@ public class CitySerializer extends Serializer<City> {
 
     @Override
     public City read(Kryo kryo, Input input, Class<City> type) {
-        City result = new City();
-        result.setId(input.readInt());
-        result.setCityName(input.readString());
-        result.setFoundDate(kryo.readObject(input, LocalDate.class));
-        result.setNumberOfInhabitants(input.readLong());
+        City readingCity = new City();
+        readingCity.setId(input.readInt());
+        readingCity.setCityName(input.readString());
+        readingCity.setFoundDate(kryo.readObject(input, LocalDate.class));
+        readingCity.setNumberOfInhabitants(input.readLong());
+
+        Optional<City> cached = cachedCities.stream()
+                .filter(e -> ((e.getId() == readingCity.getId())
+                        && (e.getCityName().equals(readingCity.getCityName()))
+                        && (e.getNumberOfInhabitants() == readingCity.getNumberOfInhabitants())))
+                .findFirst();
+        City result;
+        if(cached.isPresent()){
+            result = cached.get();
+        }else {
+            result = readingCity;
+            cachedCities.add(result);
+        }
+
         int size = input.readInt();
         List<City> nearCities = result.getNearCities();
         for (int i = 0; i < size; i++) {

@@ -10,11 +10,11 @@ import ru.sberbank.homework.common.RouteService;
 
 import java.io.*;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class KryoRouteService extends RouteService<City, Route<City>> {
     private Kryo kryo;
+    private Map<String, Boolean> cachedCity = new HashMap<>();
 
     public KryoRouteService(CachePathProvider pathProvider) {
         super(pathProvider, false);
@@ -26,25 +26,33 @@ public class KryoRouteService extends RouteService<City, Route<City>> {
     @Override
     public Route<City> getRoute(String from, String to) {
         String key = from + "_" + to;
-        Route<City> route = null;
-        try (FileInputStream fis = new FileInputStream(pathProvider.getCacheDirectoryPath() + File.separator + key)) {
-            Input input = new Input(fis);
-            route = kryo.readObject(input, Route.class);
-            input.close();
-        } catch (IOException e) {
-//            e.printStackTrace();
-        }
+        return getCachedCityRoute(key)
+                .orElseGet(() -> createAndCacheCityRoute(key, from, to));
+    }
 
-        if (route == null) {
-            route = super.getRoute(from, to);
-            try (FileOutputStream fos = new FileOutputStream(pathProvider.getCacheDirectoryPath() + File.separator + key)) {
-                Output output = new Output(fos);
-                kryo.writeObject(output, route);
-                output.close();
+    private Optional<Route<City>> getCachedCityRoute(String key) {
+        Optional<Route<City>> route = Optional.empty();
+        if (cachedCity.containsKey(key)) {
+            try (FileInputStream fis = new FileInputStream(pathProvider.getCacheDirectoryPath() + File.separator + key)) {
+                Input input = new Input(fis);
+                route = Optional.of(kryo.readObject(input, Route.class));
+                input.close();
             } catch (IOException e) {
-                e.printStackTrace();
             }
         }
+        return route;
+    }
+
+    private Route<City> createAndCacheCityRoute(String key, String from, String to) {
+        Route<City> route = super.getRoute(from, to);
+        try (FileOutputStream fos = new FileOutputStream(pathProvider.getCacheDirectoryPath() + File.separator + key)) {
+            Output output = new Output(fos);
+            kryo.writeObject(output, route);
+            output.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        cachedCity.put(key, true);
         return route;
     }
 

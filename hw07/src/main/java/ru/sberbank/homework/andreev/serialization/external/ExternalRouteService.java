@@ -8,11 +8,10 @@ import ru.sberbank.homework.common.RouteService;
 
 import java.io.*;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class ExternalRouteService extends RouteService<City, Route<City>> {
-
+    private Map<String, Boolean> cachedCity = new HashMap<>();
     public ExternalRouteService(CachePathProvider pathProvider) {
         super(pathProvider, false);
     }
@@ -20,25 +19,33 @@ public class ExternalRouteService extends RouteService<City, Route<City>> {
     @Override
     public Route<City> getRoute(String from, String to) {
         String key = from + "_" + to;
-        ExternalRoute route = null;
-        try (FileInputStream fis = new FileInputStream(pathProvider.getCacheDirectoryPath() + File.separator + key)) {
-            ObjectInputStream ois = new ObjectInputStream(fis);
-            route = (ExternalRoute) ois.readObject();
-            ois.close();
-        } catch (IOException | ClassNotFoundException e) {
-//            e.printStackTrace();
-        }
+        return getCachedCityRoute(key)
+                .orElseGet(() -> createAndCacheCityRoute(key, from, to));
+    }
 
-        if (route == null) {
-            route = (ExternalRoute) super.getRoute(from, to);
-            try (FileOutputStream fos = new FileOutputStream(pathProvider.getCacheDirectoryPath() + File.separator + key)) {
-                ObjectOutputStream oos = new ObjectOutputStream(fos);
-                oos.writeObject(route);
-                oos.close();
-            } catch (IOException e) {
-                e.printStackTrace();
+    private Optional<Route<City>> getCachedCityRoute(String key) {
+        Optional<Route<City>> route = Optional.empty();
+        if (cachedCity.containsKey(key)) {
+            try (FileInputStream fis = new FileInputStream(pathProvider.getCacheDirectoryPath() + File.separator + key)) {
+                ObjectInputStream ois = new ObjectInputStream(fis);
+                route = Optional.of((ExternalRoute) ois.readObject());
+                ois.close();
+            } catch (IOException | ClassNotFoundException doNothing) {
             }
         }
+        return route;
+    }
+
+    private Route<City> createAndCacheCityRoute(String key, String from, String to) {
+        Route<City> route = super.getRoute(from, to);
+        try (FileOutputStream fos = new FileOutputStream(pathProvider.getCacheDirectoryPath() + File.separator + key)) {
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            oos.writeObject(route);
+            oos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        cachedCity.put(key, true);
         return route;
     }
 
