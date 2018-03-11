@@ -5,11 +5,10 @@ public class TerminalServer {
     private PinValidator pinValid;
 
     public TerminalServer(long cardNumber) throws InvalidCardNumber {
-        if(checkCardNumber(cardNumber)) {
-            account = new Account("User", 1000, (short)1234, (short)123, 1111222233334444L);
+        if (checkCardNumber(cardNumber)) {
+            account = new Account("User", 1000, (short) 1234, (short) 123, 1111222233334444L);
             pinValid = new PinValidator(account);
-        }
-        else {
+        } else {
             throw new InvalidCardNumber("Карта повреждена или не обслуживается");
         }
     }

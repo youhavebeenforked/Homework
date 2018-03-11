@@ -25,7 +25,7 @@ public class Account {
     }
 
     public void setBalance(double balance) throws IncorrectBalanceException {
-        if(balance < 0)
+        if (balance < 0)
             throw new IncorrectBalanceException("Отрицательный баланс. Баланс не может быть отрицательным");
         this.balance = balance;
     }

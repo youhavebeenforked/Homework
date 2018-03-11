@@ -19,8 +19,8 @@ public class Main {
         }
 
         boolean exit = false;
-        for(;;) {
-            if(exit) {
+        for (; ; ) {
+            if (exit) {
                 break;
             }
             MessageTerminal.menuMessage();

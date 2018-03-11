@@ -1,6 +1,6 @@
 package ru.sberbank.homework.kudryavykh;
 
-public class TerminalImpl implements Terminal{
+public class TerminalImpl implements Terminal {
 
     public boolean correctPin = false;
 
@@ -10,8 +10,7 @@ public class TerminalImpl implements Terminal{
     public TerminalImpl(long cardNumber) {
         try {
             this.server = new TerminalServer(cardNumber);
-        }
-        catch (InvalidCardNumber ex) {
+        } catch (InvalidCardNumber ex) {
             message.invalidCardNumber();
             System.exit(1);
         }
@@ -23,76 +22,66 @@ public class TerminalImpl implements Terminal{
     public boolean Pin() {
         try {
             String pin = message.inputPin();
-            if(pin.length() == 4) {
+            if (pin.length() == 4) {
                 correctPin = server.pinCheck(Short.parseShort(pin));
-                if(!correctPin) {
+                if (!correctPin) {
                     message.incorrectPinValue();
                 }
                 return correctPin;
-            }
-            else {
+            } else {
                 //Кидать исключение и сразу его ловить - фиговое решение, но суть задания - продемонстрировать понимание...
                 //...exceptionов, потому оставил.
                 try {
                     throw new IncorrectPinCode("Pin код не правильный");
-                }
-                catch (IncorrectPinCode ex) {
+                } catch (IncorrectPinCode ex) {
                     message.incorrectPinValue();
                 }
                 return false;
             }
-        }
-        catch (AccountIsLockedException ex) {
+        } catch (AccountIsLockedException ex) {
             message.accountLocked();
         }
         return false;
     }
 
     public void setMoney() throws AccessAccoutException {
-        if(!correctPin) {
-            throw new AccessAccoutException("Вызов метода невозможен. Доступ к аккаунту не получен.");
-        }
-        else {
-            try {
-                int userAnswers = message.inputSum();
-                if (userAnswers % 100 == 0) {
-                    server.setBalance(server.getBalance() + userAnswers);
-                } else {
-                    message.incorrectInputValue();
-                }
-            }
-            catch (IncorrectBalanceException e) {
-                //Логика по обработке неправильного баланса
-                //В теории исключения тут никогда не будет т.к. идет увеличение баланса
-                //Надо ли обрабатывать?
-            }
-        }
+        money(true);
     }
 
-    public void getMoney() throws AccessAccoutException {
-        if(!correctPin) {
+    /**
+     *
+     * @param operation указывает, какая осуществляется операция. True - пополнение, false - снятие
+     * @throws AccessAccoutException
+     */
+    public void money(boolean operation) throws AccessAccoutException {
+        if (!correctPin) {
             throw new AccessAccoutException("Вызов метода невозможен. Доступ к аккаунту не получен.");
-        }
-        else {
+        } else {
             try {
                 int userAnswers = message.inputSum();
                 if (userAnswers % 100 == 0) {
-                    server.setBalance(server.getBalance() - userAnswers);
+                    if(operation) {
+                        server.setBalance(server.getBalance() + userAnswers);
+                    } else {
+                        server.setBalance(server.getBalance() - userAnswers);
+                    }
                 } else {
                     message.incorrectInputValue();
                 }
-            }
-            catch (IncorrectBalanceException e) {
+            } catch (IncorrectBalanceException e) {
                 message.incorrectBalanceValue();
             }
         }
     }
 
+    public void getMoney() throws AccessAccoutException {
+        money(false);
+    }
+
     public void checkAccount() throws AccessAccoutException {
-        if(!correctPin) {
+        if (!correctPin) {
             throw new AccessAccoutException("Вызов метода невозможен. Доступ к аккаунту не получен.");
-        }
-        else {
+        } else {
             message.getBalanceCash(server.getBalance());
         }
     }
