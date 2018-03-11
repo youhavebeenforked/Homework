@@ -9,14 +9,13 @@ import java.util.regex.Pattern;
 public class Parse {
 
     private static long decodeOnDecimal(String text) {
-        if(text.charAt(text.length()-1) == 'l') {
-            text = text.substring(0, text.length()-1);
+        if (text.charAt(text.length() - 1) == 'l') {
+            text = text.substring(0, text.length() - 1);
         }
-        if(text.startsWith("0b")||text.startsWith("+0b")||text.startsWith("-0b")) {
+        if (text.startsWith("0b") || text.startsWith("+0b") || text.startsWith("-0b")) {
             text = text.replaceFirst("0b", "");
             return Long.parseLong(text, 2);
-        }
-        else {
+        } else {
             return Long.decode(text);
         }
     }
@@ -27,18 +26,19 @@ public class Parse {
         return mat.matches();
     }
 
-    public String output (String value) {
+    public String output(String value) {
         String pattern = "###.##";
-        DecimalFormatSymbols decFormSymb = new DecimalFormatSymbols(Locale.US);
+        DecimalFormatSymbols decFormSymb = new DecimalFormatSymbols(Locale.getDefault());
+        decFormSymb.setDecimalSeparator('.');
         DecimalFormat decimformat = new DecimalFormat(pattern, decFormSymb);
         return decimformat.format(Double.parseDouble(value));
     }
-    
+
     public static String validationEndParser(String word) {
 
         word = word.toLowerCase();
         double number;
-        if(checkWithRegExp(word, "_{1}.*|.*_{1}|.*_{1}\\..*|.*\\._{1}.*|0b_.*|0_b.*|0x_.*|0_x.*|.*_l|.*_f")) {
+        if (checkWithRegExp(word, "_{1}.*|.*_{1}|.*_{1}\\..*|.*\\._{1}.*|0b_.*|0_b.*|0x_.*|0_x.*|.*_l|.*_f")) {
             return null; //Проверка валидности нижнего подчеркивания
         } else {
             word = underScoreRemove(word);
