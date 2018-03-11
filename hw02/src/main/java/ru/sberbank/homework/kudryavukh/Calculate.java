@@ -27,7 +27,7 @@ public class Calculate implements ru.sberbank.homework.common.Calculator {
             return "error > wrong expression";
         }
         for (int i = 0; i < sArray.size(); ) {
-            value = Parse.validationEndParser(sArray.get(i));
+            value = Parse.validationAndParser(sArray.get(i));
             if (value == null) {
                 errorFlag = true;
                 value = sArray.get(i);
