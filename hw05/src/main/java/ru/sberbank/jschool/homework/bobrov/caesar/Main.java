@@ -1,20 +1,12 @@
 package ru.sberbank.jschool.homework.bobrov.caesar;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
 public class Main {
-    public static void main(String[] args) throws NoSuchMethodException, IllegalAccessException, InstantiationException, InvocationTargetException {
-        Class<?> cl = null;
-        EncryptedClassLoader encr = new EncryptedClassLoader("ru.sberbank.jschool.homework.bobrov.caesar", 3);
+    public static void main(String[] args) {
+        EncryptedClassLoader encr = new EncryptedClassLoader(null, "/home/malamut/projects/Homework/encrClass/MainCaesar.class", 3);
         try {
-            cl = encr.findClass("Test");
+            encr.findClass("/home/malamut/projects/Homework/encrClass/MainCaesar.class");
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-
-        Object ob = cl.newInstance();
-        Method md = cl.getMethod("show");
-        md.invoke(ob);
     }
 }
