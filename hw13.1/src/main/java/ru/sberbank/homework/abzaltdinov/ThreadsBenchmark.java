@@ -5,7 +5,7 @@ import ru.sberbank.homework.common.tasks.SleepyTask;
 import ru.sberbank.homework.common.tasks.StringsTask;
 
 public class ThreadsBenchmark {
-    public static final int NUMBER_OF_REPEATS = 5;
+    public static final int NUMBER_OF_REPEATS = 10;
 
     public static void main(String[] args) {
         ThreadsExecutor te[] = new ThreadsExecutor[]{new ConcurrentThreads(), new SerialThreads()};
