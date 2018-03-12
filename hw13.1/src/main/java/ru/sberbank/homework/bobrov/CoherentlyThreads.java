@@ -13,7 +13,7 @@ import ru.sberbank.homework.common.tasks.StringsTask;
  */
 
 
-public class coherentlyThreads {
+public class CoherentlyThreads {
     public static void main(String[] args) {
         long millis = System.currentTimeMillis();
         new StringsTask().run();
