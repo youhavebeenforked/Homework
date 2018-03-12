@@ -12,11 +12,11 @@ public class MainClass {
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
         boolean isURLReaded = false;
-        while (!isURLReaded) {
+        while (true) {
             String url = in.next();
             try {
                 readPage(url);
-                isURLReaded = true;
+                break;
             } catch (MalformedURLException | IllegalArgumentException e) {
                 System.err.println("Неверный формат ссылки. " + e.getMessage());
             } catch (IOException e) {
