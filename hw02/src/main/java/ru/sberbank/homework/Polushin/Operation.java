@@ -2,7 +2,8 @@ package ru.sberbank.homework.Polushin;
 
 /**
  * Арифметические операции и скобки.
- * У перечисления есть встроенный метод calculate, переопределенный для каждой операции, кроме скобок.
+ * У перечисления есть встроенный метод calculate , переопределенный для каждой операции, кроме скобок,
+ * а так же метод toString для красоты.
  */
 public enum Operation {
     MULTIPLY('*') {
@@ -91,5 +92,5 @@ public enum Operation {
 
         return "No such operation";
     }
-    //todo: почитай про меня и реализуй.
+
 }
