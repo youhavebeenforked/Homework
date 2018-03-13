@@ -6,16 +6,17 @@ import java.util.*;
  * Работа с математическими выражениями в postfix notation (a.k.a польская запись).
  */
 class PostfixParser {
-    /** Приведет матем. выражения вида "1+2*3" к "1 2 + 3 *"
+    /** Приведет матем. выражения вида "1*2+3" к "1 2 * 3 +"
      *
      *  Алгоритм работы используя стек:
      *  Число передается сразу в результат.
-     *  Для текущего матем. оператора проверяем - есть-ли на стеке другой оператор,
+     *  Для текущего матем. оператора проверяем - есть ли на стеке другой оператор,
      *  с приоритетом => текущего.
      *  Если есть - его в результат, текущий на стек.
-     *  Если к коцну на стеке остаются операторы - добавим их в результат.
+     *  Если к концу на стеке остаются операторы - добавим их в результат.
      */
-    static List<Element> createPostfix(List<Element> equation) {
+
+    List<Element> createPostfix(List<Element> equation) {
         Deque<Element> stack = new ArrayDeque<>();
         List<Element> result = new ArrayList<>();
 
@@ -24,14 +25,19 @@ class PostfixParser {
                 result.add(e);
             }
             else {
-                if (e.getElement() == Operation.MULTIPLY || e.getElement() == Operation.DIVIDE ) {
-                    if (stack.size() > 0)
-                        if (stack.peek().getElement() == Operation.MULTIPLY || stack.peek().getElement() == Operation.DIVIDE)
+                if (e.getElement() == Operation.MULTIPLY
+                        || e.getElement() == Operation.DIVIDE) {
+                    if (stack.size() > 0) {
+                        if (stack.peek().getElement() == Operation.MULTIPLY
+                                || stack.peek().getElement() == Operation.DIVIDE) {
                             result.add(stack.pop());
+                        }
+                    }
                 }
                 else {
-                    if (stack.size() > 0)
+                    if (stack.size() > 0) {
                         result.add(stack.pop());
+                    }
                 }
                 stack.push(e);
             }
@@ -42,8 +48,8 @@ class PostfixParser {
         return result;
     }
 
-    static double evaluatePostfix(List<Element> equation) {
-        Deque<Double> stack = new ArrayDeque<Double>();
+    double evaluatePostfix(List<Element> equation) {
+        Deque<Double> stack = new ArrayDeque<>();
         double x = 0;
 
         for (Element e : equation) {
@@ -59,5 +65,10 @@ class PostfixParser {
             }
         }
         return x;
+    }
+
+    double compute(List<Element> equation) {
+        equation = createPostfix(equation);
+        return evaluatePostfix(equation);
     }
 }

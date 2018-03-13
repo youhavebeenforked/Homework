@@ -4,6 +4,9 @@ package ru.sberbank.homework.kalugin;
  * Элемент математического выражения.
  */
 interface Element<T> {
-    boolean isNumber();
     T getElement();
+
+    default boolean isNumber() {
+        return false;
+    }
 }

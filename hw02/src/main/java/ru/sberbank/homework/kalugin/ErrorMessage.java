@@ -17,8 +17,17 @@ class ErrorMessage {
     public String getMessage() {
         return message;
     }
+
     public void setMessage(String s) {
         message = s;
         hasMessage = true;
+    }
+
+    @Override
+    public String toString() {
+        return "ErrorMessage{" +
+                "message='" + message + '\'' +
+                ", hasMessage=" + hasMessage +
+                '}';
     }
 }
