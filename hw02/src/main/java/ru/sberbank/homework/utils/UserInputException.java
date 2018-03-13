@@ -3,7 +3,7 @@ package ru.sberbank.homework.utils;
 public class UserInputException extends NumberFormatException {
     private static final String ERROR = "error > wrong expression";
 
-    UserInputException() {
+    public UserInputException() {
         super(ERROR);
     }
 

@@ -13,6 +13,7 @@ import java.util.Stack;
 public class Calculation implements Calculator {
     private String output;
     private Double result = 0d;
+    private boolean firstOperation = true;
 
     @Override
     public String calculate(String userInput) {
@@ -22,10 +23,18 @@ public class Calculation implements Calculator {
 
             Stack<Double> temp = new Stack<>();
 
-            if ((postfixExpression.peekFirst() instanceof Operation)) {
+            /*
+                Продолжение вычеслений или начало нового. И для первого вычисления обязательная форма a_@_b.
+            */
+            if (postfixExpression.size() % 2 == 0) {
+                if (firstOperation == true) {
+                    throw new UserInputException();
+                }
                 temp.push(result);
+
             } else {
-                result = 0d;
+                firstOperation = false;
+
             }
 
             while (!postfixExpression.isEmpty()) {

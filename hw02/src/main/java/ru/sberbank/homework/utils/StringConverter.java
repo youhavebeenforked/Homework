@@ -12,7 +12,7 @@ public class StringConverter {
     Затем конвертирует ее в постфиксную форму записи выражения и возращает результат в виде стэка.
      */
     public static LinkedList convertToPostfix(String inputExpression) throws UserInputException {
-        String isCorrect = new StringAnalyzer().analyze(inputExpression.toUpperCase());
+        String isCorrect = new StringAnalyzer().analyze(inputExpression);
         if (isCorrect != "good") {
             throw new UserInputException(isCorrect);
         }
@@ -100,7 +100,7 @@ public class StringConverter {
                         break;
                     //Может понадобится, если литерал из одного символа, например "7". и он всегда будет инт.
                     default:
-                        postfixExpression.push(Integer.parseInt(infix[i]));
+                        postfixExpression.push((double) Integer.parseInt(infix[i]));
                 }
             }
         }
@@ -116,7 +116,6 @@ public class StringConverter {
     /*
     Преобразует строку в число и возращает его как double
      */
-    //TODO подумать и возможно переделать метод, чтобы возвращал значение + тип
     protected static Double valueOf(String input) throws UserInputException {
         String value = input;
         if (Pattern.compile("^" + RegularExpr.INTEGER_TYPE.getRegExp() + "$").matcher(input).find()) {
@@ -132,6 +131,10 @@ public class StringConverter {
                      */
             if (input.charAt(0) == '-') {
                 sign = 1;
+                input = input.substring(1);
+            }
+            if (input.charAt(0) == '+') {
+                sign = 0;
                 input = input.substring(1);
             }
             if (input.charAt(0) == '0') {
@@ -156,7 +159,7 @@ public class StringConverter {
                 } catch (NumberFormatException e) {
                     throw new UserInputException("Вы ввели недопустимое значение для данного типа Long: " + value);
                 }
-                return Double.valueOf(sign == 1 ? 0 - var : var);
+                return (double) (sign == 1 ? 0 - var : var);
             } else {
                 long var;
                 try {
@@ -164,7 +167,7 @@ public class StringConverter {
                 } catch (NumberFormatException e) {
                     throw new UserInputException("Вы ввели недопустимое значение для данного типа Integer: " + value);
                 }
-                return Double.valueOf((sign == 1 ? 0 - var : var));
+                return (double) (sign == 1 ? 0 - var : var);
             }
         } else {
             double var;
