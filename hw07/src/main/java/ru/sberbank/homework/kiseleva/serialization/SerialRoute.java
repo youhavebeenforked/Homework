@@ -4,6 +4,7 @@ import ru.sberbank.homework.common.City;
 import ru.sberbank.homework.common.Route;
 
 import java.io.*;
+import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -11,8 +12,14 @@ import java.util.stream.Collectors;
 /**
  * Created by Ekaterina Kiseleva on 01.03.2018.
  */
-public class SerialRoute<C extends SerialCity> extends Route implements Serializable, Externalizable {
+public class SerialRoute extends Route implements Serializable, Externalizable {
     private String routeName;
+
+    @Override
+    public List<City> getCities() {
+        return cities;
+    }
+
     private List<City> cities = new LinkedList<>();
 
     public SerialRoute() {
@@ -35,8 +42,11 @@ public class SerialRoute<C extends SerialCity> extends Route implements Serializ
         out.writeObject(routeName);
         out.writeObject(cities.size());
         for (City city : cities) {
-            new SerialCity(city.getId(), city.getCityName(), city.getFoundDate(), city.getNumberOfInhabitants())
-                    .writeExternal(out);
+            out.writeObject(city.getId());
+            out.writeObject(city.getCityName());
+            out.writeObject(city.getFoundDate());
+            out.writeObject(city.getNumberOfInhabitants());
+            out.writeObject(city.getNearCities());
         }
     }
 
@@ -45,8 +55,12 @@ public class SerialRoute<C extends SerialCity> extends Route implements Serializ
         routeName = (String) in.readObject();
         int size = (int) in.readObject();
         for (int i = 0; i < size; i++) {
-            SerialCity city = new SerialCity();
-            city.readExternal(in);
+            City city = new City();
+            city.setId((int) in.readObject());
+            city.setCityName((String) in.readObject());
+            city.setFoundDate((LocalDate) in.readObject());
+            city.setNumberOfInhabitants((long) in.readObject());
+            city.setNearCities((List<City>) in.readObject());
             cities.add(city);
         }
     }

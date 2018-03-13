@@ -7,7 +7,7 @@ import ru.sberbank.homework.common.RouteService;
 
 import java.io.*;
 import java.time.LocalDate;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 
@@ -16,7 +16,7 @@ import java.util.UUID;
  */
 public class ExternalizableRouteService extends RouteService<City, Route<City>> {
     private final String cachePath;
-    private HashMap<String, Route<City>> routeHashMap = new HashMap<>();
+    private HashSet<String> routeHashSet = new HashSet<>();
 
 
     public ExternalizableRouteService(CachePathProvider cachePathProvider) {
@@ -28,10 +28,10 @@ public class ExternalizableRouteService extends RouteService<City, Route<City>> 
     public Route<City> getRoute(String from, String to) {
         String key = from + "_" + to;
 
-        Route<City> route = routeHashMap.get(key);
-        if (route == null) {
+        Route<City> route = null;
+        if (!routeHashSet.contains(key)) {
             route = super.getRoute(from, to);
-            routeHashMap.put(key, route);
+            routeHashSet.add(key);
 
             SerialRoute serialRoute = new SerialRoute(route.getRouteName(), route.getCities());
             try (FileOutputStream fos = new FileOutputStream(cachePath + "/" + key);

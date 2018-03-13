@@ -13,7 +13,7 @@ import java.util.*;
  * Created by Ekaterina Kiseleva on 01.03.2018.
  */
 public class SerializableRouteService extends RouteService<City, Route<City>> implements Serializable {
-    private HashMap<String, Route<City>> routeHashMap = new HashMap<>();
+    private HashSet<String> routeHashSet = new HashSet<>();
     private SerialRoute serialRoute;
     private String cachePath;
 
@@ -26,11 +26,11 @@ public class SerializableRouteService extends RouteService<City, Route<City>> im
     public Route<City> getRoute(String from, String to) {
         String key = from + "_" + to;
 
-        Route<City> route = routeHashMap.get(key);
+        Route<City> route = null;
 
-        if (route == null) {
+        if (!routeHashSet.contains(key)) {
             route = super.getRoute(from, to);
-            routeHashMap.put(key, route);
+            routeHashSet.add(key);
 
             try (FileOutputStream fos = new FileOutputStream(cachePath + "/" + key);
                  ObjectOutputStream oos = new ObjectOutputStream(fos)) {
