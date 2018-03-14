@@ -2,13 +2,13 @@ package ru.sberbank.homework.kudryavykh;
 
 public class Account {
 
-    final private String name;
+    private final String name;
     private double balance;
-    final private short pin;
-    final private short cvv;
-    final private long cardnumber;
+    private final int pin;
+    private final int cvv;
+    private final long cardnumber;
 
-    public Account(String name, double balance, short pin, short cvv, long cardnumber) {
+    public Account(String name, double balance, int pin, int cvv, long cardnumber) {
         this.name = name;
         this.balance = balance;
         this.pin = pin;
@@ -16,7 +16,7 @@ public class Account {
         this.cardnumber = cardnumber;
     }
 
-    public short getPin() {
+    public int getPin() {
         return pin;
     }
 
@@ -25,8 +25,9 @@ public class Account {
     }
 
     public void setBalance(double balance) throws IncorrectBalanceException {
-        if (balance < 0)
+        if (balance < 0) {
             throw new IncorrectBalanceException("Отрицательный баланс. Баланс не может быть отрицательным");
+        }
         this.balance = balance;
     }
 }

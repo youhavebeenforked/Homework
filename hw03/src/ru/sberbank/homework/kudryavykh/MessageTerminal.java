@@ -4,10 +4,12 @@ import java.util.Scanner;
 
 public class MessageTerminal implements MessageTermnalInterface {
 
+    @Override
     public void incorrectPinValue() {
         System.out.println("Некорректный Pin код. Попробуйте еще раз!");
     }
 
+    @Override
     public void incorrectBalanceValue() {
         System.out.println("Ваш баланс не может быть отрицательным!");
     }
@@ -16,15 +18,18 @@ public class MessageTerminal implements MessageTermnalInterface {
         System.out.println("Сумма должна быть кратна 100.");
     }
 
+    @Override
     public void invalidCardNumber() {
         System.out.println("Карта повреждена или не обслуживается банком.");
     }
 
+    @Override
     public void accountLocked() {
         System.out.println("Слишком большое количество неверных попыток ввода Pin кода. " +
                 "Аккаунт заблокирован");
     }
 
+    @Override
     public int inputSum() {
         System.out.println("Введите сумму");
         Scanner in = new Scanner(System.in);
@@ -32,13 +37,15 @@ public class MessageTerminal implements MessageTermnalInterface {
         return Integer.parseInt(userAnswers);
     }
 
+    @Override
     public String inputPin() {
         System.out.println("Введите Pin: ");
         Scanner in = new Scanner(System.in);
         return in.nextLine();
     }
 
-    public void getBalanceCash(double balance) {
+    @Override
+    public void balanceCash(double balance) {
         System.out.println("Ваш баланс " + balance);
     }
 

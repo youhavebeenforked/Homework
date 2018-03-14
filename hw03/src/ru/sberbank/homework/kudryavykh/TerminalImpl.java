@@ -2,10 +2,11 @@ package ru.sberbank.homework.kudryavykh;
 
 public class TerminalImpl implements Terminal {
 
-    public boolean correctPin = false;
+    public boolean correctPin;
 
     private MessageTerminal message;
     private TerminalServer server;
+    private final int PIN_LENGTH = 4;
 
     public TerminalImpl(long cardNumber) {
         try {
@@ -19,10 +20,11 @@ public class TerminalImpl implements Terminal {
 
     // Проверка только лишь на количество символов.
     // Ведь пользователь в банкомате не может ввести буквы, верно?
-    public boolean Pin() {
+    @Override
+    public boolean pin() {
         try {
             String pin = message.inputPin();
-            if (pin.length() == 4) {
+            if (pin.length() == PIN_LENGTH) {
                 correctPin = server.pinCheck(Short.parseShort(pin));
                 if (!correctPin) {
                     message.incorrectPinValue();
@@ -44,6 +46,7 @@ public class TerminalImpl implements Terminal {
         return false;
     }
 
+    @Override
     public void setMoney() throws AccessAccoutException {
         money(true);
     }
@@ -53,6 +56,7 @@ public class TerminalImpl implements Terminal {
      * @param operation указывает, какая осуществляется операция. True - пополнение, false - снятие
      * @throws AccessAccoutException
      */
+
     public void money(boolean operation) throws AccessAccoutException {
         if (!correctPin) {
             throw new AccessAccoutException("Вызов метода невозможен. Доступ к аккаунту не получен.");
@@ -74,15 +78,17 @@ public class TerminalImpl implements Terminal {
         }
     }
 
+    @Override
     public void getMoney() throws AccessAccoutException {
         money(false);
     }
 
+    @Override
     public void checkAccount() throws AccessAccoutException {
         if (!correctPin) {
             throw new AccessAccoutException("Вызов метода невозможен. Доступ к аккаунту не получен.");
         } else {
-            message.getBalanceCash(server.getBalance());
+            message.balanceCash(server.getBalance());
         }
     }
 }

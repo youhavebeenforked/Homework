@@ -8,5 +8,5 @@ public interface Terminal {
 
     void setMoney() throws AccessAccoutException;
 
-    boolean Pin();
+    boolean pin();
 }

@@ -15,11 +15,11 @@ public class Main {
 
         boolean flag = false;
         while (!flag) {
-            flag = terminal.Pin();
+            flag = terminal.pin();
         }
 
         boolean exit = false;
-        for (; ; ) {
+        while(true) {
             if (exit) {
                 break;
             }

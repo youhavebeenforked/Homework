@@ -13,7 +13,7 @@ public interface MessageTermnalInterface {
 
     void invalidCardNumber();
 
-    void getBalanceCash(double balance);
+    void balanceCash(double balance);
 
     int inputSum();
 
