@@ -45,22 +45,31 @@ public class TerminalImpl implements Terminal {
         return false;
     }
 
-    @Override
-    public void setMoney() throws AccessAccoutException {
-        if(validationInputSum()) {
+    public void money(boolean flag) throws AccessAccoutException {
+        if (!correctPin) {
+            throw new AccessAccoutException("Вызов метода невозможен. Доступ к аккаунту не получен.");
+        } else {
             try {
-                server.setBalance(server.getBalance() + message.inputSum());
+                int userAnswers = message.inputSum();
+                if (userAnswers % 100 == 0) {
+                    if(flag == true) {
+                        server.setBalance(server.getBalance() + userAnswers);
+                    } else {
+                        server.setBalance(server.getBalance() - userAnswers);
+                    }
+                } else {
+                    message.incorrectInputValue();
+                }
             } catch (IncorrectBalanceException e) {
                 message.incorrectBalanceValue();
             }
         }
     }
 
-    private boolean validationInputSum() throws AccessAccoutException {
+    private boolean validationInputSum(int userAnswers) throws AccessAccoutException {
         if (!correctPin) {
             throw new AccessAccoutException("Вызов метода невозможен. Доступ к аккаунту не получен.");
         } else {
-            int userAnswers = message.inputSum();
             if (userAnswers % 100 != 0) {
                 message.incorrectInputValue();
                 return false;
@@ -71,9 +80,22 @@ public class TerminalImpl implements Terminal {
 
     @Override
     public void getMoney() throws AccessAccoutException {
-        if(validationInputSum()) {
+        int usersSum = message.inputSum();
+        if(validationInputSum(usersSum)) {
             try {
-                server.setBalance(server.getBalance() - message.inputSum());
+                server.setBalance(server.getBalance() - usersSum);
+            } catch (IncorrectBalanceException e) {
+                message.incorrectBalanceValue();
+            }
+        }
+    }
+
+    @Override
+    public void setMoney() throws AccessAccoutException {
+        int usersSum = message.inputSum();
+        if(validationInputSum(usersSum)) {
+            try {
+                server.setBalance(server.getBalance() + usersSum);
             } catch (IncorrectBalanceException e) {
                 message.incorrectBalanceValue();
             }
