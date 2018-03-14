@@ -13,8 +13,7 @@ public class TerminalImpl implements Terminal {
         try {
             this.server = new TerminalServer(cardNumber);
         } catch (InvalidCardNumber ex) {
-            message.invalidCardNumber();
-            System.exit(1);
+            ex.printMessage();
         }
     }
 
@@ -48,34 +47,33 @@ public class TerminalImpl implements Terminal {
 
     @Override
     public void setMoney() throws AccessAccoutException {
-        if (!correctPin) {
-            throw new AccessAccoutException("Вызов метода невозможен. Доступ к аккаунту не получен.");
-        } else {
+        if(validationInputSum()) {
             try {
-                int userAnswers = message.inputSum();
-                if (userAnswers % 100 == 0) {
-                    server.setBalance(server.getBalance() + userAnswers);
-                } else {
-                    message.incorrectInputValue();
-                }
+                server.setBalance(server.getBalance() + message.inputSum());
             } catch (IncorrectBalanceException e) {
                 message.incorrectBalanceValue();
             }
         }
     }
 
-    @Override
-    public void getMoney() throws AccessAccoutException {
+    private boolean validationInputSum() throws AccessAccoutException {
         if (!correctPin) {
             throw new AccessAccoutException("Вызов метода невозможен. Доступ к аккаунту не получен.");
         } else {
+            int userAnswers = message.inputSum();
+            if (userAnswers % 100 != 0) {
+                message.incorrectInputValue();
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public void getMoney() throws AccessAccoutException {
+        if(validationInputSum()) {
             try {
-                int userAnswers = message.inputSum();
-                if (userAnswers % 100 == 0) {
-                    server.setBalance(server.getBalance() - userAnswers);
-                } else {
-                    message.incorrectInputValue();
-                }
+                server.setBalance(server.getBalance() - message.inputSum());
             } catch (IncorrectBalanceException e) {
                 message.incorrectBalanceValue();
             }
@@ -111,5 +109,6 @@ class IncorrectPinCode extends Exception {
     public IncorrectPinCode(String message) {
         super(message);
     }
+
 }
 

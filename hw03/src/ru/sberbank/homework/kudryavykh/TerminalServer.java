@@ -38,4 +38,9 @@ class InvalidCardNumber extends Exception {
     public InvalidCardNumber(String message) {
         super(message);
     }
+
+    public void printMessage() {
+        new MessageTerminal().invalidCardNumber();
+        System.exit(1);
+    }
 }
