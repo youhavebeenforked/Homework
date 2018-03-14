@@ -9,13 +9,13 @@ public class TerminalImpl implements Terminal {
     private final int PIN_LENGTH = 4;
 
     public TerminalImpl(long cardNumber) {
+        this.message = new MessageTerminal();
         try {
             this.server = new TerminalServer(cardNumber);
         } catch (InvalidCardNumber ex) {
             message.invalidCardNumber();
             System.exit(1);
         }
-        this.message = new MessageTerminal();
     }
 
     // Проверка только лишь на количество символов.
@@ -48,27 +48,13 @@ public class TerminalImpl implements Terminal {
 
     @Override
     public void setMoney() throws AccessAccoutException {
-        money(true);
-    }
-
-    /**
-     *
-     * @param operation указывает, какая осуществляется операция. True - пополнение, false - снятие
-     * @throws AccessAccoutException
-     */
-
-    public void money(boolean operation) throws AccessAccoutException {
         if (!correctPin) {
             throw new AccessAccoutException("Вызов метода невозможен. Доступ к аккаунту не получен.");
         } else {
             try {
                 int userAnswers = message.inputSum();
                 if (userAnswers % 100 == 0) {
-                    if(operation) {
-                        server.setBalance(server.getBalance() + userAnswers);
-                    } else {
-                        server.setBalance(server.getBalance() - userAnswers);
-                    }
+                    server.setBalance(server.getBalance() + userAnswers);
                 } else {
                     message.incorrectInputValue();
                 }
@@ -80,7 +66,20 @@ public class TerminalImpl implements Terminal {
 
     @Override
     public void getMoney() throws AccessAccoutException {
-        money(false);
+        if (!correctPin) {
+            throw new AccessAccoutException("Вызов метода невозможен. Доступ к аккаунту не получен.");
+        } else {
+            try {
+                int userAnswers = message.inputSum();
+                if (userAnswers % 100 == 0) {
+                    server.setBalance(server.getBalance() - userAnswers);
+                } else {
+                    message.incorrectInputValue();
+                }
+            } catch (IncorrectBalanceException e) {
+                message.incorrectBalanceValue();
+            }
+        }
     }
 
     @Override

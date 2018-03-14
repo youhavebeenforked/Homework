@@ -19,7 +19,7 @@ public class Main {
         }
 
         boolean exit = false;
-        while(true) {
+        while (true) {
             if (exit) {
                 break;
             }
