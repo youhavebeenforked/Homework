@@ -75,29 +75,29 @@ public class ScalableThreadPoolTest {
     }
 
 
-    @Test
-    public void test() {
-        Runnable r = () -> {
-            count.getAndIncrement();
-        };
-        for (int i = 0; i < 10; i++) {
-            threadPool.execute(r);
-        }
-        threadPool.start();
-        sleep(5000);
-
-        for (int i = 0; i < 1000; i++) {
-            threadPool.execute(r);
-        }
-        sleep(10000);
-
-        long start = System.currentTimeMillis();
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        long end = System.currentTimeMillis();
-        System.out.println(end - start);
-    }
+//    @Test
+//    public void test() {
+//        Runnable r = () -> {
+//            count.getAndIncrement();
+//        };
+//        for (int i = 0; i < 10; i++) {
+//            threadPool.execute(r);
+//        }
+//        threadPool.start();
+//        sleep(5000);
+//
+//        for (int i = 0; i < 1000; i++) {
+//            threadPool.execute(r);
+//        }
+//        sleep(10000);
+//
+//        long start = System.currentTimeMillis();
+//        try {
+//            Thread.sleep(1000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//        long end = System.currentTimeMillis();
+//        System.out.println(end - start);
+//    }
 }

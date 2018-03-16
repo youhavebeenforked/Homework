@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Stream;
 
 import static java.util.Objects.nonNull;
 
@@ -22,10 +23,10 @@ public class FixedThreadPool implements ThreadPool {
         this.tasks = new ConcurrentLinkedQueue<>();
         this.execute = new AtomicBoolean(false);
         this.workers = new ArrayList<>();
-        for (int threadIndex = 0; threadIndex < threadCount; threadIndex++) {
-            FixedThreadPoolThread thread = new FixedThreadPoolThread(this.tasks);
-            this.workers.add(thread);
-        }
+
+        Stream.generate(() -> new FixedThreadPoolThread(tasks))
+                .limit(threadCount)
+                .forEach(workers::add);
     }
 
     public static FixedThreadPool getInstance(int threadCount) {

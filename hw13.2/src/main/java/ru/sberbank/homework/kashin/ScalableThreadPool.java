@@ -9,6 +9,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Stream;
 
 public class ScalableThreadPool implements ThreadPool {
     private final AtomicInteger countThreads;
@@ -18,7 +19,7 @@ public class ScalableThreadPool implements ThreadPool {
     private final ConcurrentLinkedQueue<Runnable> tasks;
     private final AtomicBoolean execute;
     private final AtomicInteger countActiveWorkers = new AtomicInteger(0);
-    private final List<ScalableThreadPool.ScalableThreadPoolThread> workers;
+    private final List<ScalableThreadPoolThread> workers;
 
     private ScalableThreadPool(int minSize, int maxSize) {
         this.minSize = minSize;
@@ -28,10 +29,10 @@ public class ScalableThreadPool implements ThreadPool {
         execute = new AtomicBoolean(false);
         workers = new ArrayList<>();
         maximumTimeOfThreadInactivity = 2000;
-        for (int threadIndex = 0; threadIndex < minSize; threadIndex++) {
-            ScalableThreadPool.ScalableThreadPoolThread thread = new ScalableThreadPool.ScalableThreadPoolThread(tasks);
-            workers.add(thread);
-        }
+
+        Stream.generate(() -> new ScalableThreadPoolThread(tasks))
+                .limit(minSize)
+                .forEach(workers::add);
     }
 
     public static ScalableThreadPool getInstance(int minSize, int maxSize) {
