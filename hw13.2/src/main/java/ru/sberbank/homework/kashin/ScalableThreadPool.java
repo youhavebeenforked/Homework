@@ -11,25 +11,26 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class ScalableThreadPool implements ThreadPool {
-    private AtomicInteger countThreads;
-    private int minSize;
-    private int maxSize;
-    private ConcurrentLinkedQueue<Runnable> tasks;
-    private AtomicBoolean execute;
-    private AtomicInteger countActiveWorkers = new AtomicInteger(0);
-    private List<ScalableThreadPool.ScalableThreadPoolThread> workers;
+    private final AtomicInteger countThreads;
+    private final long maximumTimeOfThreadInactivity;    // миллисекунды, время неактивности потока через которое он убивается
+    private final Integer minSize;
+    private final Integer maxSize;
+    private final ConcurrentLinkedQueue<Runnable> tasks;
+    private final AtomicBoolean execute;
+    private final AtomicInteger countActiveWorkers = new AtomicInteger(0);
+    private final List<ScalableThreadPool.ScalableThreadPoolThread> workers;
 
     private ScalableThreadPool(int minSize, int maxSize) {
-        countThreads = new AtomicInteger(0);
         this.minSize = minSize;
         this.maxSize = maxSize;
-        this.tasks = new ConcurrentLinkedQueue<>();
-        this.execute = new AtomicBoolean(false);
-        this.workers = new ArrayList<>();
+        countThreads = new AtomicInteger(0);
+        tasks = new ConcurrentLinkedQueue<>();
+        execute = new AtomicBoolean(false);
+        workers = new ArrayList<>();
+        maximumTimeOfThreadInactivity = 2000;
         for (int threadIndex = 0; threadIndex < minSize; threadIndex++) {
-            ScalableThreadPool.ScalableThreadPoolThread thread = new ScalableThreadPool.ScalableThreadPoolThread(this.tasks);
-            this.workers.add(thread);
-            System.out.println("I`m new thread " + countThreads.incrementAndGet());
+            ScalableThreadPool.ScalableThreadPoolThread thread = new ScalableThreadPool.ScalableThreadPoolThread(tasks);
+            workers.add(thread);
         }
     }
 
@@ -54,12 +55,10 @@ public class ScalableThreadPool implements ThreadPool {
     }
 
     private class ScalableThreadPoolThread extends Thread {
-        private AtomicBoolean active;
-//        private long
-        private ConcurrentLinkedQueue<Runnable> tasksInPool;
+        private long timeVacation = System.currentTimeMillis();
+        private final ConcurrentLinkedQueue<Runnable> tasksInPool;
 
         ScalableThreadPoolThread(ConcurrentLinkedQueue<Runnable> tasks) {
-            this.active = new AtomicBoolean(false);
             this.tasksInPool = tasks;
         }
 
@@ -67,11 +66,12 @@ public class ScalableThreadPool implements ThreadPool {
         public void run() {
             try {
                 while (execute.get() || !tasksInPool.isEmpty()) {
+                    if (checkVacantWorkersAndTaskSizeAndKillWorkers()) break;
                     Runnable runnable;
-                    while ((runnable =  tasksInPool.poll()) != null) {
+                    while ((runnable = tasksInPool.poll()) != null) {
                         executeTask(runnable);
                     }
-                    TimeUnit.MILLISECONDS.sleep(1);
+                    TimeUnit.MILLISECONDS.sleep(10);
                 }
             } catch (RuntimeException | InterruptedException e) {
                 throw new ThreadPoolException(e.getCause());
@@ -84,27 +84,37 @@ public class ScalableThreadPool implements ThreadPool {
             checkVacantWorkersAndTaskSizeAndAddWorkers(vacantWorkers, taskSize);
             try {
                 countActiveWorkers.incrementAndGet();
-                active.set(true);
                 runnable.run();
             } finally {
-                active.set(false);
                 countActiveWorkers.decrementAndGet();
+                timeVacation = System.currentTimeMillis();
             }
         }
 
         private void checkVacantWorkersAndTaskSizeAndAddWorkers(int vacantWorkers, int taskSize) {
-            System.out.println(">>>       " + (taskSize - vacantWorkers));
             if (taskSize > vacantWorkers && countThreads.get() < maxSize) {
                 int countNewWorkers = taskSize - vacantWorkers;
-                for(int i = countNewWorkers; i >= 0; i--) {
-                    if (!(countThreads.get() < maxSize)) {
+                for (int i = countNewWorkers; i >= 0; i--) {
+                    if (countThreads.get() >= maxSize) {
                         break;
                     }
                     ScalableThreadPoolThread newThread = new ScalableThreadPoolThread(new ConcurrentLinkedQueue<>());
                     workers.add(newThread);
                     newThread.start();
-                    System.out.println("I`m new thread " + countThreads.incrementAndGet());
                 }
+            }
+        }
+
+        private boolean checkVacantWorkersAndTaskSizeAndKillWorkers() {
+            return (System.currentTimeMillis() - timeVacation) > maximumTimeOfThreadInactivity && checkCountThreads();
+        }
+
+        private synchronized boolean checkCountThreads() {
+            if (countThreads.get() > minSize) {
+                countThreads.decrementAndGet();
+                return true;
+            } else {
+                return false;
             }
         }
     }

@@ -1,6 +1,5 @@
 package ru.sberbank.homework.kashin;
 
-import org.junit.Assert;
 import org.junit.Test;
 import ru.sberbank.homework.kashin.exception.ThreadPoolException;
 
@@ -91,5 +90,14 @@ public class ScalableThreadPoolTest {
             threadPool.execute(r);
         }
         sleep(10000);
+
+        long start = System.currentTimeMillis();
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        long end = System.currentTimeMillis();
+        System.out.println(end - start);
     }
 }
