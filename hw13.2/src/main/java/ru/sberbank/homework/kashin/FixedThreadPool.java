@@ -15,22 +15,18 @@ import static java.util.Objects.nonNull;
 
 public class FixedThreadPool implements ThreadPool {
 
-    private ConcurrentLinkedQueue<Runnable> tasks;
-    private AtomicBoolean execute;
-    private List<FixedThreadPoolThread> workers;
+    private final ConcurrentLinkedQueue<Runnable> tasks;
+    private final AtomicBoolean execute;
+    private final List<FixedThreadPoolThread> workers;
 
-    private FixedThreadPool(int threadCount) {
-        this.tasks = new ConcurrentLinkedQueue<>();
-        this.execute = new AtomicBoolean(false);
-        this.workers = new ArrayList<>();
+    public FixedThreadPool(int threadCount) {
+        tasks = new ConcurrentLinkedQueue<>();
+        execute = new AtomicBoolean(false);
+        workers = new ArrayList<>();
 
         Stream.generate(() -> new FixedThreadPoolThread(tasks))
                 .limit(threadCount)
                 .forEach(workers::add);
-    }
-
-    public static FixedThreadPool getInstance(int threadCount) {
-        return new FixedThreadPool(threadCount);
     }
 
     @Override
@@ -50,10 +46,10 @@ public class FixedThreadPool implements ThreadPool {
     }
 
     private class FixedThreadPoolThread extends Thread {
-        private ConcurrentLinkedQueue<Runnable> tasksInPool;
+        private final ConcurrentLinkedQueue<Runnable> tasksInPool;
 
-        FixedThreadPoolThread(ConcurrentLinkedQueue<Runnable> tasks) {
-            this.tasksInPool = tasks;
+        private FixedThreadPoolThread(ConcurrentLinkedQueue<Runnable> tasks) {
+            tasksInPool = tasks;
         }
 
         @Override

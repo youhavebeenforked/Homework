@@ -21,7 +21,7 @@ public class ScalableThreadPool implements ThreadPool {
     private final AtomicInteger countActiveWorkers = new AtomicInteger(0);
     private final List<ScalableThreadPoolThread> workers;
 
-    private ScalableThreadPool(int minSize, int maxSize) {
+    public ScalableThreadPool(int minSize, int maxSize) {
         this.minSize = minSize;
         this.maxSize = maxSize;
         countThreads = new AtomicInteger(0);
@@ -33,10 +33,6 @@ public class ScalableThreadPool implements ThreadPool {
         Stream.generate(() -> new ScalableThreadPoolThread(tasks))
                 .limit(minSize)
                 .forEach(workers::add);
-    }
-
-    public static ScalableThreadPool getInstance(int minSize, int maxSize) {
-        return new ScalableThreadPool(minSize, maxSize);
     }
 
     @Override
@@ -59,8 +55,8 @@ public class ScalableThreadPool implements ThreadPool {
         private long timeVacation = System.currentTimeMillis();
         private final ConcurrentLinkedQueue<Runnable> tasksInPool;
 
-        ScalableThreadPoolThread(ConcurrentLinkedQueue<Runnable> tasks) {
-            this.tasksInPool = tasks;
+        private ScalableThreadPoolThread(ConcurrentLinkedQueue<Runnable> tasks) {
+            tasksInPool = tasks;
         }
 
         @Override

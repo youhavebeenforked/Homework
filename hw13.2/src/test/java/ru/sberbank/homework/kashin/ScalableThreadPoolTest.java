@@ -10,7 +10,7 @@ import static org.junit.Assert.*;
 
 public class ScalableThreadPoolTest {
     private final int runnableCount = 10;
-    private final ScalableThreadPool threadPool = ScalableThreadPool.getInstance(1, 50);
+    private final ScalableThreadPool threadPool = new  ScalableThreadPool(1, 50);
     private final AtomicInteger count = new AtomicInteger(0);
 
     @Test
