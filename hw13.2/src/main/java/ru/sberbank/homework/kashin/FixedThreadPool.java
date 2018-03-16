@@ -9,6 +9,8 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import static java.util.Objects.nonNull;
+
 
 public class FixedThreadPool implements ThreadPool {
 
@@ -21,7 +23,7 @@ public class FixedThreadPool implements ThreadPool {
         this.execute = new AtomicBoolean(false);
         this.workers = new ArrayList<>();
         for (int threadIndex = 0; threadIndex < threadCount; threadIndex++) {
-            FixedThreadPoolThread thread = new FixedThreadPoolThread(this.execute, this.tasks);
+            FixedThreadPoolThread thread = new FixedThreadPoolThread(this.tasks);
             this.workers.add(thread);
         }
     }
@@ -47,11 +49,9 @@ public class FixedThreadPool implements ThreadPool {
     }
 
     private class FixedThreadPoolThread extends Thread {
-        private AtomicBoolean execute;
         private ConcurrentLinkedQueue<Runnable> tasksInPool;
 
-        FixedThreadPoolThread(AtomicBoolean execute, ConcurrentLinkedQueue<Runnable> tasks) {
-            this.execute = execute;
+        FixedThreadPoolThread(ConcurrentLinkedQueue<Runnable> tasks) {
             this.tasksInPool = tasks;
         }
 
@@ -60,7 +60,7 @@ public class FixedThreadPool implements ThreadPool {
             try {
                 while (execute.get() || !tasksInPool.isEmpty()) {
                     Runnable runnable;
-                    while ((runnable = tasksInPool.poll()) != null) {
+                    while (nonNull(runnable = tasksInPool.poll())) {
                         runnable.run();
                     }
                     TimeUnit.MILLISECONDS.sleep(1);

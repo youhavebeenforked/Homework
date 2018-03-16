@@ -7,9 +7,11 @@ import ru.sberbank.homework.kashin.exception.ThreadPoolException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class FixedThreadPoolTest {
-    private final int runnableCount = Runtime.getRuntime().availableProcessors();
-    private final FixedThreadPool threadPool = FixedThreadPool.getInstance(runnableCount);
+import static org.junit.Assert.*;
+
+public class ScalableThreadPoolTest {
+    private final int runnableCount = 10;
+    private final ScalableThreadPool threadPool = ScalableThreadPool.getInstance(1, 50);
     private final AtomicInteger count = new AtomicInteger(0);
 
     @Test
@@ -18,7 +20,7 @@ public class FixedThreadPoolTest {
         threadPool.execute(r);
         threadPool.start();
         sleep(100);
-        Assert.assertEquals("Вызовом метода start() FixedThreadPool должен начать работу", 1, count.get());
+        assertEquals("Вызовом метода start() FixedThreadPool должен начать работу", 1, count.get());
     }
 
     @Test
@@ -26,7 +28,7 @@ public class FixedThreadPoolTest {
         Runnable r = count::getAndIncrement;
         threadPool.execute(r);
         sleep(100);
-        Assert.assertEquals("Без вызова метода start() FixedThreadPool не должен начать работу", 0, count.get());
+        assertEquals("Без вызова метода start() FixedThreadPool не должен начать работу", 0, count.get());
     }
 
     @Test
@@ -35,23 +37,22 @@ public class FixedThreadPoolTest {
         threadPool.execute(r);
         threadPool.start();
         sleep(100);
-        Assert.assertEquals("Задача добавленная в FixedThreadPool должна инкрементировать count", 1, count.get());
+        assertEquals("Задача добавленная в FixedThreadPool должна инкрементировать count", 1, count.get());
     }
 
     @Test
     public void testTerminateWithoutExecutingPendingTask() {
-        FixedThreadPool threadPoolWithHalfRunnableCount = FixedThreadPool.getInstance(runnableCount / 2);
         Runnable r = () -> {
             count.getAndIncrement();
             sleep(300);
         };
         for (int i = 0; i < runnableCount; i++) {
-            threadPoolWithHalfRunnableCount.execute(r);
+            threadPool.execute(r);
         }
-        threadPoolWithHalfRunnableCount.start();
+        threadPool.start();
         sleep(100);
-        threadPoolWithHalfRunnableCount.terminate();
-        Assert.assertFalse("ThreadPool должен завершаться без ожидания невыполненых заданий", runnableCount == count.get());
+        threadPool.terminate();
+        assertFalse("ThreadPool должен завершаться без ожидания невыполненых заданий", runnableCount == count.get());
     }
 
     @Test
@@ -61,9 +62,9 @@ public class FixedThreadPoolTest {
             threadPool.execute(r);
         }
         threadPool.start();
-
+        sleep(100);
         threadPool.terminate();
-        Assert.assertTrue("ThreadPool должен выполнить все задания после вызова terminate()", runnableCount == count.get());
+        assertTrue("ThreadPool должен выполнить все задания после вызова terminate()", runnableCount == count.get());
     }
 
     private void sleep(long milliseconds) {
@@ -72,5 +73,23 @@ public class FixedThreadPoolTest {
         } catch (Exception e) {
             throw new ThreadPoolException(e.getCause());
         }
+    }
+
+
+    @Test
+    public void test() {
+        Runnable r = () -> {
+            count.getAndIncrement();
+        };
+        for (int i = 0; i < 10; i++) {
+            threadPool.execute(r);
+        }
+        threadPool.start();
+        sleep(5000);
+
+        for (int i = 0; i < 1000; i++) {
+            threadPool.execute(r);
+        }
+        sleep(10000);
     }
 }
