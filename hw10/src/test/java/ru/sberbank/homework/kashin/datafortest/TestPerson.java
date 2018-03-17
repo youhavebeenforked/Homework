@@ -2,6 +2,7 @@ package ru.sberbank.homework.kashin.datafortest;
 
 
 import ru.sberbank.homework.kashin.task_03.annotations.Cache;
+import ru.sberbank.homework.kashin.task_03.storage.TypeStorage;
 
 import java.util.Objects;
 
@@ -23,7 +24,7 @@ public class TestPerson implements Person {
         return i * id * name.hashCode();
     }
 
-    @Cache(typeStorage = true, name = "qwerty")
+    @Cache(typeStorage = TypeStorage.FS, name = "qwerty")
     @Override
     public int doItInFile(int i) {
         counter.count(i);

@@ -4,6 +4,7 @@ import ru.sberbank.homework.kashin.task_03.annotations.Cache;
 import ru.sberbank.homework.kashin.task_03.storage.FileStorage;
 import ru.sberbank.homework.kashin.task_03.storage.InMemoryStorage;
 import ru.sberbank.homework.kashin.task_03.storage.Storage;
+import ru.sberbank.homework.kashin.task_03.storage.TypeStorage;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -24,7 +25,7 @@ public class DynamicProxy {
             Method method = code.getClass().getDeclaredMethod(interfaceMethod.getName(), interfaceMethod.getParameterTypes());
             Cache annotationCache = method.getAnnotation(Cache.class);
             if (annotationCache != null) {
-                if (annotationCache.typeStorage()) {
+                if (annotationCache.typeStorage() == TypeStorage.FS) {
                     storage = new FileStorage(root);
                 } else {
                     storage = new InMemoryStorage();

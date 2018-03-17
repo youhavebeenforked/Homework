@@ -1,5 +1,7 @@
 package ru.sberbank.homework.kashin.task_03.annotations;
 
+import ru.sberbank.homework.kashin.task_03.storage.TypeStorage;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -14,10 +16,10 @@ import java.lang.annotation.Target;
 public @interface Cache {
     /**
      * Параметр для указания где будет храниться кэш метода.
-     * true - файловая система. false - в памяти JVM. По умолчанию значение false.
+     * TypeStorage.FS - файловая система. TypeStorage.JVM - в памяти JVM. По умолчанию значение TypeStorage.JVM.
      * @return значение для проверки где хранить кэш метода.
      */
-    boolean typeStorage() default false;
+    TypeStorage typeStorage() default TypeStorage.JVM;
 
     /**
      * Параметр для указания имени файла при хранении в файловой системе.
