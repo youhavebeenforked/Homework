@@ -13,8 +13,8 @@ public final class MethodAndArgs {
 
     public MethodAndArgs(final Method method, final Object[] args) {
         this.method = method;
-        methodArgs = args;
-        methodHash = calcHash();
+        methodArgs = new Object[]{args};
+        methodHash = new Integer(calcHash());
     }
 
     @Override
@@ -35,7 +35,7 @@ public final class MethodAndArgs {
 
     @Override
     public int hashCode() {
-        return methodHash;
+        return new Integer(methodHash);
     }
 
     private int calcHash() {
