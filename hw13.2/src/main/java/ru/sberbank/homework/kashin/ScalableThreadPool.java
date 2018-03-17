@@ -34,7 +34,7 @@ public class ScalableThreadPool implements ThreadPool {
                 .limit(minSize)
                 .forEach(e -> {
                     workers.add(e);
-                    System.out.println("I`m new Thread " + countThreads.getAndIncrement() + " from constructor");
+                    countThreads.getAndIncrement();
                 });
     }
 
@@ -69,7 +69,7 @@ public class ScalableThreadPool implements ThreadPool {
                     if ((System.currentTimeMillis() - timeVacation) > maximumTimeOfThreadInactivity) {
                         synchronized (countThreads) {
                             if ((System.currentTimeMillis() - timeVacation) > maximumTimeOfThreadInactivity && checkCountThreads())  {
-                                System.out.println("KILL Thread " + countThreads.getAndDecrement());
+                                countThreads.getAndDecrement();
                                 break;
                             }
                         }
@@ -108,16 +108,12 @@ public class ScalableThreadPool implements ThreadPool {
                         } else {
                             ScalableThreadPoolThread newThread = new ScalableThreadPoolThread(tasks);
                             workers.add(newThread);
+                            countThreads.getAndIncrement();
                             newThread.start();
-                            System.out.println("I`m new Thread " + countThreads.getAndIncrement());
                         }
                     }
                 }
             }
-        }
-
-        private boolean checkVacantWorkersAndTaskSizeAndKillWorkers() {
-            return (System.currentTimeMillis() - timeVacation) > maximumTimeOfThreadInactivity && checkCountThreads();
         }
 
         private synchronized boolean checkCountThreads() {
