@@ -16,7 +16,6 @@ import ru.sberbank.homework.kashin.task_03.proxy.DynamicProxy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-@RunWith(MockitoJUnitRunner.class)
 public class CacheProxyTest {
     private DynamicProxy proxy = new DynamicProxy(DataForTestInFile.ROOT);
 
@@ -67,6 +66,18 @@ public class CacheProxyTest {
         proxyPerson.doItInMemory(10);
         proxyPerson.doItInMemory(20);
         proxyPerson.doItInMemory(10);
+
+        verify(counter, times(1)).count(10);
+        verify(counter, times(1)).count(20);
+    }
+
+    @Test
+    public void inMemoryCacheAndEqualsWithoutFieldName() {
+        proxyPerson.doItInMemoryAndEqualsWithoutSecondArgument(10, 10);
+        proxyPerson.doItInMemoryAndEqualsWithoutSecondArgument(20, 20);
+        proxyPerson.doItInMemoryAndEqualsWithoutSecondArgument(10, 100);
+        proxyPerson.doItInMemoryAndEqualsWithoutSecondArgument(20, 200);
+        proxyPerson.doItInMemoryAndEqualsWithoutSecondArgument(10, 1000);
 
         verify(counter, times(1)).count(10);
         verify(counter, times(1)).count(20);

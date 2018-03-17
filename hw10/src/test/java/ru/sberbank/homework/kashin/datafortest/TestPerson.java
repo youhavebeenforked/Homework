@@ -19,7 +19,7 @@ public class TestPerson implements Person {
         this.name = name;
     }
 
-    public int doItWithoutCache(int i){
+    public int doItWithoutCache(int i) {
         counter.count(i);
         return i * id * name.hashCode();
     }
@@ -36,6 +36,13 @@ public class TestPerson implements Person {
     public int doItInMemory(int i) {
         counter.count(i);
         return i * id * name.hashCode();
+    }
+
+    @Cache(excludedFields = {"1"})
+    @Override
+    public int doItInMemoryAndEqualsWithoutSecondArgument(int i, int j) {
+        counter.count(i);
+        return i * j * id * name.hashCode();
     }
 
     @Override

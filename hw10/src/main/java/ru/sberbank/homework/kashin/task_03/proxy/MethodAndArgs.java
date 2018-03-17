@@ -3,6 +3,8 @@ package ru.sberbank.homework.kashin.task_03.proxy;
 import ru.sberbank.homework.kashin.task_03.annotations.Cache;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.List;
 
 public final class MethodAndArgs {
     private final Method method;
@@ -13,7 +15,7 @@ public final class MethodAndArgs {
 
     public MethodAndArgs(final Method method, final Object[] args) {
         this.method = method;
-        methodArgs = new Object[]{args};
+        methodArgs = Arrays.copyOf(args, args.length);
         methodHash = new Integer(calcHash());
     }
 
@@ -35,7 +37,7 @@ public final class MethodAndArgs {
 
     @Override
     public int hashCode() {
-        return new Integer(methodHash);
+        return methodHash;
     }
 
     private int calcHash() {

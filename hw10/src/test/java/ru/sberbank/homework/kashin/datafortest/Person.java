@@ -7,4 +7,6 @@ public interface Person {
     int doItInFile(int i);
 
     int doItInMemory(int i);
+
+    int doItInMemoryAndEqualsWithoutSecondArgument(int i, int j);
 }
