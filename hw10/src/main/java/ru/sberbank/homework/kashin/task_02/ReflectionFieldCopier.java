@@ -5,6 +5,7 @@ import ru.sberbank.homework.common.BeanFieldCopier;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
+import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -57,7 +58,13 @@ public class ReflectionFieldCopier implements BeanFieldCopier {
         Method methodSetter = setters.get(setterName);
         if (methodSetter != null) {
             try {
-                methodSetter.invoke(to ,getter.getValue());
+                Class setterParameter = methodSetter.getParameterTypes()[0];
+                if (setterParameter.isPrimitive()) {
+                    setterParameter = Array.get(Array.newInstance(setterParameter,1),0).getClass();
+                }
+                if (setterParameter.isInstance(getter.getValue())) {
+                    methodSetter.invoke(to, getter.getValue());
+                }
             } catch (IllegalAccessException | InvocationTargetException e) {
                 e.printStackTrace();
             }
