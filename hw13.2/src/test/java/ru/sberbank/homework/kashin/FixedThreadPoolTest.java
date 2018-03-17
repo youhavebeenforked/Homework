@@ -9,7 +9,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class FixedThreadPoolTest {
     private final int runnableCount = Runtime.getRuntime().availableProcessors();
-    private final FixedThreadPool threadPool = new  FixedThreadPool(runnableCount);
+    private final FixedThreadPool threadPool = new FixedThreadPool(runnableCount);
     private final AtomicInteger count = new AtomicInteger(0);
 
     @Test
@@ -40,7 +40,7 @@ public class FixedThreadPoolTest {
 
     @Test
     public void testTerminateWithoutExecutingPendingTask() {
-        FixedThreadPool threadPoolWithHalfRunnableCount = new  FixedThreadPool(runnableCount / 2);
+        FixedThreadPool threadPoolWithHalfRunnableCount = new FixedThreadPool(runnableCount / 2);
         Runnable r = () -> {
             count.getAndIncrement();
             sleep(300);
