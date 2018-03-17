@@ -10,11 +10,12 @@ import static org.junit.Assert.*;
 
 public class ScalableThreadPoolTest {
     private final int runnableCount = 10;
-    private final ScalableThreadPool threadPool = new  ScalableThreadPool(1, 50);
     private final AtomicInteger count = new AtomicInteger(0);
+    private final int numberOfProcessors = Runtime.getRuntime().availableProcessors();
 
     @Test
     public void startSuccessfully() {
+        ScalableThreadPool threadPool = new  ScalableThreadPool(1, numberOfProcessors);
         Runnable r = count::getAndIncrement;
         threadPool.execute(r);
         threadPool.start();
@@ -24,6 +25,7 @@ public class ScalableThreadPoolTest {
 
     @Test
     public void startUnsuccessfully() {
+        ScalableThreadPool threadPool = new  ScalableThreadPool(1, numberOfProcessors);
         Runnable r = count::getAndIncrement;
         threadPool.execute(r);
         sleep(100);
@@ -32,6 +34,7 @@ public class ScalableThreadPoolTest {
 
     @Test
     public void execute() {
+        ScalableThreadPool threadPool = new  ScalableThreadPool(1, numberOfProcessors);
         Runnable r = count::getAndIncrement;
         threadPool.execute(r);
         threadPool.start();
@@ -41,6 +44,7 @@ public class ScalableThreadPoolTest {
 
     @Test
     public void testTerminateWithoutExecutingPendingTask() {
+        ScalableThreadPool threadPool = new  ScalableThreadPool(1, 1);
         Runnable r = () -> {
             count.getAndIncrement();
             sleep(300);
@@ -56,6 +60,7 @@ public class ScalableThreadPoolTest {
 
     @Test
     public void testTerminateExecutingAllTask() {
+        ScalableThreadPool threadPool = new  ScalableThreadPool(1, numberOfProcessors);
         Runnable r = count::getAndIncrement;
         for (int i = 0; i < runnableCount; i++) {
             threadPool.execute(r);
@@ -64,6 +69,39 @@ public class ScalableThreadPoolTest {
         sleep(100);
         threadPool.terminate();
         assertTrue("ThreadPool должен выполнить все задания после вызова terminate()", runnableCount == count.get());
+    }
+
+    @Test
+    public void testWithMaximumOneThread() {
+        ScalableThreadPool threadPool = new  ScalableThreadPool(1, 1);
+        Runnable r = () -> {
+            count.getAndIncrement();
+            sleep(100);
+        };
+        for (int i = 0; i < runnableCount; i++) {
+            threadPool.execute(r);
+        }
+        threadPool.start();
+        sleep(300);
+        threadPool.terminate();
+        assertFalse("ThreadPool должен завершаться без ожидания невыполненых заданий", runnableCount == count.get());
+    }
+
+    @Test
+    public void testWithMaximumNumberOfProcessorsThread() {
+        ScalableThreadPool threadPool = new  ScalableThreadPool(2, runnableCount);
+        Runnable r = () -> {
+            count.getAndIncrement();
+            System.out.println(Thread.currentThread().getName());
+            sleep(100);
+        };
+        for (int i = 0; i < runnableCount; i++) {
+            threadPool.execute(r);
+        }
+        threadPool.start();
+        sleep(300);
+        threadPool.terminate();
+        assertTrue("ThreadPool должен успеть выполнить все задания до завершения", runnableCount == count.get());
     }
 
     private void sleep(long milliseconds) {

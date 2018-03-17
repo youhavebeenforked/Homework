@@ -24,7 +24,7 @@ public class ScalableThreadPool implements ThreadPool {
     public ScalableThreadPool(int minSize, int maxSize) {
         this.minSize = minSize;
         this.maxSize = maxSize;
-        countThreads = new AtomicInteger(0);
+        countThreads = new AtomicInteger();
         tasks = new ConcurrentLinkedQueue<>();
         execute = new AtomicBoolean(false);
         workers = new ArrayList<>();
@@ -32,7 +32,10 @@ public class ScalableThreadPool implements ThreadPool {
 
         Stream.generate(() -> new ScalableThreadPoolThread(tasks))
                 .limit(minSize)
-                .forEach(workers::add);
+                .forEach(e -> {
+                    workers.add(e);
+                    System.out.println("I`m new Thread " + countThreads.getAndIncrement() + " from constructor");
+                });
     }
 
     @Override
@@ -63,7 +66,14 @@ public class ScalableThreadPool implements ThreadPool {
         public void run() {
             try {
                 while (execute.get() || !tasksInPool.isEmpty()) {
-                    if (checkVacantWorkersAndTaskSizeAndKillWorkers()) break;
+                    if ((System.currentTimeMillis() - timeVacation) > maximumTimeOfThreadInactivity) {
+                        synchronized (countThreads) {
+                            if ((System.currentTimeMillis() - timeVacation) > maximumTimeOfThreadInactivity && checkCountThreads())  {
+                                System.out.println("KILL Thread " + countThreads.getAndDecrement());
+                                break;
+                            }
+                        }
+                    }
                     Runnable runnable;
                     while ((runnable = tasksInPool.poll()) != null) {
                         executeTask(runnable);
@@ -92,12 +102,16 @@ public class ScalableThreadPool implements ThreadPool {
             if (taskSize > vacantWorkers && countThreads.get() < maxSize) {
                 int countNewWorkers = taskSize - vacantWorkers;
                 for (int i = countNewWorkers; i >= 0; i--) {
-                    if (countThreads.get() >= maxSize) {
-                        break;
+                    synchronized (countThreads) {
+                        if (countThreads.get() >= maxSize) {
+                            break;
+                        } else {
+                            ScalableThreadPoolThread newThread = new ScalableThreadPoolThread(tasks);
+                            workers.add(newThread);
+                            newThread.start();
+                            System.out.println("I`m new Thread " + countThreads.getAndIncrement());
+                        }
                     }
-                    ScalableThreadPoolThread newThread = new ScalableThreadPoolThread(new ConcurrentLinkedQueue<>());
-                    workers.add(newThread);
-                    newThread.start();
                 }
             }
         }

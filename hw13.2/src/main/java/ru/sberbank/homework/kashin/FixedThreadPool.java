@@ -60,7 +60,7 @@ public class FixedThreadPool implements ThreadPool {
                     while (nonNull(runnable = tasksInPool.poll())) {
                         runnable.run();
                     }
-                    TimeUnit.MILLISECONDS.sleep(1);
+                    TimeUnit.MILLISECONDS.sleep(10);
                 }
             } catch (RuntimeException | InterruptedException e) {
                 throw new ThreadPoolException(e.getCause());
