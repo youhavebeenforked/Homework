@@ -1,4 +1,4 @@
-package ru.sberbank.homework.bobrov.serialization;
+package ru.sberbank.homework.bobrov.serialization.serial;
 
 import ru.sberbank.homework.common.City;
 import ru.sberbank.homework.common.Route;

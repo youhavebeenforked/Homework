@@ -1,4 +1,5 @@
-package ru.sberbank.homework.bobrov.serialization;
+package ru.sberbank.homework.bobrov.serialization.external;
+
 
 import ru.sberbank.homework.common.CachePathProvider;
 import ru.sberbank.homework.common.City;
@@ -15,30 +16,36 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
-public class SerializeRouteService extends RouteService<City, Route<City>> {
+/**
+ * TODO: comment
+ *
+ * @author Dmitriy Bobrov (bobrov.dmitriy@gmail.com)
+ * @since 12.03.2018
+ */
 
 
-    public SerializeRouteService(CachePathProvider pathProvider) {
+public class ExternalizeRouteService extends RouteService<City, Route<City>> {
+    public ExternalizeRouteService(CachePathProvider pathProvider) {
         super(pathProvider, false);
     }
 
     @Override
-    public RouteWrapperSer<City> getRoute(String from, String to) {
-        RouteWrapperSer<City> wrapper = null;
+    public Route<City> getRoute(String from, String to) {
+        RouteWrapperExt wrapper = null;
         Route<City> original = null;
-        String routeName = String.format("%s_%s%s", from, to, ".ser");
+        String routeName = String.format("%s_%s%s", from, to, ".ext");
         File file = new File(pathProvider.getCacheDirectoryPath() + File.separator + routeName);
         if (file.exists()) {
             return deserialize(file.getPath());
         } else {
             original = super.getRoute(from, to);
-            wrapper = new RouteWrapperSer(original.getCities());
+            wrapper = new RouteWrapperExt(original.getRouteName(), original.getCities());
             serialize(file.getPath(), wrapper);
             return wrapper;
         }
     }
 
-    private void serialize(String path, RouteWrapperSer<City> route) {
+    private void serialize(String path, RouteWrapperExt<CityWrapperExt> route) {
         try (FileOutputStream fos = new FileOutputStream(path);
              ObjectOutputStream ous = new ObjectOutputStream(fos)) {
             ous.writeObject(route);
@@ -47,11 +54,11 @@ public class SerializeRouteService extends RouteService<City, Route<City>> {
         }
     }
 
-    private RouteWrapperSer<City> deserialize(String path) {
-        RouteWrapperSer<City> route = null;
+    private Route<City> deserialize(String path) {
+        Route<City> route = null;
         try (FileInputStream fis = new FileInputStream(path);
              ObjectInputStream ois = new ObjectInputStream(fis)) {
-            route = (RouteWrapperSer<City>) ois.readObject();
+            route = (Route<City>) ois.readObject();
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -59,12 +66,13 @@ public class SerializeRouteService extends RouteService<City, Route<City>> {
     }
 
     @Override
-    protected City createCity(int id, String cityName, LocalDate foundDate, long numberOfInhabitants) {
-        return new City(id, cityName, foundDate, numberOfInhabitants);
+    protected CityWrapperExt createCity(int id, String cityName, LocalDate foundDate, long numberOfInhabitants) {
+        return new CityWrapperExt(id, cityName, foundDate, numberOfInhabitants);
     }
 
     @Override
-    protected Route<City> createRoute(List<City> cities) {
-        return new Route<>(UUID.randomUUID().toString(), cities);
+    protected RouteWrapperExt<City> createRoute(List<City> cities) {
+        return new RouteWrapperExt<>(UUID.randomUUID().toString(), cities);
     }
+
 }

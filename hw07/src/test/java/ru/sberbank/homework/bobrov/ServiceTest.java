@@ -1,15 +1,12 @@
 package ru.sberbank.homework.bobrov;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import ru.sberbank.homework.bobrov.serialization.ExternalizeRouteService;
-import ru.sberbank.homework.bobrov.serialization.SerializeRouteService;
+import ru.sberbank.homework.bobrov.serialization.external.ExternalizeRouteService;
 import ru.sberbank.homework.common.City;
 import ru.sberbank.homework.common.Route;
 import ru.sberbank.homework.common.RouteService;
 
-import java.io.File;
 import java.util.List;
 
 import static org.junit.Assert.assertTrue;
@@ -21,8 +18,8 @@ public class ServiceTest {
     public void pre() {
         //routeService = new KryoRouteService();
 //        routeService = new InMemoryRouteService(() -> "C:\\temp\\");
-        routeService = new SerializeRouteService(() -> "H:\\bobrov\\");
-//        routeService = new ExternalizeRouteService(() -> "H:\\bobrov\\");
+//        routeService = new SerializeRouteService(() -> "H:\\bobrov\\");
+        routeService = new ExternalizeRouteService(() -> "H:\\bobrov\\");
     }
 
     @Test
