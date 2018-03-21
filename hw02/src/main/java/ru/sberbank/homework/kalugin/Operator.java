@@ -4,20 +4,21 @@ class Operator implements Element<Operation> {
     private Operation operation;
 
     Operator (char c) {
-        if (c == '+') {
-            operation = Operation.ADD;
-        }
-        else if (c == '-') {
-            operation = Operation.SUBTRACT;
-        }
-        else if (c == '*') {
-            operation = Operation.MULTIPLY;
-        }
-        else if (c == '/') {
-            operation = Operation.DIVIDE;
-        }
-        else {
-            throw new IllegalArgumentException("Assignment of unsupported operator: " + c);
+        switch(c) {
+            case '+':
+                operation = Operation.ADD;
+                break;
+            case '-':
+                operation = Operation.SUBTRACT;
+                break;
+            case '*':
+                operation = Operation.MULTIPLY;
+                break;
+            case '/':
+                operation = Operation.DIVIDE;
+                break;
+            default:
+                throw new IllegalArgumentException("Assignment of unsupported operator: " + c);
         }
     }
 
