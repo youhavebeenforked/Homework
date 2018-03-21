@@ -1,6 +1,8 @@
 package ru.sberbank.homework.kudryavykh;
 
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
@@ -10,6 +12,7 @@ public class Main {
         //Тестовый Pin 1234
 
         Terminal terminal = new TerminalImpl(1111222233334444L);
+
 
         //Заглушка
 
