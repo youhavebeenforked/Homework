@@ -18,10 +18,6 @@ public enum Operation {
         this.function = function;
     }
 
-    public DoubleBinaryOperator getFunction() {
-        return function;
-    }
-
     public Double compute(double x1, double x2) {
         return this.function.applyAsDouble(x1, x2);
     }
