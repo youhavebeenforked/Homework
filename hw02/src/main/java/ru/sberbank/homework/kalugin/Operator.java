@@ -3,21 +3,21 @@ package ru.sberbank.homework.kalugin;
 class Operator implements Element<Operation> {
     private Operation operation;
 
-    Operator (String s) {
-        if (s.equals("+")) {
+    Operator (char c) {
+        if (c == '+') {
             operation = Operation.ADD;
         }
-        else if (s.equals("-")) {
+        else if (c == '-') {
             operation = Operation.SUBTRACT;
         }
-        else if (s.equals("*")) {
+        else if (c == '*') {
             operation = Operation.MULTIPLY;
         }
-        else if (s.equals("/")) {
+        else if (c == '/') {
             operation = Operation.DIVIDE;
         }
         else {
-            throw new IllegalArgumentException(s);
+            throw new IllegalArgumentException("Assignment of unsupported operator: " + c);
         }
     }
 

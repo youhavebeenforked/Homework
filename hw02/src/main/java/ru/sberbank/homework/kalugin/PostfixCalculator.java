@@ -34,15 +34,13 @@ public class PostfixCalculator implements Calculator {
     }
 
     private String prepareResult(Double answer) {
-        // округляем до 2-х знаков после запятой
         answer = new BigDecimal(answer).setScale(2, RoundingMode.HALF_UP).doubleValue();
-        // в случае если после округления число оканчивается только нулями после точки,
-        // уберем и их из ответа
-        if ((answer - Math.round(answer)) != 0) {
-            return String.valueOf(answer);
+
+        if ((answer - Math.round(answer)) == 0) {
+            return String.valueOf(Math.round(answer));
         }
         else {
-            return String.valueOf(Math.round(answer));
+            return String.valueOf(answer);
         }
     }
 
@@ -50,7 +48,6 @@ public class PostfixCalculator implements Calculator {
      * Проверка переданных в калькулятор данных.
      */
     private static final String OPERATION_REGEX = "^[*/+-]{1}$";
-    private static final String DECIMAL_OR_INT_REGEX = "^[+-]{0,1}\\d*\\.{0,1}\\d+$";
 
     private List<Element> validate(String input, String lastResult, ErrorMessage error) {
         if (lastResult != null
@@ -67,19 +64,19 @@ public class PostfixCalculator implements Calculator {
             return null;
         }
 
-        Boolean nextElementIsOperator = false;
+        boolean nextElementIsOperator = false;
 
-        for (String s: tokens) {
+        for (String element: tokens) {
             if (nextElementIsOperator) {
-                if (!checkOperator(s, equation)) {
+                if (!checkOperator(element, equation)) {
                     error.setMessage("error > wrong expression");
                     return null;
                 }
                 nextElementIsOperator = false;
             }
             else {
-                if (!checkNumber(s, equation)) {
-                    error.setMessage("error > " + s);
+                if (!checkNumber(element, equation)) {
+                    error.setMessage("error > " + element);
                     return null;
                 }
                 nextElementIsOperator = true;
@@ -95,7 +92,7 @@ public class PostfixCalculator implements Calculator {
 
     private boolean checkOperator(String s, List<Element> equation) {
         if (s.matches(OPERATION_REGEX)) {
-            equation.add(new Operator(s));
+            equation.add(new Operator(s.charAt(0)));
             return true;
         }
         else {
@@ -105,28 +102,20 @@ public class PostfixCalculator implements Calculator {
 
     private boolean checkNumber(String s, List<Element> equation) {
         NumberParser number = new NumberParser(s);
-        if (number.hasError()) {
+        if (!number.parse()) {
             return false;
         }
 
         try {
-            if (number.isBinary) {
-                equation.add(new EquationNumber(new BigInteger(number.getNumber(), 2).longValue()));
-            }
-            else if (number.isHexadecimal) {
-                equation.add(new EquationNumber(Long.parseLong(number.getNumber(), 16)));
-            }
-            else if (number.isOctal) {
-                equation.add(new EquationNumber(Long.parseLong(number.getNumber(),8)));
-            }
-            else if (number.isDecimalOrInt
-                    && number.getNumber().matches(DECIMAL_OR_INT_REGEX)) {
+            if (number.type == NumberType.DECIMAL) {
                 equation.add(new EquationNumber(Double.valueOf(number.getNumber())));
+            }
+            else if (number.type != null) {
+                equation.add(new EquationNumber(Long.parseLong(number.getNumber(), number.type.getRadix())));
             }
             else {
                 return false;
             }
-
         }
         catch (NumberFormatException e) {
             return false;
@@ -138,38 +127,40 @@ public class PostfixCalculator implements Calculator {
     }
 
     private class NumberParser {
-        private String number;
-
-        private boolean error;
-        private boolean minusSign;
-
-        private boolean isBinary;
-        private boolean isHexadecimal;
-        private boolean isOctal;
-        private boolean isDecimalOrInt;
+        String number;
+        boolean minusSign;
+        NumberType type;
 
         NumberParser(String s) {
             number = s;
+        }
+
+        boolean parse() {
             if (!number.isEmpty()) {
                 handleLiterals();
                 handleSign();
                 handlePrefix();
+                if(!handleUnderscore()) {
+                    return false;
+                }
+                return finalCheck();
             }
             else {
-                error = true;
+                return false;
             }
         }
 
-        private void handleLiterals() {
-            if (number.endsWith("l")
-                    || number.endsWith("L")
-                    || number.endsWith("d")
-                    || number.endsWith("D")) {
+        void handleLiterals() {
+            char endChar = number.charAt(number.length() - 1);
+            if (endChar == 'l'
+                    || endChar == 'L'
+                    || endChar == 'd'
+                    || endChar == 'D') {
                 number = number.substring(0, number.length() - 1);
             }
         }
 
-        private void handleSign() {
+        void handleSign() {
             if (number.charAt(0) == '-') {
                 minusSign = true;
                 number = number.substring(1);
@@ -179,59 +170,54 @@ public class PostfixCalculator implements Calculator {
             }
         }
 
-        private void handlePrefix() {
+        void handlePrefix() {
             if (number.length() > 1) {
-                if (number.startsWith("0x") || number.startsWith("0X")) {
-                    number = number.substring(2);
-                    if (!checkUnderscore(number)) {
-                        error = true;
-                        return;
-                    }
-                    number = number.replace("_", "");
-                    isHexadecimal = true;
-                }
-                else if (number.startsWith("0b") || number.startsWith("0B")) {
-                    number = number.substring(2);
-                    if (!checkUnderscore(number)) {
-                        error = true;
-                        return;
-                    }
-                    number = number.replace("_", "");
-                    isBinary = true;
-                }
-                else if (number.startsWith("0") && !number.startsWith("0.")) {
-                    number = number.substring(1);
-                    number = number.replace("_", "");
-                    isOctal = true;
-                }
+                if (number.charAt(0) == '0') {
+                    char prefix = number.charAt(1);
 
-            }
-            if (!isHexadecimal && !isOctal && !isBinary) {
-                if (!checkUnderscore(number)) {
-                    error = true;
-                    return;
+                    if (prefix == 'x' || prefix == 'X') {
+                        number = number.substring(2);
+                        type = NumberType.HEX;
+                    }
+                    else if (prefix == 'b' || prefix == 'B') {
+                        number = number.substring(2);
+                        type = NumberType.BINARY;
+                    }
+                    else if (prefix != '.') {
+                        number = number.substring(1);
+                        type = NumberType.OCTAL;
+                    }
                 }
-                number = number.replace("_","");
-                isDecimalOrInt = true;
             }
+
+            if (type == null) {
+                type = NumberType.DECIMAL;
+            }
+        }
+
+        boolean handleUnderscore() {
+            if (number.contains("_.")) {
+                return false;
+            }
+            if ( (number.startsWith("_") && type != NumberType.OCTAL)
+                    || number.endsWith("_")) {
+                return false;
+            }
+            number = number.replace("_", "");
+            return true;
+        }
+
+        boolean finalCheck() {
+            if (type != null) {
+                return number.matches(type.getRegEx());
+            }
+            return false;
+        }
+
+        String getNumber() {
             if (minusSign) {
                 number = "-" + number;
             }
-        }
-
-        private boolean checkUnderscore(String s) {
-            return !s.contains("_.") && checkUnderscoreAtTheBegAndTheEnd(s);
-        }
-        private boolean checkUnderscoreAtTheBegAndTheEnd(String s) {
-            return !(s.isEmpty()
-                    || (s.startsWith("_")
-                    || s.endsWith("_")) );
-        }
-
-        boolean hasError() {
-            return error;
-        }
-        String getNumber() {
             return number;
         }
     }

@@ -60,7 +60,7 @@ class PostfixParser {
                 double x1 = stack.pop();
                 double x2 = stack.pop();
                 Operation o = (Operation) e.getElement();
-                x = o.getFunction().applyAsDouble(x2, x1);
+                x = o.compute(x2, x1);
                 stack.push(x);
             }
         }
