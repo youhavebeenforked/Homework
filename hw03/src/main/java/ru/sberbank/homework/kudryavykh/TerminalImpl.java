@@ -1,9 +1,8 @@
 package ru.sberbank.homework.kudryavykh;
 
-public class TerminalImpl implements Terminal {
+public class TerminalImpl implements Terminal, Cloneable {
 
     public boolean correctPin;
-
     private MessageTerminal message;
     private TerminalServer server;
     private final int PIN_LENGTH = 4;
@@ -15,6 +14,19 @@ public class TerminalImpl implements Terminal {
         } catch (InvalidCardNumber ex) {
             ex.printMessage();
         }
+    }
+
+    public TerminalImpl(Account account) {
+        this.message = new MessageTerminal();
+        this.server = new TerminalServer(account);
+    }
+
+    public TerminalImpl(TerminalImpl terminal) {
+        this.message = terminal.message;
+        this.server = terminal.server;
+        this.correctPin = terminal.correctPin;
+
+
     }
 
     // Проверка только лишь на количество символов.
@@ -43,27 +55,6 @@ public class TerminalImpl implements Terminal {
             message.accountLocked();
         }
         return false;
-    }
-
-    public void money(boolean flag) throws AccessAccoutException {
-        if (!correctPin) {
-            throw new AccessAccoutException("Вызов метода невозможен. Доступ к аккаунту не получен.");
-        } else {
-            try {
-                int userAnswers = message.inputSum();
-                if (userAnswers % 100 == 0) {
-                    if(flag == true) {
-                        server.setBalance(server.getBalance() + userAnswers);
-                    } else {
-                        server.setBalance(server.getBalance() - userAnswers);
-                    }
-                } else {
-                    message.incorrectInputValue();
-                }
-            } catch (IncorrectBalanceException e) {
-                message.incorrectBalanceValue();
-            }
-        }
     }
 
     private boolean validationInputSum(int userAnswers) throws AccessAccoutException {
