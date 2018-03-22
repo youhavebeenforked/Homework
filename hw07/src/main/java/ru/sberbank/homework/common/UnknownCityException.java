@@ -1,7 +1,5 @@
 package ru.sberbank.homework.common;
 
 public class UnknownCityException extends RuntimeException {
-    public UnknownCityException(String name) {
-        super("Unknown city with name: " + name);
-    }
+    public UnknownCityException(String name) 
 }

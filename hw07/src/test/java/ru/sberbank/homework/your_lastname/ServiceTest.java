@@ -1,19 +1,14 @@
 package ru.sberbank.homework.your_lastname;
 
-import org.junit.Before;
-import org.junit.Test;
-import ru.sberbank.homework.common.City;
-import ru.sberbank.homework.common.Route;
-import ru.sberbank.homework.common.RouteService;
+
+import ru.sberbank.homework.karaush.serialization.InMemoryRouteService;
+
+
 import ru.sberbank.homework.your_lastname.serialization.InMemoryRouteService;
 
-import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-public class ServiceTest {
     RouteService<City, Route<City>> routeService;
+
 
     @Before
     public void pre() {
