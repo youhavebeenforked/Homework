@@ -13,6 +13,5 @@ public class RandomException {
             throw new HardwareProblemException("Hardware problems.  Please try later...");
         }
     }
-
 }
 
