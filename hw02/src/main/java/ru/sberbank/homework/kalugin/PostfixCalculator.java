@@ -18,7 +18,7 @@ public class PostfixCalculator implements Calculator {
             return null;
         }
         if (userInput.equals(QUIT_COMMAND)) {
-            return (result = null);
+            return null;
         }
 
         ErrorMessage error = new ErrorMessage();
@@ -38,8 +38,7 @@ public class PostfixCalculator implements Calculator {
 
         if ((answer - Math.round(answer)) == 0) {
             return String.valueOf(Math.round(answer));
-        }
-        else {
+        } else {
             return String.valueOf(answer);
         }
     }
@@ -59,31 +58,30 @@ public class PostfixCalculator implements Calculator {
         List<Element> equation = new ArrayList<>();
 
         String[] tokens = input.split(" ");
-        if ((tokens.length < 3) || (tokens.length % 2 == 0) ) {
+        if (tokens.length < 3 || tokens.length % 2 == 0) {
             error.setMessage("error > wrong expression");
             return null;
         }
 
-        boolean nextElementIsOperator = false;
+        boolean elementIsOperator = false;
 
         for (String element: tokens) {
-            if (nextElementIsOperator) {
+            if (elementIsOperator) {
                 if (!checkOperator(element, equation)) {
                     error.setMessage("error > wrong expression");
                     return null;
                 }
-                nextElementIsOperator = false;
-            }
-            else {
+                elementIsOperator = false;
+            } else {
                 if (!checkNumber(element, equation)) {
                     error.setMessage("error > " + element);
                     return null;
                 }
-                nextElementIsOperator = true;
+                elementIsOperator = true;
             }
         }
         // если закончили цикл проверки оператором, а не числом, ошибка в выражении
-        if (!nextElementIsOperator) {
+        if (!elementIsOperator) {
             error.setMessage("error > wrong expression");
             return null;
         }
@@ -94,8 +92,7 @@ public class PostfixCalculator implements Calculator {
         if (s.matches(OPERATION_REGEX)) {
             equation.add(new Operator(s.charAt(0)));
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
@@ -109,18 +106,14 @@ public class PostfixCalculator implements Calculator {
         try {
             if (number.type == NumberType.DECIMAL) {
                 equation.add(new EquationNumber(Double.valueOf(number.getNumber())));
-            }
-            else if (number.type != null) {
+            } else if (number.type != null) {
                 equation.add(new EquationNumber(Long.parseLong(number.getNumber(), number.type.getRadix())));
+            } else {
+                throw new NullPointerException("The type for the number provided has not been assigned " + s);
             }
-            else {
-                return false;
-            }
-        }
-        catch (NumberFormatException e) {
+        } catch (NumberFormatException e) {
             return false;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return true;
@@ -140,12 +133,11 @@ public class PostfixCalculator implements Calculator {
                 handleLiterals();
                 handleSign();
                 handlePrefix();
-                if(!handleUnderscore()) {
+                if (!handleUnderscore()) {
                     return false;
                 }
-                return finalCheck();
-            }
-            else {
+                return validateParsedNumber();
+            } else {
                 return false;
             }
         }
@@ -164,8 +156,7 @@ public class PostfixCalculator implements Calculator {
             if (number.charAt(0) == '-') {
                 minusSign = true;
                 number = number.substring(1);
-            }
-            else if (number.charAt(0) == '+') {
+            } else if (number.charAt(0) == '+') {
                 number = number.substring(1);
             }
         }
@@ -178,12 +169,10 @@ public class PostfixCalculator implements Calculator {
                     if (prefix == 'x' || prefix == 'X') {
                         number = number.substring(2);
                         type = NumberType.HEX;
-                    }
-                    else if (prefix == 'b' || prefix == 'B') {
+                    } else if (prefix == 'b' || prefix == 'B') {
                         number = number.substring(2);
                         type = NumberType.BINARY;
-                    }
-                    else if (prefix != '.') {
+                    } else if (prefix != '.') {
                         number = number.substring(1);
                         type = NumberType.OCTAL;
                     }
@@ -207,11 +196,12 @@ public class PostfixCalculator implements Calculator {
             return true;
         }
 
-        boolean finalCheck() {
-            if (type != null) {
-                return number.matches(type.getRegEx());
+        boolean validateParsedNumber() {
+            if (type == null) {
+                throw new NullPointerException("The type for the number provided has not been assigned "
+                                                + number);
             }
-            return false;
+            return number.matches(type.getRegEx());
         }
 
         String getNumber() {

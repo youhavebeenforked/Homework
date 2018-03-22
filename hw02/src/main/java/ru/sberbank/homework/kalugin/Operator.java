@@ -5,20 +5,24 @@ class Operator implements Element<Operation> {
 
     Operator (char c) {
         switch(c) {
-            case '+':
-                operation = Operation.ADD;
-                break;
-            case '-':
-                operation = Operation.SUBTRACT;
-                break;
-            case '*':
-                operation = Operation.MULTIPLY;
-                break;
-            case '/':
-                operation = Operation.DIVIDE;
-                break;
-            default:
-                throw new IllegalArgumentException("Assignment of unsupported operator: " + c);
+        case '+':
+            operation = Operation.ADD;
+            break;
+
+        case '-':
+            operation = Operation.SUBTRACT;
+            break;
+
+        case '*':
+            operation = Operation.MULTIPLY;
+            break;
+
+        case '/':
+            operation = Operation.DIVIDE;
+            break;
+
+        default:
+            throw new IllegalArgumentException("Assignment of unsupported operator: " + c);
         }
     }
 

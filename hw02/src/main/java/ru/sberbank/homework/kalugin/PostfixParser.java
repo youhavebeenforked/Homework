@@ -23,8 +23,7 @@ class PostfixParser {
         for (Element e : equation) {
             if (e.isNumber()) {
                 result.add(e);
-            }
-            else {
+            } else {
                 if (e.getElement() == Operation.MULTIPLY
                         || e.getElement() == Operation.DIVIDE) {
                     if (stack.size() > 0) {
@@ -33,8 +32,7 @@ class PostfixParser {
                             result.add(stack.pop());
                         }
                     }
-                }
-                else {
+                } else {
                     if (stack.size() > 0) {
                         result.add(stack.pop());
                     }
@@ -55,8 +53,7 @@ class PostfixParser {
         for (Element e : equation) {
             if (e.isNumber()) {
                 stack.push((Double) e.getElement());
-            }
-            else {
+            } else {
                 double x1 = stack.pop();
                 double x2 = stack.pop();
                 Operation o = (Operation) e.getElement();
