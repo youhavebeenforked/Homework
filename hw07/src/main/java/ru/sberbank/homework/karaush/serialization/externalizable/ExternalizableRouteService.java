@@ -52,11 +52,11 @@ public class ExternalizableRouteService extends RouteService<City, Route<City>> 
 
     @Override
     protected City createCity(int id, String cityName, LocalDate foundDate, long numberOfInhabitants) {
-        return new ru.sberbank.homework.karaush.serialization.externalizable.ExternalizableCity(id, cityName, foundDate, numberOfInhabitants);
+        return new ExternalizableCity(id, cityName, foundDate, numberOfInhabitants);
     }
 
     @Override
     protected Route<City> createRoute(List<City> cities) {
-        return new ru.sberbank.homework.karaush.serialization.externalizable.ExternalizableRoute(UUID.randomUUID().toString(), cities);
+        return new ExternalizableRoute(UUID.randomUUID().toString(), cities);
     }
 }
