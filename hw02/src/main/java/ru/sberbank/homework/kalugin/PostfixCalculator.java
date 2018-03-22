@@ -80,11 +80,6 @@ public class PostfixCalculator implements Calculator {
                 elementIsOperator = true;
             }
         }
-        // если закончили цикл проверки оператором, а не числом, ошибка в выражении
-        if (!elementIsOperator) {
-            error.setMessage("error > wrong expression");
-            return null;
-        }
         return equation;
     }
 
