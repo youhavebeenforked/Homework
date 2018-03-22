@@ -13,7 +13,7 @@ public class MessageTerminalTest {
     MessageTerminal terminalTest = new MessageTerminal();
 
     @Test
-    public void incorrectPinValue() throws IOException {
+    public void incorrectPinValue() {
 
     }
 
