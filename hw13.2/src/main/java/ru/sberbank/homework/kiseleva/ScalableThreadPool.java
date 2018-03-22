@@ -22,6 +22,7 @@ public class ScalableThreadPool implements ThreadPool {
         for (int i = 0; i < min; i++) {
             threads.add(new Thread(new Worker()));
         }
+        new Thread(new ThreadCleaner()).start();
     }
 
     public List<Thread> getThreads() {
@@ -72,6 +73,17 @@ public class ScalableThreadPool implements ThreadPool {
                 Runnable nextTask = taskQueue.poll();
                 if (nextTask != null) {
                     nextTask.run();
+                }
+            }
+        }
+    }
+
+    private class ThreadCleaner implements Runnable {
+        @Override
+        public void run() {
+            while (isRunning) {
+                while (threads.size() > minPoolSize && taskQueue.size() < threads.size()) {
+                    threads.remove(threads.size() - 1);
                 }
             }
         }

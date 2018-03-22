@@ -34,8 +34,8 @@ public class ScalableThreadPoolTest {
             threadPool.execute(threadPool.getTask());
         }
         threadPool.start();
-        Thread.sleep(150 * limitTasks);
         assertEquals(max, threadPool.getThreads().size());
+        Thread.sleep(150 * limitTasks);
         assertEquals(limitTasks, threadPool.getRunnedTasksCounter().get());
     }
 
@@ -46,8 +46,23 @@ public class ScalableThreadPoolTest {
             threadPool.execute(threadPool.getTask());
         }
         threadPool.start();
-        Thread.sleep(150 * limitTasks);
         assertEquals(limitTasks, threadPool.getThreads().size());
+        Thread.sleep(150 * limitTasks);
+        assertEquals(limitTasks, threadPool.getRunnedTasksCounter().get());
+    }
+
+    @Test
+    public void reduceAmountOfThreads() throws InterruptedException {
+        int limitTasks = max + 3;
+        for (int i = 0; i < limitTasks; i++) {
+            threadPool.execute(threadPool.getTask());
+        }
+        threadPool.start();
+        while ((threadPool.getRunnedTasksCounter().get() != limitTasks)) {
+            Thread.sleep(50 * limitTasks);
+        }
+        Thread.sleep(150);
+        assertEquals(min, threadPool.getThreads().size());
         assertEquals(limitTasks, threadPool.getRunnedTasksCounter().get());
     }
 
