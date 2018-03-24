@@ -1,7 +1,6 @@
 package ru.sberbank.homework.kashin;
 
 import ru.sberbank.homework.common.ThreadPool;
-import ru.sberbank.homework.kashin.exception.ThreadPoolException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,8 +79,8 @@ public class ScalableThreadPool implements ThreadPool {
                     }
                     TimeUnit.MILLISECONDS.sleep(10);
                 }
-            } catch (RuntimeException | InterruptedException e) {
-                throw new ThreadPoolException(e.getCause());
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
             }
         }
 

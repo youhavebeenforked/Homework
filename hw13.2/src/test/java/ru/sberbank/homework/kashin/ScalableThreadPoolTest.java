@@ -66,7 +66,7 @@ public class ScalableThreadPoolTest {
             threadPool.execute(r);
         }
         threadPool.start();
-        sleep(100);
+        sleep(300);
         threadPool.terminate();
         assertTrue("ThreadPool должен выполнить все задания после вызова terminate()", runnableCount == count.get());
     }
@@ -92,7 +92,6 @@ public class ScalableThreadPoolTest {
         ScalableThreadPool threadPool = new  ScalableThreadPool(2, runnableCount);
         Runnable r = () -> {
             count.getAndIncrement();
-            System.out.println(Thread.currentThread().getName());
             sleep(100);
         };
         for (int i = 0; i < runnableCount; i++) {
