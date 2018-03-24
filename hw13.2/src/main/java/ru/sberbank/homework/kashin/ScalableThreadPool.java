@@ -46,6 +46,9 @@ public class ScalableThreadPool implements ThreadPool {
     @Override
     public void execute(Runnable runnable) {
         tasks.add(runnable);
+        synchronized (tasks) {
+            tasks.notify();
+        }
     }
 
     public void terminate() {
@@ -63,7 +66,6 @@ public class ScalableThreadPool implements ThreadPool {
 
         @Override
         public void run() {
-            try {
                 while (execute.get() || !tasksInPool.isEmpty()) {
                     if ((System.currentTimeMillis() - timeVacation) > maximumTimeOfThreadInactivity) {
                         synchronized (countThreads) {
@@ -77,11 +79,16 @@ public class ScalableThreadPool implements ThreadPool {
                     while ((runnable = tasksInPool.poll()) != null) {
                         executeTask(runnable);
                     }
-                    TimeUnit.MILLISECONDS.sleep(10);
+                    while (tasksInPool.isEmpty()) {
+                        synchronized (tasks) {
+                            try {
+                                tasks.wait();
+                            } catch (InterruptedException e) {
+                                Thread.currentThread().interrupt();
+                            }
+                        }
+                    }
                 }
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
         }
 
         private void executeTask(Runnable runnable) {
