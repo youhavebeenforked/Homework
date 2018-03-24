@@ -58,17 +58,6 @@ public class FixedThreadPool implements ThreadPool {
     public void shutdown() {
         for (Thread thread : threads) {
             thread.interrupt();
-
-//            while (true) {
-//                try {
-//                    thread.join(1000);
-//                    if (!thread.isAlive()) {
-//                        break;
-//                    }
-//                } catch (InterruptedException ignored) {
-//                    break;
-//                }
-//            }
         }
     }
 }

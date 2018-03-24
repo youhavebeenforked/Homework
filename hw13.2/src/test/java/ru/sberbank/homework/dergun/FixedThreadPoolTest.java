@@ -8,6 +8,7 @@ import java.util.Set;
 
 public class FixedThreadPoolTest {
     public int count = 0;
+
     @Test
     public void countThreads() throws InterruptedException {
         FixedThreadPool pool = new FixedThreadPool(2);
