@@ -3,15 +3,17 @@ package ru.sberbank.homework.dergun;
 import ru.sberbank.homework.common.ThreadPool;
 
 import java.util.HashSet;
+import java.util.Queue;
 import java.util.Set;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class ScalableThreadPool implements ThreadPool {
     private final Set<Thread> threads;
-    private final BlockingQueue<Runnable> queue;
+    private final Queue<Runnable> queue;
     private final int MIN_SIZE;
     private final int MAX_SIZE;
+    private final AtomicInteger numberBusyThreads = new AtomicInteger(0);
 
     public ScalableThreadPool(int min, int max) {
         this.MAX_SIZE = max;
@@ -54,7 +56,9 @@ public class ScalableThreadPool implements ThreadPool {
                 synchronized (threads) {
                     if (!queue.isEmpty()) {
                         task = queue.poll();
-                        if (!queue.isEmpty() && threads.size() < MAX_SIZE) {
+                        if (!queue.isEmpty()
+                                && threads.size() < MAX_SIZE
+                                && numberBusyThreads.intValue() + 1 == threads.size()) {
                             Thread newThread = new Thread(new Worker());
                             newThread.start();
                             threads.add(newThread);
@@ -64,16 +68,25 @@ public class ScalableThreadPool implements ThreadPool {
                     }
 
                 }
-                try {
-                    if (task != null) {
+
+                if (task != null) {
+                    numberBusyThreads.incrementAndGet();
+                    try {
                         task.run();
-                    } else {
-                        synchronized (threads) {
-                            threads.wait();
-                        }
+                    } catch (Exception ignored) {
                     }
-                } catch (Exception ignored) {
+                    numberBusyThreads.decrementAndGet();
+                    continue;
                 }
+
+                synchronized (threads) {
+                    try {
+                        threads.wait();
+                    } catch (InterruptedException ignored) {
+                    }
+                }
+
+
             }
         }
     }

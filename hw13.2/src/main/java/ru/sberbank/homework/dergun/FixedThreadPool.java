@@ -2,12 +2,12 @@ package ru.sberbank.homework.dergun;
 
 import ru.sberbank.homework.common.ThreadPool;
 
-import java.util.concurrent.BlockingQueue;
+import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class FixedThreadPool implements ThreadPool {
     private final Thread[] threads;
-    private final BlockingQueue<Runnable> queue;
+    private final Queue<Runnable> queue;
 
     public FixedThreadPool(int countThreads) {
         if (countThreads < 1) {

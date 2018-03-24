@@ -4,15 +4,11 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class ScalableThreadPoolTest {
-    @Test
-    public void getCurrentSize() throws Exception {
-
-    }
 
     @Test
     public void maxSizeThread() throws InterruptedException {
         final String monitor = "";
-        ScalableThreadPool pool = new ScalableThreadPool(2, 8);
+        ScalableThreadPool pool = new ScalableThreadPool(2, 18);
 
         final int[] flag = {0};
         pool.start();
@@ -20,7 +16,7 @@ public class ScalableThreadPoolTest {
         for (int i = 0; i < 100; i++) {
             pool.execute(() -> {
                 try {
-                    Thread.sleep(1000);
+                    Thread.sleep(100);
 
                 } catch (InterruptedException e) {
                 }
@@ -33,7 +29,7 @@ public class ScalableThreadPoolTest {
             max_size = Math.max(pool.getCurrentSize(), max_size);
             Thread.sleep(1);
         }
-        Assert.assertEquals(8, max_size);
+        Assert.assertEquals(18, max_size);
     }
 
     @Test
