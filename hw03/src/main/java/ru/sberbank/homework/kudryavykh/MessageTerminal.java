@@ -55,10 +55,6 @@ public class MessageTerminal implements MessageTermnalInterface {
         System.out.println("3 -> Положить на счет");
         System.out.println("4 -> Выход");
     }
-
-    private static void consoleOutput(String message) {
-        System.out.println(message);
-    }
 }
 //Методы inputSum и inputPin очень схожи, но я решил их не обьеденять, т.к. при их вызове из...
 //...терминала придется передавать начальную фразу (введите пин), что противоречит логике терминала

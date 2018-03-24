@@ -20,14 +20,18 @@ public class TerminalImplTest {
     }
 
     @Test
-    public void pin()  {
+    public void pinCorrect()  {
         System.setIn(new ByteArrayInputStream("1234".getBytes()));
         System.setIn(System.in);
         boolean result = terminal.pin();
         assertEquals(false, result);
+    }
+
+    @Test
+    public void pinIncorrect()  {
         System.setIn(new ByteArrayInputStream("7777".getBytes()));
         System.setIn(System.in);
-        result = terminal.pin();
+        boolean result = terminal.pin();
         assertEquals(true, result);
     }
 

@@ -1,5 +1,6 @@
 package ru.sberbank.homework.kudryavykh;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -7,6 +8,7 @@ import static org.junit.Assert.*;
 public class AccountTest {
 
     Account account = new Account("name", 1000, 1234, 333, 1234_1234_1234_1234L);
+
 
     @Test
     public void getPin() {
@@ -17,7 +19,7 @@ public class AccountTest {
     @Test
     public void getBalance() {
         double result = account.getBalance();
-        assertEquals(1000, 1000);
+        assertEquals(1000, result, 0.0001);
     }
 
     @Test
