@@ -2,18 +2,20 @@ package ru.sberbank.homework.dergun;
 
 import ru.sberbank.homework.common.ThreadPool;
 
+import java.util.LinkedList;
 import java.util.Queue;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.logging.Logger;
 
 public class FixedThreadPool implements ThreadPool {
     private final Thread[] threads;
     private final Queue<Runnable> queue;
+    private static Logger log = Logger.getLogger(FixedThreadPool.class.getName());
 
     public FixedThreadPool(int countThreads) {
         if (countThreads < 1) {
             throw new IllegalArgumentException("Incorrect count threads");
         }
-        queue = new LinkedBlockingQueue<>();
+        queue = new LinkedList<>();
         threads = new Thread[countThreads];
 
         for (int i = 0; i < countThreads; i++) {
@@ -33,7 +35,8 @@ public class FixedThreadPool implements ThreadPool {
                                 threads.wait();
                             }
                         }
-                    } catch (Exception ignored) {
+                    } catch (Exception e) {
+                        log.warning(e.getMessage());
                     }
                 }
             });

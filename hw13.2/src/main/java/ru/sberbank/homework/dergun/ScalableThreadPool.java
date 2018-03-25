@@ -3,12 +3,14 @@ package ru.sberbank.homework.dergun;
 import ru.sberbank.homework.common.ThreadPool;
 
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Set;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Logger;
 
 public class ScalableThreadPool implements ThreadPool {
+    private static Logger log = Logger.getLogger(FixedThreadPool.class.getName());
     private final Set<Thread> threads;
     private final Queue<Runnable> queue;
     private final int MIN_SIZE;
@@ -19,7 +21,7 @@ public class ScalableThreadPool implements ThreadPool {
         this.MAX_SIZE = max;
         this.MIN_SIZE = min;
         threads = new HashSet<>();
-        queue = new LinkedBlockingQueue<>();
+        queue = new LinkedList<>();
         for (int i = 0; i < min; i++) {
             threads.add(new Thread(new Worker()));
         }
@@ -73,7 +75,8 @@ public class ScalableThreadPool implements ThreadPool {
                     numberBusyThreads.incrementAndGet();
                     try {
                         task.run();
-                    } catch (Exception ignored) {
+                    } catch (Exception e) {
+                        log.warning(e.getMessage());
                     }
                     numberBusyThreads.decrementAndGet();
                     continue;
@@ -82,7 +85,8 @@ public class ScalableThreadPool implements ThreadPool {
                 synchronized (threads) {
                     try {
                         threads.wait();
-                    } catch (InterruptedException ignored) {
+                    } catch (InterruptedException e) {
+                        log.warning(e.getMessage());
                     }
                 }
 
