@@ -1,10 +1,5 @@
 package ru.sberbank.homework.Polushin;
 
-/**
- * Арифметические операции и скобки.
- * У перечисления есть встроенный метод calculate , переопределенный для каждой операции, кроме скобок,
- * а так же метод toString для красоты.
- */
 public enum Operation {
     MULTIPLY('*') {
         @Override
