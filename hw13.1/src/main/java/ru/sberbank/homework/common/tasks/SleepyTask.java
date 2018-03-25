@@ -13,7 +13,7 @@ public class SleepyTask implements Runnable {
             try {
                 System.out.println("Going to sleep! Already slept for " + TimeUnit.NANOSECONDS.toMillis(sleepTime) + " milliseconds!");
                 long beforeSleep = System.nanoTime();
-                TimeUnit.MILLISECONDS.sleep(TIMEOUT); // не зарантирует точное время! не меньше заданного значения
+                TimeUnit.MILLISECONDS.sleep(TIMEOUT); // не гарантирует точное время! не меньше заданного значения
                 sleepTime += System.nanoTime() - beforeSleep;
             } catch (InterruptedException e) {
                 e.printStackTrace();
