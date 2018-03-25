@@ -1,6 +1,6 @@
 package ru.sberbank.homework.kiseleva;
 
-import ru.sberbank.homework.common.ThreadPool;
+//import ru.sberbank.homework.common.ThreadPool;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,7 +69,7 @@ public class ScalableThreadPool implements ThreadPool {
     private class Worker implements Runnable {
         @Override
         public void run() {
-            while (isRunning) {
+            while (!taskQueue.isEmpty() && isRunning) {
                 Runnable nextTask = taskQueue.poll();
                 if (nextTask != null) {
                     nextTask.run();
@@ -83,6 +83,7 @@ public class ScalableThreadPool implements ThreadPool {
         public void run() {
             while (isRunning) {
                 while (threads.size() > minPoolSize && taskQueue.size() < threads.size()) {
+                    threads.get(threads.size() - 1).interrupt();
                     threads.remove(threads.size() - 1);
                 }
             }
