@@ -9,22 +9,15 @@ import java.util.Map;
 public class CountMapImpl<T> implements CountMap<T> {
 
     private Map<T, Integer> map = new HashMap<>();
-    private int value = 0;
 
     @Override
     public void add(T key) {
-        map.put(key, value++);
+        map.merge(key, 1, (oldValue, value) -> oldValue + value);
     }
 
     @Override
     public int getCount(T key) {
-        int count = 0;
-        for (Map.Entry<T, Integer> entry : map.entrySet()) {
-            if (entry.getKey().equals(key)) {
-                count++;
-            }
-        }
-        return count;
+        return map.get(key);
     }
 
     @Override
@@ -39,7 +32,9 @@ public class CountMapImpl<T> implements CountMap<T> {
 
     @Override
     public void addAll(CountMap<? extends T> source) {
-        map.putAll((Map<? extends T, Integer>) source);
+        for(Map.Entry<? extends T, Integer> entry : source.toMap().entrySet()) {
+            map.merge(entry.getKey(), entry.getValue(), (oldValue, value) -> oldValue + value);
+        }
     }
 
     @Override

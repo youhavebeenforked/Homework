@@ -34,7 +34,7 @@ public interface CountMap<T> {
     /**
      * Вернуть java.util.Map. ключ - добавленный элемент, значение - количество его добавлений
      */
-    Map<? super T, Integer> toMap();
+    Map<T, Integer> toMap();
 
     /**
      * Тот же самый контракт как и toMap(), только всю информацию записать в destination
