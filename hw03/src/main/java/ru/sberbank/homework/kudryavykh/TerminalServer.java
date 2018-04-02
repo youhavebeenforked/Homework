@@ -14,12 +14,17 @@ public class TerminalServer {
         }
     }
 
+    public TerminalServer(Account account) {
+        this.account = account;
+        this.pinValid = new PinValidator(account);
+    }
+
     //Условный метод по проверке карты
     private boolean checkCardNumber(long cardNumber) {
         return true;
     }
 
-    public boolean pinCheck(short pin) throws AccountIsLockedException {
+    public boolean pinCheck(int pin) throws AccountIsLockedException {
         return pinValid.checkPin(pin);
     }
 
