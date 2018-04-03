@@ -1,15 +1,14 @@
-package ru.sberbank.homework.your_lastname;
+package ru.sberbank.homework.bobrov;
 
 import org.junit.Before;
 import org.junit.Test;
+import ru.sberbank.homework.bobrov.serialization.external.ExternalizeRouteService;
 import ru.sberbank.homework.common.City;
 import ru.sberbank.homework.common.Route;
 import ru.sberbank.homework.common.RouteService;
-import ru.sberbank.homework.your_lastname.serialization.InMemoryRouteService;
 
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class ServiceTest {
@@ -18,7 +17,9 @@ public class ServiceTest {
     @Before
     public void pre() {
         //routeService = new KryoRouteService();
-        routeService = new InMemoryRouteService(() -> "C:\\temp\\");
+//        routeService = new InMemoryRouteService(() -> "C:\\temp\\");
+//        routeService = new SerializeRouteService(() -> "H:\\bobrov\\");
+        routeService = new ExternalizeRouteService(() -> "H:\\bobrov\\");
     }
 
     @Test
@@ -56,8 +57,7 @@ public class ServiceTest {
     }
 
     private void compareCities(List<? extends City> cached, List<? extends City> unCached) {
-        assertEquals(unCached.size(), cached.size());
-        for (int i = 0; i < unCached.size(); i++) {
+        for (int i = 0; i < cached.size(); i++) {
             City city = unCached.get(i);
             City city1 = cached.get(i);
             boolean equals = city.compare(city1);

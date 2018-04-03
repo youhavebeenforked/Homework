@@ -2,7 +2,7 @@
 ### Вспоминаем дженерики
 - Если вдруг ещё не смотрели, то обязательно посмотрите доклад нашего коллеги "Неочевидные дженерики": 
 https://www.youtube.com/watch?v=mNyQYTp-Njw
-- по отработанной схеме, копируете в свой пакет классы из **ru.sberbank.homework.your_lastname.generics** 
+- по отработанной схеме, копируете в свой пакет классы из **ru.sberbank.homework.bobrov.generics** 
 и следуете инструкциям в комментариях. Можете сделать проверочный класс или юнит-тесты.
 - https://docs.oracle.com/javase/tutorial/java/generics/index.html для справки.
 ### Сериализация
